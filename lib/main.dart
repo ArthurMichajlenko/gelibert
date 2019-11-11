@@ -1,7 +1,42 @@
-import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'dart:io';
 
-void main() => runApp(MyApp());
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
+
+// void main() => runApp(MyApp());
+Database db1;
+void main() async {
+  var databasePath = await getDatabasesPath();
+  var path = join(databasePath, "gelibert.db");
+  var exists = await databaseExists(path);
+  if (!exists) {
+    print("Creating from assets");
+    try {
+      await Directory(dirname(path)).create(recursive: true);
+    } catch (_) {}
+    //Copy from assets
+    ByteData data = await rootBundle.load(join("assets", "gelibert.db"));
+    List<int> bytes =
+        data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+    await File(path).writeAsBytes(bytes, flush: true);
+  } else {
+    print("Opening exsisting database");
+  }
+  // Open the database
+  final db1 = await openDatabase(path);
+  // print(db.path);
+  // print(db.isOpen);
+  // db1 = db;
+  print(db1.isOpen);
+  print(db1.path);
+  // print(db.toString());
+  print(db1.toString());
+
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -21,7 +56,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Gelibert'),
     );
   }
 }
@@ -72,27 +107,10 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ListTile(
+      body: ListView.builder(
+          itemCount: 3,
+          itemBuilder: (context, index) {
+            return ListTile(
               leading: GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: () {
@@ -106,20 +124,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: CircleAvatar(),
                 ),
               ),
-              title: Text('Curier'),
-              onTap: () => launch("tel:+37369130450"),
+              title: Text('Curier: ' + '$_counter'),
+              onTap: () => launch("tel:+3736913040"),
               dense: false,
-            ),
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
-        ),
-      ),
+              enabled: true,
+            );
+          }),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
