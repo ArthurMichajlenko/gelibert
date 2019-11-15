@@ -13,14 +13,14 @@ import 'order_detail.dart';
 // import 'models/clients.dart';
 
 // void main() => runApp(GelibertApp());
-Database db;
+// Database db;
 void main() async {
   await _workdb();
 
   runApp(GelibertApp());
 }
 
-Future _workdb() async {
+Future<Database> _workdb() async {
   var databasePath = await getDatabasesPath();
   var path = join(databasePath, "gelibert.db");
   var exists = await databaseExists(path);
@@ -37,8 +37,7 @@ Future _workdb() async {
   }
   // Open the database
   final db = await openDatabase(path);
-  //* remove when begin using db
-  print(db);
+  return db;
 }
 
 class GelibertApp extends StatelessWidget {
@@ -67,7 +66,7 @@ class _OrdersPageState extends State<OrdersPage> {
 
   @override
   void dispose() {
-    db.close();
+    // db.close();
     super.dispose();
   }
 
@@ -119,4 +118,3 @@ class _OrdersPageState extends State<OrdersPage> {
     );
   }
 }
-

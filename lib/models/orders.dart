@@ -14,13 +14,10 @@ class Orders {
   int id;
   int courierId;
   int clientId;
-  String productTo;
-  String productFrom;
   String paymentMethod;
-  double quantityTo;
-  double quantityFrom;
+  List<Consist> consists;
   double orderCost;
-  int orderStatus;
+  bool delivered;
   int deliveryDelay;
   String dateStart;
   String dateFinish;
@@ -29,47 +26,62 @@ class Orders {
     this.id,
     this.courierId,
     this.clientId,
-    this.productTo,
-    this.productFrom,
     this.paymentMethod,
-    this.quantityTo,
-    this.quantityFrom,
+    this.consists,
     this.orderCost,
-    this.orderStatus,
+    this.delivered,
     this.deliveryDelay,
     this.dateStart,
     this.dateFinish,
   });
 
   factory Orders.fromJson(Map<String, dynamic> json) => new Orders(
-        id: json["id"],
-        courierId: json["courier_id"],
-        clientId: json["client_id"],
-        productTo: json["product_to"],
-        productFrom: json["product_from"],
-        paymentMethod: json["payment_method"],
-        quantityTo: json["quantity_to"].toDouble(),
-        quantityFrom: json["quantity_from"].toDouble(),
-        orderCost: json["order_cost"].toDouble(),
-        orderStatus: json["order_status"],
-        deliveryDelay: json["delivery_delay"],
-        dateStart: json["date_start"],
-        dateFinish: json["date_finish"],
-      );
+    id: json["id"],
+    courierId: json["courier_id"],
+    clientId: json["client_id"],
+    paymentMethod: json["payment_method"],
+    consists: new List<Consist>.from(json["consists"].map((x) => Consist.fromJson(x))),
+    orderCost: json["order_cost"].toDouble(),
+    delivered: json["delivered"],
+    deliveryDelay: json["delivery_delay"],
+    dateStart: json["date_start"],
+    dateFinish: json["date_finish"],
+  );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "courier_id": courierId,
-        "client_id": clientId,
-        "product_to": productTo,
-        "product_from": productFrom,
-        "payment_method": paymentMethod,
-        "quantity_to": quantityTo,
-        "quantity_from": quantityFrom,
-        "order_cost": orderCost,
-        "order_status": orderStatus,
-        "delivery_delay": deliveryDelay,
-        "date_start": dateStart,
-        "date_finish": dateFinish,
-      };
+    "id": id,
+    "courier_id": courierId,
+    "client_id": clientId,
+    "payment_method": paymentMethod,
+    "consists": new List<dynamic>.from(consists.map((x) => x.toJson())),
+    "order_cost": orderCost,
+    "delivered": delivered,
+    "delivery_delay": deliveryDelay,
+    "date_start": dateStart,
+    "date_finish": dateFinish,
+  };
+}
+
+class Consist {
+  String product;
+  double quantity;
+  bool delivery;
+
+  Consist({
+    this.product,
+    this.quantity,
+    this.delivery,
+  });
+
+  factory Consist.fromJson(Map<String, dynamic> json) => new Consist(
+    product: json["product"],
+    quantity: json["quantity"].toDouble(),
+    delivery: json["delivery"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "product": product,
+    "quantity": quantity,
+    "delivery": delivery,
+  };
 }
