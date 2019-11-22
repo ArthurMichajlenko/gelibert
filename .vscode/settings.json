@@ -11,9 +11,10 @@
             "username": "arthur"
         },
         {
-            "askForPassword": false,
-            "database": "/Users/arthur/go/src/gbtestapi/gelibert.db",
+            "database": "./assets/gelibert.db",
             "dialect": "SQLite",
+            "isActive": true,
+            "isConnected": true,
             "name": "gelibert"
         }
     ]

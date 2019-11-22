@@ -2,25 +2,23 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-import 'order_detail.dart';
 //* uncomment when begin using models
-// import 'models/orders.dart';
+import 'models/orders.dart';
 // import 'models/couriers.dart';
 // import 'models/clients.dart';
 
 // void main() => runApp(GelibertApp());
-// Database db;
+Database db;
 void main() async {
-  await _workdb();
+  db = await _openDB();
 
   runApp(GelibertApp());
 }
 
-Future<Database> _workdb() async {
+Future<Database> _openDB() async {
   var databasePath = await getDatabasesPath();
   var path = join(databasePath, "gelibert.db");
   var exists = await databaseExists(path);
@@ -62,18 +60,12 @@ class OrdersPage extends StatefulWidget {
 }
 
 class _OrdersPageState extends State<OrdersPage> {
-  int _counter = 0;
+  var _orders = Orders();
 
   @override
   void dispose() {
-    // db.close();
+    db.close();
     super.dispose();
-  }
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
   }
 
   @override
@@ -82,39 +74,7 @@ class _OrdersPageState extends State<OrdersPage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: ListView.builder(
-          itemCount: 3,
-          itemBuilder: (context, index) {
-            return Card(
-              child: ListTile(
-                leading: GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => OrderDetail()));
-                  },
-                  child: Container(
-                    width: 48,
-                    height: 48,
-                    padding: EdgeInsets.symmetric(vertical: 4.0),
-                    alignment: Alignment.center,
-                    child: CircleAvatar(
-                      child: Icon(Icons.shopping_cart),
-                    ),
-                  ),
-                ),
-                title: Text('Curier: ' + '$_counter'),
-                onTap: () => launch("tel:+3736913040"),
-                dense: false,
-                enabled: true,
-              ),
-            );
-          }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
+      body: _orders.ordersListWidget(db),
     );
   }
 }

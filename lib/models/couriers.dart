@@ -42,6 +42,17 @@ class Couriers {
     address: json["address"],
   );
 
+  factory Couriers.fromSQL(Map<String, dynamic> sql) => new Couriers(
+    id: sql["id"],
+    imei: sql["imei"],
+    tel: sql["tel"],
+    name: sql["name"],
+    carNumber: sql["car_number"],
+    latitude: sql["latitude"],
+    longitude: sql["longitude"],
+    address: sql["address"],
+  );
+
   Map<String, dynamic> toJson() => {
     "id": id,
     "imei": imei,
