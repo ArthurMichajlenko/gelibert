@@ -15,13 +15,30 @@ class OrderDetail extends StatelessWidget {
       ),
       body: Container(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Center(child: client.clientData(db, order.clientId)),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Контрагент',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.normal,
+                  color: Colors.grey,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+                child: client.clientData(db, order.clientId),
+            ),
             Expanded(
-              child: ListView.builder(
+              child: ListView.separated(
                 itemCount: order.consists.length,
+                separatorBuilder: (BuildContext context, int index) =>
+                    Divider(),
                 itemBuilder: (context, index) {
-                  return Card(
+                  return Container(
                     child: ListTile(
                       // isThreeLine: true,
                       title: Text(order.consists[index].product),
@@ -33,14 +50,33 @@ class OrderDetail extends StatelessWidget {
           ],
         ),
       ),
-      // body: Center(
-      //   child: RaisedButton(
-      //     onPressed: () {
-      //       Navigator.pop(context);
-      //     },
-      //     child: Text(order.consists[0].product),
-      //   ),
-      // ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white70,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.av_timer,
+              color: Colors.red,
+            ),
+            title: Text(
+              'Отложить',
+              style: TextStyle(color: Colors.red),
+            ),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.check,
+              color: Colors.green,
+            ),
+            title: Text(
+              'Завершить',
+              style: TextStyle(
+                color: Colors.green,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
