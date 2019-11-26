@@ -19,19 +19,12 @@ class OrderDetail extends StatelessWidget {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Контрагент',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.grey,
-                ),
-              ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-                child: client.clientData(db, order.clientId),
+              child: client.clientData(db, order.clientId),
             ),
+            Divider(),
             Expanded(
               child: ListView.separated(
                 itemCount: order.consists.length,
@@ -60,7 +53,9 @@ class OrderDetail extends StatelessWidget {
             ),
             title: Text(
               'Отложить',
-              style: TextStyle(color: Colors.red),
+              style: TextStyle(
+                color: Colors.red,
+              ),
             ),
           ),
           BottomNavigationBarItem(

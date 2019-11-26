@@ -43,8 +43,34 @@ class Clients {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(clientSnap.data.name),
-              Text(clientSnap.data.address),
+              Text(
+                'Контрагент',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.normal,
+                  color: Colors.grey,
+                ),
+              ),
+              Text(
+                clientSnap.data.name,
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+              Text(
+                'Адрес',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.normal,
+                  color: Colors.grey,
+                ),
+              ),
+              Text(
+                clientSnap.data.address,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
         );
