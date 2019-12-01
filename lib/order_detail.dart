@@ -22,7 +22,7 @@ class _OrderDetailState extends State<OrderDetail> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text("OrderDetail"),
+        title: Text("Заказ № ${widget.order.id}"),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -57,30 +57,23 @@ class _OrderDetailState extends State<OrderDetail> {
                 ),
               ),
             ),
-            Container(
-              height: MediaQuery.of(context).size.width * 0.33,
-              child: ListView.builder(
-                itemCount: widget.order.consists.length,
-                // separatorBuilder: (BuildContext context, int index) =>
-                //     Divider(),
-                itemBuilder: (context, index) {
-                  // if (widget.order.consists[index].delivery)
-                    return ListTile(
-                      // isThreeLine: true,
-                      title: Text((index + 1).toString() +
+            Divider(),
+            for (int i = 0; i < widget.order.consists.length; i++)
+              Column(
+                children: [
+                  ListTile(
+                    title: Text(
+                      (i + 1).toString() +
                           '. ' +
-                          widget.order.consists[index].product),
-                      trailing: Text(
-                        'Кол-во: \n' +
-                            widget.order.consists[index].quantity.toString() +
-                            ' шт.',
-                      ),
-                    );
-                  // else
-                  //   return Divider();
-                },
+                          widget.order.consists[i].product,
+                    ),
+                    trailing: Text('Кол-во: \n' +
+                        widget.order.consists[i].quantity.toString() +
+                        ' шт.'),
+                  ),
+                  Divider(),
+                ],
               ),
-            ),
             Card(
               child: ListTile(
                 title: Text(
@@ -93,6 +86,10 @@ class _OrderDetailState extends State<OrderDetail> {
                 onTap: () {
                   Picker picker = Picker(
                       looping: false,
+                      hideHeader: true,
+                      title: Text("Заказ будет доставлен через:"),
+                      cancelText: 'Отменить',
+                      confirmText: 'Отправить',
                       adapter: PickerDataAdapter(
                         data: [
                           PickerItem(
@@ -121,7 +118,8 @@ class _OrderDetailState extends State<OrderDetail> {
                         print(value);
                         print(picker.getSelectedValues()[0]);
                       });
-                  picker.show(_scaffoldKey.currentState);
+                  // picker.show(_scaffoldKey.currentState);
+                  picker.showDialog(context);
                 },
               ),
             ),

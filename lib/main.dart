@@ -46,7 +46,7 @@ class GelibertApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.grey,
       ),
-      home: OrdersPage(title: 'Orders'),
+      home: OrdersPage(title: 'Заказы'),
     );
   }
 }
