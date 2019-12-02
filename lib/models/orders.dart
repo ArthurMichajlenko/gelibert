@@ -93,7 +93,7 @@ class Orders {
         "date_finish": dateFinish,
       };
 
-  Widget ordersListWidget(Database db) {
+  Widget ordersListWidget(Database db, int delivered) {
     return FutureBuilder<List<Orders>>(
       builder: (context, ordersSnap) {
         if (ordersSnap.connectionState == ConnectionState.none ||
@@ -102,29 +102,43 @@ class Orders {
           return Center(child: CircularProgressIndicator());
         }
         return ListView.builder(
+          // shrinkWrap: true,
           itemCount: ordersSnap.data.length,
           itemBuilder: (context, index) {
             return Card(
               child: ListTile(
-                leading: CircleAvatar(
-                  child: Text(ordersSnap.data[index].id.toString()),
-                  // backgroundColor: Colors.grey,
-                  // foregroundColor: Colors.black,
+                leading: Column(
+                  children: <Widget>[
+                    if (ordersSnap.data[index].delivered==-1)
+                    CircleAvatar(
+                      child: Text(ordersSnap.data[index].id.toString()),
+                      backgroundColor: Colors.red,
+                    ),
+                    if (ordersSnap.data[index].delivered==1)
+                    CircleAvatar(
+                      child: Text(ordersSnap.data[index].id.toString()),
+                      backgroundColor: Colors.green,
+                      ),
+                    if (ordersSnap.data[index].delivered==0)
+                    CircleAvatar(
+                      child: Text(ordersSnap.data[index].id.toString()),
+                      backgroundColor: Colors.blue,
+                      ),
+                  ],
                 ),
                 isThreeLine: true,
                 title: _client.clientData(db, ordersSnap.data[index].clientId),
                 subtitle: Row(
                   children: <Widget>[
                     Text(ordersSnap.data[index].paymentMethod),
-                    Text(ordersSnap.data[index].delivered.toString()),
                   ],
                 ),
                 trailing: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
                     Text(ordersSnap.data[index].consistsTo[0].product),
-                    Text(
-                        ordersSnap.data[index].consistsTo[0].quantity.toString()),
+                    Text(ordersSnap.data[index].consistsTo[0].quantity
+                        .toString()),
                     Text(ordersSnap.data[index].orderCost.toString() + ' Lei'),
                   ],
                 ),
@@ -141,17 +155,28 @@ class Orders {
           },
         );
       },
-      future: getOrdersList(db),
+      future: getOrdersList(db, delivered),
     );
   }
 }
 
-Future<List<Orders>> getOrdersList(Database db) async {
-  List<Map<String, dynamic>> sqlDataOrders = await db.query('orders');
+Future<List<Orders>> getOrdersList(Database db, int delivered) async {
+  List<Map<String, dynamic>> sqlDataOrders;
+  switch (delivered) {
+    case -1:
+    case 0:
+    case 1:
+      sqlDataOrders = await db
+          .query('orders', where: 'delivered=?', whereArgs: [delivered]);
+      break;
+    default:
+      sqlDataOrders = await db.query('orders');
+  }
   List<Map<String, dynamic>> sqlDataConsistsTo = await db.query('consists_to');
   var consistsTo =
       List<Consist>.from(sqlDataConsistsTo.map((x) => Consist.fromSQL(x)));
-  List<Map<String, dynamic>> sqlDataConsistsFrom = await db.query('consists_from');
+  List<Map<String, dynamic>> sqlDataConsistsFrom =
+      await db.query('consists_from');
   var consistsFrom =
       List<Consist>.from(sqlDataConsistsFrom.map((x) => Consist.fromSQL(x)));
   var orders = List<Orders>.from(sqlDataOrders.map((x) {

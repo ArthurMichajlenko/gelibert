@@ -12,6 +12,8 @@ import 'models/orders.dart';
 
 // void main() => runApp(GelibertApp());
 Database db;
+int orderDelivered = 2;
+
 void main() async {
   db = await _openDB();
 
@@ -74,24 +76,40 @@ class _OrdersPageState extends State<OrdersPage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: _orders.ordersListWidget(db),
+      body: _orders.ordersListWidget(db, orderDelivered),
       drawer: Drawer(
         child: Column(
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(top:20),
+              padding: EdgeInsets.only(top: 20),
             ),
             ListTile(
               title: Text('Все заказы'),
+              onTap: () {
+                setState(() => orderDelivered = 2);
+                Navigator.pop(context);
+              },
             ),
             ListTile(
               title: Text('В работе'),
+              onTap: () {
+                setState(() => orderDelivered = 0);
+                Navigator.pop(context);
+              },
             ),
             ListTile(
               title: Text('Выполненные'),
+              onTap: () {
+                setState(() => orderDelivered = 1);
+                Navigator.pop(context);
+              },
             ),
             ListTile(
               title: Text('Отложенные'),
+              onTap: () {
+                setState(() => orderDelivered = -1);
+                Navigator.pop(context);
+              },
             ),
           ],
         ),
