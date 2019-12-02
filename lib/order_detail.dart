@@ -87,7 +87,7 @@ class _OrderDetailState extends State<OrderDetail> {
                           widget.order.consistsTo[i].product,
                     ),
                     subtitle: Text(
-                        '${widget.order.consistsTo[i].quantity}x${widget.order.consistsTo[i].price}'),
+                        '${widget.order.consistsTo[i].price}x${widget.order.consistsTo[i].quantity} шт.'),
                     trailing: Text('Кол-во: \n' +
                         widget.order.consistsTo[i].quantity.toString() +
                         ' шт.'),

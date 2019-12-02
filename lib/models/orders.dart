@@ -147,13 +147,13 @@ class Orders {
 }
 
 Future<List<Orders>> getOrdersList(Database db) async {
+  List<Map<String, dynamic>> sqlDataOrders = await db.query('orders');
   List<Map<String, dynamic>> sqlDataConsistsTo = await db.query('consists_to');
   var consistsTo =
       List<Consist>.from(sqlDataConsistsTo.map((x) => Consist.fromSQL(x)));
   List<Map<String, dynamic>> sqlDataConsistsFrom = await db.query('consists_from');
   var consistsFrom =
       List<Consist>.from(sqlDataConsistsFrom.map((x) => Consist.fromSQL(x)));
-  List<Map<String, dynamic>> sqlDataOrders = await db.query('orders');
   var orders = List<Orders>.from(sqlDataOrders.map((x) {
     var result = Orders.fromSQL(x);
     consistsTo.forEach((y) {

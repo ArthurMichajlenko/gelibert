@@ -44,7 +44,7 @@ class GelibertApp extends StatelessWidget {
     return MaterialApp(
       title: 'Orders',
       theme: ThemeData(
-        primarySwatch: Colors.grey,
+        primarySwatch: Colors.blueGrey,
       ),
       home: OrdersPage(title: 'Заказы'),
     );
@@ -75,6 +75,27 @@ class _OrdersPageState extends State<OrdersPage> {
         title: Text(widget.title),
       ),
       body: _orders.ordersListWidget(db),
+      drawer: Drawer(
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(top:20),
+            ),
+            ListTile(
+              title: Text('Все заказы'),
+            ),
+            ListTile(
+              title: Text('В работе'),
+            ),
+            ListTile(
+              title: Text('Выполненные'),
+            ),
+            ListTile(
+              title: Text('Отложенные'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
