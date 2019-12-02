@@ -79,6 +79,20 @@ class Clients {
     );
   }
 
+  Widget clientTel(Database db, int id) {
+    return FutureBuilder<Clients>(
+      builder: (context, snap) {
+        if (snap.connectionState == ConnectionState.none ||
+            snap.connectionState == ConnectionState.waiting ||
+            snap.hasData == null) {
+          return Text('Wait...');
+        }
+        return Text(snap.data.tel);
+      },
+      future: getClient(db, id),
+    );
+  }
+
   factory Clients.fromJson(Map<String, dynamic> json) => new Clients(
         id: json["id"],
         name: json["name"],

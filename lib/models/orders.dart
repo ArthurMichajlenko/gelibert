@@ -22,7 +22,8 @@ class Orders {
   int courierId;
   int clientId;
   String paymentMethod;
-  List<Consist> consists;
+  List<Consist> consistsTo;
+  List<Consist> consistsFrom;
   double orderCost;
   int delivered;
   int deliveryDelay;
@@ -34,7 +35,8 @@ class Orders {
     this.courierId,
     this.clientId,
     this.paymentMethod,
-    this.consists,
+    this.consistsTo,
+    this.consistsFrom,
     this.orderCost,
     this.delivered,
     this.deliveryDelay,
@@ -47,7 +49,9 @@ class Orders {
         courierId: json["courier_id"],
         clientId: json["client_id"],
         paymentMethod: json["payment_method"],
-        consists: new List<Consist>.from(
+        consistsTo: new List<Consist>.from(
+            json["consists"].map((x) => Consist.fromJson(x))),
+        consistsFrom: new List<Consist>.from(
             json["consists"].map((x) => Consist.fromJson(x))),
         orderCost: json["order_cost"].toDouble(),
         delivered: json["delivered"],
@@ -63,7 +67,8 @@ class Orders {
       courierId: sqlOrders["courier_id"],
       clientId: sqlOrders["client_id"],
       paymentMethod: sqlOrders["payment_method"],
-      consists: List<Consist>(),
+      consistsTo: List<Consist>(),
+      consistsFrom: List<Consist>(),
       orderCost: sqlOrders["order_cost"],
       delivered: sqlOrders["delivered"],
       deliveryDelay: sqlOrders["delivery_delay"],
@@ -77,7 +82,10 @@ class Orders {
         "courier_id": courierId,
         "client_id": clientId,
         "payment_method": paymentMethod,
-        "consists": new List<dynamic>.from(consists.map((x) => x.toJson())),
+        "consists_to":
+            new List<dynamic>.from(consistsTo.map((x) => x.toJson())),
+        "consists_from":
+            new List<dynamic>.from(consistsFrom.map((x) => x.toJson())),
         "order_cost": orderCost,
         "delivered": delivered,
         "delivery_delay": deliveryDelay,
@@ -105,13 +113,18 @@ class Orders {
                 ),
                 isThreeLine: true,
                 title: _client.clientData(db, ordersSnap.data[index].clientId),
-                subtitle: Text(ordersSnap.data[index].paymentMethod),
+                subtitle: Row(
+                  children: <Widget>[
+                    Text(ordersSnap.data[index].paymentMethod),
+                    Text(ordersSnap.data[index].delivered.toString()),
+                  ],
+                ),
                 trailing: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
-                    Text(ordersSnap.data[index].consists[0].product),
+                    Text(ordersSnap.data[index].consistsTo[0].product),
                     Text(
-                        ordersSnap.data[index].consists[0].quantity.toString()),
+                        ordersSnap.data[index].consistsTo[0].quantity.toString()),
                     Text(ordersSnap.data[index].orderCost.toString() + ' Lei'),
                   ],
                 ),
@@ -134,15 +147,23 @@ class Orders {
 }
 
 Future<List<Orders>> getOrdersList(Database db) async {
-  List<Map<String, dynamic>> sqlDataConsists = await db.query('consists');
-  var consists =
-      List<Consist>.from(sqlDataConsists.map((x) => Consist.fromSQL(x)));
+  List<Map<String, dynamic>> sqlDataConsistsTo = await db.query('consists_to');
+  var consistsTo =
+      List<Consist>.from(sqlDataConsistsTo.map((x) => Consist.fromSQL(x)));
+  List<Map<String, dynamic>> sqlDataConsistsFrom = await db.query('consists_from');
+  var consistsFrom =
+      List<Consist>.from(sqlDataConsistsFrom.map((x) => Consist.fromSQL(x)));
   List<Map<String, dynamic>> sqlDataOrders = await db.query('orders');
   var orders = List<Orders>.from(sqlDataOrders.map((x) {
     var result = Orders.fromSQL(x);
-    consists.forEach((y) {
+    consistsTo.forEach((y) {
       if (y.id == result.id) {
-        result.consists.add(y);
+        result.consistsTo.add(y);
+      }
+    });
+    consistsFrom.forEach((y) {
+      if (y.id == result.id) {
+        result.consistsFrom.add(y);
       }
     });
     return result;
@@ -154,33 +175,33 @@ class Consist {
   int id;
   String product;
   double quantity;
-  bool delivery;
+  double price;
 
   Consist({
     this.id,
     this.product,
     this.quantity,
-    this.delivery,
+    this.price,
   });
 
   factory Consist.fromJson(Map<String, dynamic> json) => new Consist(
         product: json["product"],
         quantity: json["quantity"].toDouble(),
-        delivery: json["delivery"],
+        price: json["price"],
       );
 
   factory Consist.fromSQL(Map<String, dynamic> sql) {
-    bool _delivery = sql["delivery"] == 0 ? false : true;
     return new Consist(
-        id: sql["id"],
-        product: sql["product"],
-        quantity: sql["quantity"],
-        delivery: _delivery);
+      id: sql["id"],
+      product: sql["product"],
+      quantity: sql["quantity"],
+      price: sql["price"],
+    );
   }
 
   Map<String, dynamic> toJson() => {
         "product": product,
         "quantity": quantity,
-        "delivery": delivery,
+        "price": price,
       };
 }
