@@ -139,7 +139,7 @@ class _OrdersPageState extends State<OrdersPage> {
                 title: Text('Выполненные'),
                 onTap: () {
                   setState(() {
-                    widget.title = 'Заказы выполненные';
+                    // widget.title = 'Заказы выполненные';
                     return orderDelivered = 1;
                   });
                   Navigator.pop(context);
