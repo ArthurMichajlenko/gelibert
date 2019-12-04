@@ -16,7 +16,6 @@ int orderDelivered = 2;
 
 void main() async {
   db = await _openDB();
-
   runApp(GelibertApp());
 }
 
@@ -37,6 +36,14 @@ Future<Database> _openDB() async {
   }
   // Open the database
   final db = await openDatabase(path);
+  countAll =
+      Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders'));
+  countInWork = Sqflite.firstIntValue(
+      await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 0'));
+  countComplete = Sqflite.firstIntValue(
+      await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 1'));
+  countDeffered = Sqflite.firstIntValue(
+      await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = -1'));
   return db;
 }
 
@@ -49,6 +56,7 @@ class GelibertApp extends StatelessWidget {
         primarySwatch: Colors.blueGrey,
       ),
       home: OrdersPage(title: 'Заказы'),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -64,6 +72,11 @@ class OrdersPage extends StatefulWidget {
 class _OrdersPageState extends State<OrdersPage> {
   var _orders = Orders();
 
+  // @override
+  // void initState() {
+  //   super.initState();
+  // }
+
   @override
   void dispose() {
     db.close();
@@ -78,40 +91,88 @@ class _OrdersPageState extends State<OrdersPage> {
       ),
       body: _orders.ordersListWidget(db, orderDelivered),
       drawer: Drawer(
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(top: 20),
-            ),
-            ListTile(
-              title: Text('Все заказы'),
-              onTap: () {
-                setState(() => orderDelivered = 2);
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text('В работе'),
-              onTap: () {
-                setState(() => orderDelivered = 0);
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text('Выполненные'),
-              onTap: () {
-                setState(() => orderDelivered = 1);
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text('Отложенные'),
-              onTap: () {
-                setState(() => orderDelivered = -1);
-                Navigator.pop(context);
-              },
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              UserAccountsDrawerHeader(
+                accountEmail: Text('BLAV437'),
+                accountName: Text('Name'),
+                currentAccountPicture: CircleAvatar(
+                  backgroundImage: AssetImage('assets/images/Aqua.png'),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 20),
+              ),
+              ListTile(
+                leading: Icon(Icons.shopping_cart),
+                title: Text('Все заказы'),
+                onTap: () {
+                  setState(() => orderDelivered = 2);
+                  Navigator.pop(context);
+                },
+                trailing: Chip(
+                  label: Text(
+                    countAll.toString(),
+                  ),
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.airport_shuttle),
+                title: Text('В работе'),
+                onTap: () {
+                  setState(() => orderDelivered = 0);
+                  Navigator.pop(context);
+                },
+                trailing: Chip(
+                  label: Text(
+                    countInWork.toString(),
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  backgroundColor: Colors.blue,
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.check),
+                title: Text('Выполненные'),
+                onTap: () {
+                  setState(() {
+                    widget.title = 'Заказы выполненные';
+                    return orderDelivered = 1;
+                  });
+                  Navigator.pop(context);
+                },
+                trailing: Chip(
+                  label: Text(
+                    countComplete.toString(),
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  backgroundColor: Colors.green,
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.av_timer),
+                title: Text('Отложенные'),
+                onTap: () {
+                  setState(() => orderDelivered = -1);
+                  Navigator.pop(context);
+                },
+                trailing: Chip(
+                  label: Text(
+                    countDeffered.toString(),
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  backgroundColor: Colors.red,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

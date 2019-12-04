@@ -14,7 +14,7 @@ class OrderDetail extends StatefulWidget {
 }
 
 class _OrderDetailState extends State<OrderDetail> {
-  final _scaffoldKey = GlobalKey();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   final Clients client = Clients();
 
   final delays = const {
@@ -206,19 +206,49 @@ class _OrderDetailState extends State<OrderDetail> {
                     ),
                   ),
                   trailing: Icon(Icons.arrow_forward_ios),
-                  onTap: () => Scaffold.of(context).showSnackBar(
-                    SnackBar(
-                      content: Row(
-                        children: <Widget>[
-                          Text('Звонок на номер: '),
-                          client.clientTel(db, widget.order.clientId),
-                        ],
-                      ),
-                      duration: Duration(
-                        seconds: 3,
-                      ),
-                    ),
-                  ),
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Связаться с клиентом'),
+                          content: Row(
+                            children: <Widget>[
+                              Text('Позвонить клиенту '),
+                              client.clientName(db, widget.order.clientId),
+                              Text(' ?'),
+                            ],
+                          ),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text('Нет'),
+                              onPressed: () => Navigator.pop(context),
+                            ),
+                            FlatButton(
+                              child: Text('Да'),
+                              onPressed: () {
+                                _scaffoldKey.currentState.showSnackBar(
+                                  SnackBar(
+                                    content: Row(
+                                      children: <Widget>[
+                                        Text('Звонок на номер: '),
+                                        client.clientTel(
+                                            db, widget.order.clientId),
+                                      ],
+                                    ),
+                                    duration: Duration(
+                                      seconds: 3,
+                                    ),
+                                  ),
+                                );
+                                return Navigator.pop(context);
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
                 ),
               ),
             ),
@@ -247,6 +277,10 @@ class _OrderDetailState extends State<OrderDetail> {
                       FlatButton(
                         child: Text('Да'),
                         onPressed: () async {
+                          setState(() {
+                            countInWork--;
+                            countDeffered++;
+                          });
                           await db.update('orders', {'delivered': -1},
                               where: 'id=?', whereArgs: [widget.order.id]);
                           Navigator.pop(context);
@@ -276,8 +310,26 @@ class _OrderDetailState extends State<OrderDetail> {
                       FlatButton(
                         child: Text('Да'),
                         onPressed: () async {
-                          await db.update('orders', {'delivered': 1},
-                              where: 'id=?', whereArgs: [widget.order.id]);
+                          String _dt = DateTime.now().toLocal().toString();
+                          int _indexMS = _dt.indexOf('.');
+                          setState(() {
+                            if (widget.order.delivered == -1) {
+                              countDeffered--;
+                              countComplete++;
+                            } else {
+                              countInWork--;
+                              countComplete++;
+                            }
+                          });
+                          _dt = _dt.substring(0, _indexMS);
+                          await db.update(
+                              'orders',
+                              {
+                                'delivered': 1,
+                                'date_finish': _dt,
+                              },
+                              where: 'id=?',
+                              whereArgs: [widget.order.id]);
                           Navigator.pop(context);
                           return Navigator.pop(context);
                         },

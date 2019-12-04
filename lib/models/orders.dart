@@ -15,6 +15,11 @@ String ordersToJson(List<Orders> data) {
   return json.encode(dyn);
 }
 
+int countAll;
+int countInWork;
+int countComplete;
+int countDeffered;
+
 class Orders {
   var _client = Clients();
 
@@ -107,22 +112,23 @@ class Orders {
           itemBuilder: (context, index) {
             return Card(
               child: ListTile(
+                dense: true,
                 leading: Column(
                   children: <Widget>[
-                    if (ordersSnap.data[index].delivered==-1)
-                    CircleAvatar(
-                      child: Text(ordersSnap.data[index].id.toString()),
-                      backgroundColor: Colors.red,
-                    ),
-                    if (ordersSnap.data[index].delivered==1)
-                    CircleAvatar(
-                      child: Text(ordersSnap.data[index].id.toString()),
-                      backgroundColor: Colors.green,
+                    if (ordersSnap.data[index].delivered == -1)
+                      CircleAvatar(
+                        child: Text(ordersSnap.data[index].id.toString()),
+                        backgroundColor: Colors.red,
                       ),
-                    if (ordersSnap.data[index].delivered==0)
-                    CircleAvatar(
-                      child: Text(ordersSnap.data[index].id.toString()),
-                      backgroundColor: Colors.blue,
+                    if (ordersSnap.data[index].delivered == 1)
+                      CircleAvatar(
+                        child: Text(ordersSnap.data[index].id.toString()),
+                        backgroundColor: Colors.green,
+                      ),
+                    if (ordersSnap.data[index].delivered == 0)
+                      CircleAvatar(
+                        child: Text(ordersSnap.data[index].id.toString()),
+                        backgroundColor: Colors.blue,
                       ),
                   ],
                 ),
@@ -143,6 +149,9 @@ class Orders {
                   ],
                 ),
                 onTap: () {
+                  if (ordersSnap.data[index].delivered == 1) {
+                    return;
+                  }
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -162,6 +171,16 @@ class Orders {
 
 Future<List<Orders>> getOrdersList(Database db, int delivered) async {
   List<Map<String, dynamic>> sqlDataOrders;
+
+  countAll =
+      Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders'));
+  countInWork = Sqflite.firstIntValue(
+      await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 0'));
+  countComplete = Sqflite.firstIntValue(
+      await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 1'));
+  countDeffered = Sqflite.firstIntValue(
+      await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = -1'));
+
   switch (delivered) {
     case -1:
     case 0:

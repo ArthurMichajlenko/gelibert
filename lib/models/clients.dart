@@ -79,13 +79,41 @@ class Clients {
     );
   }
 
+  Widget clientName(Database db, int id) {
+    return FutureBuilder<Clients>(
+      builder: (context, snap) {
+        if (snap.connectionState == ConnectionState.none ||
+            snap.connectionState == ConnectionState.waiting ||
+            snap.hasData == null) {
+          return Center(child: CircularProgressIndicator());
+        }
+        return Text(snap.data.name);
+      },
+      future: getClient(db, id),
+    );
+  }
+
+  Widget clientAddress(Database db, int id) {
+    return FutureBuilder<Clients>(
+      builder: (context, snap) {
+        if (snap.connectionState == ConnectionState.none ||
+            snap.connectionState == ConnectionState.waiting ||
+            snap.hasData == null) {
+          return Center(child: CircularProgressIndicator());
+        }
+        return Text(snap.data.address);
+      },
+      future: getClient(db, id),
+    );
+  }
+
   Widget clientTel(Database db, int id) {
     return FutureBuilder<Clients>(
       builder: (context, snap) {
         if (snap.connectionState == ConnectionState.none ||
             snap.connectionState == ConnectionState.waiting ||
             snap.hasData == null) {
-          return Text('Wait...');
+          return Center(child: CircularProgressIndicator());
         }
         return Text(snap.data.tel);
       },
