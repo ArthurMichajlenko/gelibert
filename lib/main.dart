@@ -13,6 +13,7 @@ import 'models/orders.dart';
 // void main() => runApp(GelibertApp());
 Database db;
 int orderDelivered = 2;
+String mainTitle = 'Заказы';
 
 void main() async {
   db = await _openDB();
@@ -87,7 +88,14 @@ class _OrdersPageState extends State<OrdersPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        // title: Text(mainTitle),
+        title: TitleOrders(
+          countAll,
+          countAll,
+          '/',
+          colorCounter: Colors.red,
+          colorCounterAll: Colors.blue,
+        ),
       ),
       body: _orders.ordersListWidget(db, orderDelivered),
       drawer: Drawer(
@@ -108,7 +116,10 @@ class _OrdersPageState extends State<OrdersPage> {
                 leading: Icon(Icons.shopping_cart),
                 title: Text('Все заказы'),
                 onTap: () {
-                  setState(() => orderDelivered = 2);
+                  setState(() {
+                    mainTitle = 'Заказы ($countAll/$countAll)';
+                    return orderDelivered = 2;
+                  });
                   Navigator.pop(context);
                 },
                 trailing: Chip(
@@ -121,7 +132,10 @@ class _OrdersPageState extends State<OrdersPage> {
                 leading: Icon(Icons.airport_shuttle),
                 title: Text('В работе'),
                 onTap: () {
-                  setState(() => orderDelivered = 0);
+                  setState(() {
+                    mainTitle = 'Заказы в работе ($countInWork/$countAll)';
+                    return orderDelivered = 0;
+                  });
                   Navigator.pop(context);
                 },
                 trailing: Chip(
@@ -139,7 +153,7 @@ class _OrdersPageState extends State<OrdersPage> {
                 title: Text('Выполненные'),
                 onTap: () {
                   setState(() {
-                    // widget.title = 'Заказы выполненные';
+                    mainTitle = 'Заказы выполненные ($countComplete/$countAll)';
                     return orderDelivered = 1;
                   });
                   Navigator.pop(context);
@@ -158,7 +172,10 @@ class _OrdersPageState extends State<OrdersPage> {
                 leading: Icon(Icons.av_timer),
                 title: Text('Отложенные'),
                 onTap: () {
-                  setState(() => orderDelivered = -1);
+                  setState(() {
+                    mainTitle = 'Заказы отложенные ($countDeffered/$countAll)';
+                    return orderDelivered = -1;
+                  });
                   Navigator.pop(context);
                 },
                 trailing: Chip(
@@ -174,6 +191,42 @@ class _OrdersPageState extends State<OrdersPage> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class TitleOrders extends StatelessWidget {
+  final int _counter;
+  final int _counterAll;
+  final String _delimiter;
+
+  final Color colorCounter;
+  final Color colorCounterAll;
+  final Color colorDelimiter;
+
+  TitleOrders(this._counter, this._counterAll, this._delimiter,
+      {this.colorCounter, this.colorCounterAll, this.colorDelimiter});
+
+  @override
+  Widget build(BuildContext context) {
+    return Chip(
+      label: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Text(
+            '$_counter',
+            style: TextStyle(color: colorCounter),
+          ),
+          Text(
+            _delimiter,
+            style: TextStyle(color: colorDelimiter),
+          ),
+          Text(
+            '$_counterAll',
+            style: TextStyle(color: colorCounterAll),
+          ),
+        ],
       ),
     );
   }

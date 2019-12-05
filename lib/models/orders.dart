@@ -149,9 +149,9 @@ class Orders {
                   ],
                 ),
                 onTap: () {
-                  if (ordersSnap.data[index].delivered == 1) {
-                    return;
-                  }
+                  // if (ordersSnap.data[index].delivered == 1) {
+                  //   return;
+                  // }
                   Navigator.push(
                       context,
                       MaterialPageRoute(

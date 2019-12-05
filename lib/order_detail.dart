@@ -121,81 +121,82 @@ class _OrderDetailState extends State<OrderDetail> {
                   Divider(),
                 ],
               ),
-            Card(
-              child: Builder(
-                builder: (context) => ListTile(
-                  title: Text(
-                    'Оповестить клиента о доставке',
-                    style: TextStyle(
-                      color: Colors.lightBlue,
-                    ),
-                  ),
-                  trailing: Icon(Icons.arrow_forward_ios),
-                  onTap: () {
-                    Picker picker = Picker(
-                      looping: false,
-                      hideHeader: true,
-                      title: Text("Заказ будет доставлен через:"),
-                      cancelText: 'Отменить',
-                      confirmText: 'Отправить',
-                      adapter: PickerDataAdapter(
-                        data: [
-                          PickerItem(
-                            text: Text(delays[15]),
-                            value: 15,
-                          ),
-                          PickerItem(
-                            text: Text(delays[30]),
-                            value: 30,
-                          ),
-                          PickerItem(
-                            text: Text(delays[60]),
-                            value: 60,
-                          ),
-                          PickerItem(
-                            text: Text(delays[90]),
-                            value: 90,
-                          ),
-                          PickerItem(
-                            text: Text(delays[120]),
-                            value: 120,
-                          ),
-                        ],
+            if (widget.order.delivered != 1)
+              Card(
+                child: Builder(
+                  builder: (context) => ListTile(
+                    title: Text(
+                      'Оповестить клиента о доставке',
+                      style: TextStyle(
+                        color: Colors.lightBlue,
                       ),
-                      onConfirm: (Picker picker, List value) async {
-                        await db.update('orders',
-                            {'delivery_delay': picker.getSelectedValues()[0]},
-                            where: 'id=?', whereArgs: [widget.order.id]);
-                        Scaffold.of(context).showSnackBar(
-                          SnackBar(
-                            content: Row(
-                              children: <Widget>[
-                                Flexible(
-                                  child: Text(
-                                    'SMS: Ваш заказ будет доставлен через ${delays[picker.getSelectedValues()[0]]} на номер',
-                                    overflow: TextOverflow.fade,
+                    ),
+                    trailing: Icon(Icons.arrow_forward_ios),
+                    onTap: () {
+                      Picker picker = Picker(
+                        looping: false,
+                        hideHeader: true,
+                        title: Text("Заказ будет доставлен через:"),
+                        cancelText: 'Отменить',
+                        confirmText: 'Отправить',
+                        adapter: PickerDataAdapter(
+                          data: [
+                            PickerItem(
+                              text: Text(delays[15]),
+                              value: 15,
+                            ),
+                            PickerItem(
+                              text: Text(delays[30]),
+                              value: 30,
+                            ),
+                            PickerItem(
+                              text: Text(delays[60]),
+                              value: 60,
+                            ),
+                            PickerItem(
+                              text: Text(delays[90]),
+                              value: 90,
+                            ),
+                            PickerItem(
+                              text: Text(delays[120]),
+                              value: 120,
+                            ),
+                          ],
+                        ),
+                        onConfirm: (Picker picker, List value) async {
+                          await db.update('orders',
+                              {'delivery_delay': picker.getSelectedValues()[0]},
+                              where: 'id=?', whereArgs: [widget.order.id]);
+                          Scaffold.of(context).showSnackBar(
+                            SnackBar(
+                              content: Row(
+                                children: <Widget>[
+                                  Flexible(
+                                    child: Text(
+                                      'SMS: Ваш заказ будет доставлен через ${delays[picker.getSelectedValues()[0]]} на номер',
+                                      overflow: TextOverflow.fade,
+                                    ),
                                   ),
-                                ),
-                                client.clientTel(db, widget.order.clientId),
-                              ],
+                                  client.clientTel(db, widget.order.clientId),
+                                ],
+                              ),
+                              duration: Duration(
+                                seconds: 3,
+                              ),
                             ),
-                            duration: Duration(
-                              seconds: 3,
-                            ),
-                          ),
-                        );
-                      },
-                      onCancel: () async {
-                        await db.update('orders', {'delivery_delay': 0},
-                            where: 'id=?', whereArgs: [widget.order.id]);
-                      },
-                    );
-                    // picker.show(_scaffoldKey.currentState);
-                    picker.showDialog(context);
-                  },
+                          );
+                        },
+                        onCancel: () async {
+                          await db.update('orders', {'delivery_delay': 0},
+                              where: 'id=?', whereArgs: [widget.order.id]);
+                        },
+                      );
+                      // picker.show(_scaffoldKey.currentState);
+                      picker.showDialog(context);
+                    },
+                  ),
                 ),
               ),
-            ),
             Card(
               child: Builder(
                 builder: (context) => ListTile(
@@ -230,7 +231,7 @@ class _OrderDetailState extends State<OrderDetail> {
                                 _scaffoldKey.currentState.showSnackBar(
                                   SnackBar(
                                     content: Row(
-                                      children: <Widget>[
+                                      children: <Widget>[ 
                                         Text('Звонок на номер: '),
                                         client.clientTel(
                                             db, widget.order.clientId),
@@ -260,84 +261,94 @@ class _OrderDetailState extends State<OrderDetail> {
         onTap: (index) {
           switch (index) {
             case 0:
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text('Отложить заказ'),
-                    content: Text("Вы уверены ?"),
-                    actions: <Widget>[
-                      FlatButton(
-                        child: Text('Нет'),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          return Navigator.pop(context);
-                        },
-                      ),
-                      FlatButton(
-                        child: Text('Да'),
-                        onPressed: () async {
-                          setState(() {
-                            countInWork--;
-                            countDeffered++;
-                          });
-                          await db.update('orders', {'delivered': -1},
-                              where: 'id=?', whereArgs: [widget.order.id]);
-                          Navigator.pop(context);
-                          return Navigator.pop(context);
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
+              if (widget.order.delivered == -1) {
+                noActionDialog(context, 'отложен');
+              } else if (widget.order.delivered == 1) {
+                noActionDialog(context, 'завершен');
+              } else {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Отложить заказ'),
+                      content: Text("Вы уверены ?"),
+                      actions: <Widget>[
+                        FlatButton(
+                          child: Text('Нет'),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            return Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text('Да'),
+                          onPressed: () async {
+                            setState(() {
+                              countInWork--;
+                              countDeffered++;
+                            });
+                            await db.update('orders', {'delivered': -1},
+                                where: 'id=?', whereArgs: [widget.order.id]);
+                            Navigator.pop(context);
+                            return Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
               break;
             case 1:
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text('Завершить заказ'),
-                    content: Text("Вы уверены ?"),
-                    actions: <Widget>[
-                      FlatButton(
-                        child: Text('Нет'),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          return Navigator.pop(context);
-                        },
-                      ),
-                      FlatButton(
-                        child: Text('Да'),
-                        onPressed: () async {
-                          String _dt = DateTime.now().toLocal().toString();
-                          int _indexMS = _dt.indexOf('.');
-                          setState(() {
-                            if (widget.order.delivered == -1) {
-                              countDeffered--;
-                              countComplete++;
-                            } else {
-                              countInWork--;
-                              countComplete++;
-                            }
-                          });
-                          _dt = _dt.substring(0, _indexMS);
-                          await db.update(
-                              'orders',
-                              {
-                                'delivered': 1,
-                                'date_finish': _dt,
-                              },
-                              where: 'id=?',
-                              whereArgs: [widget.order.id]);
-                          Navigator.pop(context);
-                          return Navigator.pop(context);
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
+              if (widget.order.delivered == 1) {
+                noActionDialog(context, 'завершен');
+              } else {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Завершить заказ'),
+                      content: Text("Вы уверены ?"),
+                      actions: <Widget>[
+                        FlatButton(
+                          child: Text('Нет'),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            return Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text('Да'),
+                          onPressed: () async {
+                            String _dt = DateTime.now().toLocal().toString();
+                            int _indexMS = _dt.indexOf('.');
+                            setState(() {
+                              if (widget.order.delivered == -1) {
+                                countDeffered--;
+                                countComplete++;
+                              } else {
+                                countInWork--;
+                                countComplete++;
+                              }
+                            });
+                            _dt = _dt.substring(0, _indexMS);
+                            await db.update(
+                                'orders',
+                                {
+                                  'delivered': 1,
+                                  'date_finish': _dt,
+                                },
+                                where: 'id=?',
+                                whereArgs: [widget.order.id]);
+                            Navigator.pop(context);
+                            return Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
               break;
             default:
           }
@@ -370,5 +381,28 @@ class _OrderDetailState extends State<OrderDetail> {
         ],
       ),
     );
+  }
+
+  Future noActionDialog(BuildContext context, String reason) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              'Заказ $reason',
+              style: TextStyle(color: Colors.red),
+            ),
+            content:
+                Text('Заказ $reason. Данное действие для него не доступно.'),
+            actions: <Widget>[
+              FlatButton.icon(
+                icon: Icon(Icons.do_not_disturb_alt),
+                label: Text('Вернуться'),
+                textColor: Colors.red,
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
+          );
+        });
   }
 }
