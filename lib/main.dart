@@ -9,11 +9,12 @@ import 'package:sqflite/sqflite.dart';
 import 'models/orders.dart';
 // import 'models/couriers.dart';
 // import 'models/clients.dart';
+import 'title_orders.dart';
 
 // void main() => runApp(GelibertApp());
 Database db;
-int orderDelivered = 2;
-String mainTitle = 'Заказы';
+int orderDelivered;
+int countTitle;
 
 void main() async {
   db = await _openDB();
@@ -73,10 +74,12 @@ class OrdersPage extends StatefulWidget {
 class _OrdersPageState extends State<OrdersPage> {
   var _orders = Orders();
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  // }
+  @override
+  void initState() {
+    orderDelivered = 2;
+    countTitle = countAll;
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -90,11 +93,9 @@ class _OrdersPageState extends State<OrdersPage> {
       appBar: AppBar(
         // title: Text(mainTitle),
         title: TitleOrders(
+          countTitle,
           countAll,
-          countAll,
-          '/',
-          colorCounter: Colors.red,
-          colorCounterAll: Colors.blue,
+          orderDelivered,
         ),
       ),
       body: _orders.ordersListWidget(db, orderDelivered),
@@ -117,7 +118,7 @@ class _OrdersPageState extends State<OrdersPage> {
                 title: Text('Все заказы'),
                 onTap: () {
                   setState(() {
-                    mainTitle = 'Заказы ($countAll/$countAll)';
+                    countTitle = countAll;
                     return orderDelivered = 2;
                   });
                   Navigator.pop(context);
@@ -133,7 +134,7 @@ class _OrdersPageState extends State<OrdersPage> {
                 title: Text('В работе'),
                 onTap: () {
                   setState(() {
-                    mainTitle = 'Заказы в работе ($countInWork/$countAll)';
+                    countTitle = countInWork;
                     return orderDelivered = 0;
                   });
                   Navigator.pop(context);
@@ -153,7 +154,7 @@ class _OrdersPageState extends State<OrdersPage> {
                 title: Text('Выполненные'),
                 onTap: () {
                   setState(() {
-                    mainTitle = 'Заказы выполненные ($countComplete/$countAll)';
+                    countTitle = countComplete;
                     return orderDelivered = 1;
                   });
                   Navigator.pop(context);
@@ -173,7 +174,7 @@ class _OrdersPageState extends State<OrdersPage> {
                 title: Text('Отложенные'),
                 onTap: () {
                   setState(() {
-                    mainTitle = 'Заказы отложенные ($countDeffered/$countAll)';
+                    countTitle = countDeffered;
                     return orderDelivered = -1;
                   });
                   Navigator.pop(context);
@@ -191,42 +192,6 @@ class _OrdersPageState extends State<OrdersPage> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class TitleOrders extends StatelessWidget {
-  final int _counter;
-  final int _counterAll;
-  final String _delimiter;
-
-  final Color colorCounter;
-  final Color colorCounterAll;
-  final Color colorDelimiter;
-
-  TitleOrders(this._counter, this._counterAll, this._delimiter,
-      {this.colorCounter, this.colorCounterAll, this.colorDelimiter});
-
-  @override
-  Widget build(BuildContext context) {
-    return Chip(
-      label: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Text(
-            '$_counter',
-            style: TextStyle(color: colorCounter),
-          ),
-          Text(
-            _delimiter,
-            style: TextStyle(color: colorDelimiter),
-          ),
-          Text(
-            '$_counterAll',
-            style: TextStyle(color: colorCounterAll),
-          ),
-        ],
       ),
     );
   }

@@ -231,7 +231,7 @@ class _OrderDetailState extends State<OrderDetail> {
                                 _scaffoldKey.currentState.showSnackBar(
                                   SnackBar(
                                     content: Row(
-                                      children: <Widget>[ 
+                                      children: <Widget>[
                                         Text('Звонок на номер: '),
                                         client.clientTel(
                                             db, widget.order.clientId),
@@ -286,6 +286,7 @@ class _OrderDetailState extends State<OrderDetail> {
                             setState(() {
                               countInWork--;
                               countDeffered++;
+                              countTitle = countInWork;
                             });
                             await db.update('orders', {'delivered': -1},
                                 where: 'id=?', whereArgs: [widget.order.id]);
@@ -326,9 +327,11 @@ class _OrderDetailState extends State<OrderDetail> {
                               if (widget.order.delivered == -1) {
                                 countDeffered--;
                                 countComplete++;
+                                countTitle = countDeffered;
                               } else {
                                 countInWork--;
                                 countComplete++;
+                                countTitle = countInWork;
                               }
                             });
                             _dt = _dt.substring(0, _indexMS);
