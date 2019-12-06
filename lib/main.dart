@@ -110,9 +110,9 @@ class _OrdersPageState extends State<OrdersPage> {
                   backgroundImage: AssetImage('assets/images/Aqua.png'),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 20),
-              ),
+              // Padding(
+              //   padding: EdgeInsets.only(top: 20),
+              // ),
               ListTile(
                 leading: Icon(Icons.shopping_cart),
                 title: Text('Все заказы'),
@@ -129,6 +129,7 @@ class _OrdersPageState extends State<OrdersPage> {
                   ),
                 ),
               ),
+              Divider(),
               ListTile(
                 leading: Icon(Icons.airport_shuttle),
                 title: Text('В работе'),
@@ -149,6 +150,7 @@ class _OrdersPageState extends State<OrdersPage> {
                   backgroundColor: Colors.blue,
                 ),
               ),
+              Divider(),
               ListTile(
                 leading: Icon(Icons.check),
                 title: Text('Выполненные'),
@@ -169,6 +171,7 @@ class _OrdersPageState extends State<OrdersPage> {
                   backgroundColor: Colors.green,
                 ),
               ),
+              Divider(),
               ListTile(
                 leading: Icon(Icons.av_timer),
                 title: Text('Отложенные'),
