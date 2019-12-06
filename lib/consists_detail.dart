@@ -20,9 +20,9 @@ class ConsistsDetail extends StatelessWidget {
                     child: Text(
                       'Товар',
                       style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.normal,
-                        color: Colors.grey,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
                       ),
                     ),
                   ),
@@ -32,7 +32,7 @@ class ConsistsDetail extends StatelessWidget {
                       order.orderCost.toString() + ' Lei',
                       style: TextStyle(
                         fontSize: 18,
-                        fontWeight: FontWeight.normal,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     subtitle: Text('Оплата ${order.paymentMethod}'),
@@ -43,11 +43,12 @@ class ConsistsDetail extends StatelessWidget {
                     child: Text(
                       'Доставка клиенту',
                       style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
+                        fontSize: 18,
+                        color: Colors.blue,
                       ),
                     ),
                   ),
+                  Divider(),
                   for (int i = 0; i < order.consistsTo.length; i++)
                     Column(
                       children: [
@@ -72,11 +73,12 @@ class ConsistsDetail extends StatelessWidget {
                     child: Text(
                       'Возврат от клиента',
                       style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
+                        fontSize: 18,
+                        color: Colors.green,
                       ),
                     ),
                   ),
+                  Divider(),
                   for (int i = 0; i < order.consistsFrom.length; i++)
                     Column(
                       children: [
