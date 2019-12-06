@@ -66,7 +66,6 @@ class Orders {
       );
 
   factory Orders.fromSQL(Map<String, dynamic> sqlOrders) {
-    // bool _delivered = sqlOrders["delivered"] == 0 ? false : true;
     return new Orders(
       id: sqlOrders["id"],
       courierId: sqlOrders["courier_id"],
@@ -149,15 +148,13 @@ class Orders {
                   ],
                 ),
                 onTap: () {
-                  // if (ordersSnap.data[index].delivered == 1) {
-                  //   return;
-                  // }
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            OrderDetail(order: ordersSnap.data[index]),
-                      ));
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          OrderDetail(order: ordersSnap.data[index]),
+                    ),
+                  );
                 },
               ),
             );

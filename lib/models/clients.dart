@@ -54,7 +54,8 @@ class Clients {
               Text(
                 clientSnap.data.name,
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               Text(
@@ -68,6 +69,7 @@ class Clients {
               Text(
                 clientSnap.data.address,
                 style: TextStyle(
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gilebert/consists_detail.dart';
 import 'models/orders.dart';
 import 'models/clients.dart';
 import 'main.dart';
@@ -43,84 +44,49 @@ class _OrderDetailState extends State<OrderDetail> {
               padding: const EdgeInsets.all(8.0),
               child: client.clientData(db, widget.order.clientId),
             ),
-            Divider(),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Товар',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.grey,
-                ),
-              ),
-            ),
-            ListTile(
-              title: Text('Общая сумма'),
-              trailing: Text(
-                widget.order.orderCost.toString() + ' Lei',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
-            ),
-            Divider(),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Доставка клиенту',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
-                ),
-              ),
-            ),
-            for (int i = 0; i < widget.order.consistsTo.length; i++)
-              Column(
-                children: [
-                  ListTile(
-                    isThreeLine: true,
-                    title: Text(
-                      (i + 1).toString() +
-                          '. ' +
-                          widget.order.consistsTo[i].product,
+            Card(
+              child: ListTile(
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Flexible(
+                      child: Text(
+                        'Товар',
+                        style: TextStyle(),
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
+                      ),
                     ),
-                    subtitle: Text(
-                        '${widget.order.consistsTo[i].price}x${widget.order.consistsTo[i].quantity} шт.'),
-                    trailing: Text('Кол-во: \n' +
-                        widget.order.consistsTo[i].quantity.toString() +
-                        ' шт.'),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            ' Общая сумма: ',
+                          ),
+                          Text(
+                            '${widget.order.orderCost}',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(' Lei')
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                subtitle: Text('оплата: ${widget.order.paymentMethod}'),
+                trailing: Icon(Icons.arrow_forward_ios),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ConsistsDetail(order: widget.order),
                   ),
-                  Divider(),
-                ],
-              ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Возврат от клиента',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
                 ),
               ),
             ),
-            for (int i = 0; i < widget.order.consistsTo.length; i++)
-              Column(
-                children: [
-                  ListTile(
-                    title: Text(
-                      (i + 1).toString() +
-                          '. ' +
-                          widget.order.consistsFrom[i].product,
-                    ),
-                    trailing: Text('Кол-во: \n' +
-                        widget.order.consistsFrom[i].quantity.toString() +
-                        ' шт.'),
-                  ),
-                  Divider(),
-                ],
-              ),
             if (widget.order.delivered != 1)
               Card(
                 child: Builder(
@@ -396,7 +362,7 @@ class _OrderDetailState extends State<OrderDetail> {
               style: TextStyle(color: Colors.red),
             ),
             content:
-                Text('Заказ $reason. Данное действие для него не доступно.'),
+                Text('Заказ $reason. ��анное действие для него не доступно.'),
             actions: <Widget>[
               FlatButton.icon(
                 icon: Icon(Icons.do_not_disturb_alt),

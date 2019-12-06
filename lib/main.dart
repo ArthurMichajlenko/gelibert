@@ -100,100 +100,101 @@ class _OrdersPageState extends State<OrdersPage> {
       ),
       body: _orders.ordersListWidget(db, orderDelivered),
       drawer: Drawer(
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              UserAccountsDrawerHeader(
-                accountEmail: Text('BLAV437'),
-                accountName: Text('Name'),
-                currentAccountPicture: CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/Aqua.png'),
-                ),
+        child: Column(
+          children: <Widget>[
+            UserAccountsDrawerHeader(
+              accountEmail: Text('BLAV437'),
+              accountName: Text('Name'),
+              currentAccountPicture: CircleAvatar(
+                backgroundImage: AssetImage('assets/images/Aqua.png'),
               ),
-              // Padding(
-              //   padding: EdgeInsets.only(top: 20),
-              // ),
-              ListTile(
-                leading: Icon(Icons.shopping_cart),
-                title: Text('Все заказы'),
-                onTap: () {
-                  setState(() {
-                    countTitle = countAll;
-                    return orderDelivered = 2;
-                  });
-                  Navigator.pop(context);
-                },
-                trailing: Chip(
-                  label: Text(
-                    countAll.toString(),
-                  ),
-                ),
-              ),
-              Divider(),
-              ListTile(
-                leading: Icon(Icons.airport_shuttle),
-                title: Text('В работе'),
-                onTap: () {
-                  setState(() {
-                    countTitle = countInWork;
-                    return orderDelivered = 0;
-                  });
-                  Navigator.pop(context);
-                },
-                trailing: Chip(
-                  label: Text(
-                    countInWork.toString(),
-                    style: TextStyle(
-                      color: Colors.white,
+            ),
+            Expanded(
+              child: ListView(
+                children: <Widget>[
+                  ListTile(
+                    leading: Icon(Icons.shopping_cart),
+                    title: Text('Все заказы'),
+                    onTap: () {
+                      setState(() {
+                        countTitle = countAll;
+                        return orderDelivered = 2;
+                      });
+                      Navigator.pop(context);
+                    },
+                    trailing: Chip(
+                      label: Text(
+                        countAll.toString(),
+                      ),
                     ),
                   ),
-                  backgroundColor: Colors.blue,
-                ),
-              ),
-              Divider(),
-              ListTile(
-                leading: Icon(Icons.check),
-                title: Text('Выполненные'),
-                onTap: () {
-                  setState(() {
-                    countTitle = countComplete;
-                    return orderDelivered = 1;
-                  });
-                  Navigator.pop(context);
-                },
-                trailing: Chip(
-                  label: Text(
-                    countComplete.toString(),
-                    style: TextStyle(
-                      color: Colors.white,
+                  Divider(),
+                  ListTile(
+                    leading: Icon(Icons.airport_shuttle),
+                    title: Text('В работе'),
+                    onTap: () {
+                      setState(() {
+                        countTitle = countInWork;
+                        return orderDelivered = 0;
+                      });
+                      Navigator.pop(context);
+                    },
+                    trailing: Chip(
+                      label: Text(
+                        countInWork.toString(),
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      backgroundColor: Colors.blue,
                     ),
                   ),
-                  backgroundColor: Colors.green,
-                ),
-              ),
-              Divider(),
-              ListTile(
-                leading: Icon(Icons.av_timer),
-                title: Text('Отложенные'),
-                onTap: () {
-                  setState(() {
-                    countTitle = countDeffered;
-                    return orderDelivered = -1;
-                  });
-                  Navigator.pop(context);
-                },
-                trailing: Chip(
-                  label: Text(
-                    countDeffered.toString(),
-                    style: TextStyle(
-                      color: Colors.white,
+                  Divider(),
+                  ListTile(
+                    leading: Icon(Icons.check),
+                    title: Text('Выполненные'),
+                    onTap: () {
+                      setState(() {
+                        countTitle = countComplete;
+                        return orderDelivered = 1;
+                      });
+                      Navigator.pop(context);
+                    },
+                    trailing: Chip(
+                      label: Text(
+                        countComplete.toString(),
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      backgroundColor: Colors.green,
                     ),
                   ),
-                  backgroundColor: Colors.red,
-                ),
+                  Divider(),
+                  ListTile(
+                    leading: Icon(Icons.av_timer),
+                    title: Text('Отложенные'),
+                    onTap: () {
+                      setState(() {
+                        countTitle = countDeffered;
+                        return orderDelivered = -1;
+                      });
+                      Navigator.pop(context);
+                    },
+                    trailing: Chip(
+                      label: Text(
+                        countDeffered.toString(),
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      backgroundColor: Colors.red,
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
