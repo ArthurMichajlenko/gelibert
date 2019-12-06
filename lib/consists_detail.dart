@@ -35,6 +35,7 @@ class ConsistsDetail extends StatelessWidget {
                         fontWeight: FontWeight.normal,
                       ),
                     ),
+                    subtitle: Text('Оплата ${order.paymentMethod}'),
                   ),
                   Divider(),
                   Padding(
