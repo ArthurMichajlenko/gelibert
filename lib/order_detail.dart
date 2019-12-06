@@ -362,7 +362,7 @@ class _OrderDetailState extends State<OrderDetail> {
               style: TextStyle(color: Colors.red),
             ),
             content:
-                Text('Заказ $reason. ��анное действие для него не доступно.'),
+                Text('Заказ $reason. Данное действие для него не доступно.'),
             actions: <Widget>[
               FlatButton.icon(
                 icon: Icon(Icons.do_not_disturb_alt),
