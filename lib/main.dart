@@ -17,6 +17,7 @@ int orderDelivered;
 int countTitle;
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   db = await _openDB();
   runApp(GelibertApp());
 }
