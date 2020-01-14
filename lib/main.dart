@@ -1,4 +1,4 @@
-import 'dart:io';
+// import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,20 +25,34 @@ void main() async {
 Future<Database> _openDB() async {
   var databasePath = await getDatabasesPath();
   var path = join(databasePath, "gelibert.db");
-  var exists = await databaseExists(path);
-  if (!exists) {
-    // Creating database from assets
-    try {
-      await Directory(dirname(path)).create(recursive: true);
-    } catch (_) {}
-    //Copy from assets
-    ByteData data = await rootBundle.load(join("assets", "gelibert.db"));
-    List<int> bytes =
-        data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-    await File(path).writeAsBytes(bytes, flush: true);
-  }
+  // var exists = await databaseExists(path);
+  // if (!exists) {
+  //   // Creating database from assets
+  //   try {
+  //     await Directory(dirname(path)).create(recursive: true);
+  //   } catch (_) {}
+  //   //Copy from assets
+  //   ByteData data = await rootBundle.load(join("assets", "gelibert.db"));
+  //   List<int> bytes =
+  //       data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+  //   await File(path).writeAsBytes(bytes, flush: true);
+  // }
   // Open the database
-  final db = await openDatabase(path);
+  final db = await openDatabase(
+    path,
+    onCreate: (db, version) async {
+      String script =
+          await rootBundle.loadString(join("assets", "gelibert.sql"));
+      List<String> scripts = script.split(";");
+      scripts.forEach((v) {
+        if (v.isNotEmpty) {
+          // print(v.trim());
+          db.execute(v.trim());
+        }
+      });
+    },
+    version: 1,
+  );
   countAll =
       Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders'));
   countInWork = Sqflite.firstIntValue(
