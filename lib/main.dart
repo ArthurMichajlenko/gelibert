@@ -1,9 +1,14 @@
 // import 'dart:io';
 
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:http/http.dart' as http;
+import 'package:imei_plugin/imei_plugin.dart';
 
 //* uncomment when begin using models
 import 'models/orders.dart';
@@ -15,10 +20,24 @@ import 'title_orders.dart';
 Database db;
 int orderDelivered;
 int countTitle;
+String token;
+String imei;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  imei = await ImeiPlugin.getImei();
+  print(imei);
   db = await _openDB();
+  try {
+    token = await _fetchJWTToken('http://10.10.11.135:1323/login', imei);
+  } on SocketException {
+    print('on:');
+    token = 'on';
+  } catch (e) {
+    print(e);
+    token = 'catch';
+  }
+  print(token);
   runApp(GelibertApp());
 }
 
@@ -62,6 +81,17 @@ Future<Database> _openDB() async {
   countDeffered = Sqflite.firstIntValue(
       await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = -1'));
   return db;
+}
+
+Future<String> _fetchJWTToken(String url, String imei) async {
+  var res = await http.post(url, body: {'imei': imei});
+  print('Response status: ${res.statusCode}');
+  print('Response body: ${res.body}');
+  if (res.statusCode != 200) {
+    return "Unauthorized";
+  }
+  Map<String, dynamic> tk = jsonDecode(res.body);
+  return tk['token'];
 }
 
 class GelibertApp extends StatelessWidget {
