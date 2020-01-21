@@ -120,6 +120,8 @@ class ConnectToServer extends StatelessWidget {
         }
         print(token);
         // return OrdersPage(title: 'Заказы');
+        // return InitDB();
+        // Navigator.of(context).pushReplacementNamed('/initDB');
         return InitDB();
       },
       future: _fetchJWTToken(serverURL),
@@ -161,7 +163,13 @@ class GelibertApp extends StatelessWidget {
         primarySwatch: Colors.blueGrey,
       ),
       // home: OrdersPage(title: 'Заказы'),
-      home: ConnectToServer(),
+      // home: ConnectToServer(),
+      initialRoute: '/connectToServer',
+      routes: {
+        '/connectToServer': (context) => ConnectToServer(),
+        '/initDB': (context) => InitDB(),
+        'ordersPage': (context) => OrdersPage(title: 'Заказы'),
+      },
       debugShowCheckedModeBanner: false,
     );
   }
