@@ -1,7 +1,6 @@
 // import 'dart:io';
 
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,54 +17,30 @@ import 'title_orders.dart';
 
 // void main() => runApp(GelibertApp());
 Database db;
+String token;
+final serverURL = 'http://10.10.11.135:1323/login';
 int orderDelivered;
 int countTitle;
-String token;
-String imei;
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  imei = await ImeiPlugin.getImei();
-  print(imei);
-  db = await _openDB();
-  try {
-    token = await _fetchJWTToken('http://10.10.11.135:1323/login', imei);
-  } on SocketException {
-    print('on:');
-    token = 'on';
-  } catch (e) {
-    print(e);
-    token = 'catch';
-  }
-  print(token);
-  runApp(GelibertApp());
-}
+// void main() async {
+//   WidgetsFlutterBinding.ensureInitialized();
+//   db = await _openDB();
+//   runApp(GelibertApp());
+// }
+void main() => runApp(GelibertApp());
 
 Future<Database> _openDB() async {
   var databasePath = await getDatabasesPath();
   var path = join(databasePath, "gelibert.db");
-  // var exists = await databaseExists(path);
-  // if (!exists) {
-  //   // Creating database from assets
-  //   try {
-  //     await Directory(dirname(path)).create(recursive: true);
-  //   } catch (_) {}
-  //   //Copy from assets
-  //   ByteData data = await rootBundle.load(join("assets", "gelibert.db"));
-  //   List<int> bytes =
-  //       data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-  //   await File(path).writeAsBytes(bytes, flush: true);
-  // }
-  // Open the database
   final db = await openDatabase(
     path,
     onCreate: (db, version) async {
       String script =
-          await rootBundle.loadString(join("assets", "gelibert.sql"));
+          // await rootBundle.loadString(join("assets", "gelibert.sql"));
+          await rootBundle.loadString(join("assets", "gelibert_data.sql"));
       List<String> scripts = script.split(";");
       scripts.forEach((v) {
         if (v.isNotEmpty) {
-          // print(v.trim());
           db.execute(v.trim());
         }
       });
@@ -83,15 +58,98 @@ Future<Database> _openDB() async {
   return db;
 }
 
-Future<String> _fetchJWTToken(String url, String imei) async {
-  var res = await http.post(url, body: {'imei': imei});
-  print('Response status: ${res.statusCode}');
-  print('Response body: ${res.body}');
-  if (res.statusCode != 200) {
-    return "Unauthorized";
+Future<String> _fetchJWTToken(String url) async {
+  try {
+    var res = await http.post(url, body: {'imei': await ImeiPlugin.getImei()});
+    if (res.statusCode != 200) {
+      return "Unauthorized";
+    }
+    Map<String, dynamic> tk = jsonDecode(res.body);
+    return tk['token'];
+    // } on SocketException catch (e) {
+  } catch (_) {
+    return "Unconnect";
   }
-  Map<String, dynamic> tk = jsonDecode(res.body);
-  return tk['token'];
+}
+
+class ConnectToServer extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<String>(
+      builder: (context, startSnap) {
+        if (startSnap.connectionState == ConnectionState.none ||
+            startSnap.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text("Подключение..."),
+            ),
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+        token = startSnap.data;
+        // Navigator.of(context).pushReplacement(
+        //   MaterialPageRoute(
+        //     builder: (BuildContext context) => OrdersPage(
+        //       title: 'Заказы',
+        //     ),
+        //   ),
+        // );
+        if (token == 'Unauthorized') {
+          return AlertDialog(
+            title: Text('Unauthorized'),
+            content: Text('Устройство не зарегистрированно...'),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () => SystemNavigator.pop(),
+                  child: Text('Выйти из программы')),
+            ],
+          );
+        }
+        if (token == 'Unconnect') {
+          return AlertDialog(
+            title: Text('Unconnect'),
+            content: Text('Нет связи с сервером...'),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () => SystemNavigator.pop(),
+                  child: Text('Выйти из программы')),
+            ],
+          );
+        }
+        print(token);
+        // return OrdersPage(title: 'Заказы');
+        return InitDB();
+      },
+      future: _fetchJWTToken(serverURL),
+    );
+  }
+}
+
+class InitDB extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<Database>(
+      builder: (context, dbSnap) {
+        if (dbSnap.connectionState == ConnectionState.none ||
+            dbSnap.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text("Инициализация данных..."),
+            ),
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+        db = dbSnap.data;
+        print(db);
+        return OrdersPage(title: 'Заказы');
+      },
+      future: _openDB(),
+    );
+  }
 }
 
 class GelibertApp extends StatelessWidget {
@@ -102,7 +160,8 @@ class GelibertApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
       ),
-      home: OrdersPage(title: 'Заказы'),
+      // home: OrdersPage(title: 'Заказы'),
+      home: ConnectToServer(),
       debugShowCheckedModeBanner: false,
     );
   }
