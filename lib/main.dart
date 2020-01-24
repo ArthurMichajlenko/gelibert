@@ -17,8 +17,9 @@ import 'title_orders.dart';
 
 // void main() => runApp(GelibertApp());
 Database db;
-String token;
+String token = 'Notoken';
 final serverURL = 'http://10.10.11.135:1323/login';
+bool connected = false;
 int orderDelivered;
 int countTitle;
 
@@ -32,47 +33,65 @@ void main() => runApp(GelibertApp());
 Future<Database> _openDB() async {
   var databasePath = await getDatabasesPath();
   var path = join(databasePath, "gelibert.db");
-  final db = await openDatabase(
+  final _db = await openDatabase(
     path,
-    onCreate: (db, version) async {
+    onCreate: (_db, version) async {
       String script =
           // await rootBundle.loadString(join("assets", "gelibert.sql"));
           await rootBundle.loadString(join("assets", "gelibert_data.sql"));
       List<String> scripts = script.split(";");
       scripts.forEach((v) {
         if (v.isNotEmpty) {
-          db.execute(v.trim());
+          _db.execute(v.trim());
         }
       });
     },
     version: 1,
   );
   countAll =
-      Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders'));
+      Sqflite.firstIntValue(await _db.rawQuery('SELECT COUNT(*) FROM orders'));
   countInWork = Sqflite.firstIntValue(
-      await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 0'));
+      await _db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 0'));
   countComplete = Sqflite.firstIntValue(
-      await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 1'));
+      await _db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 1'));
   countDeffered = Sqflite.firstIntValue(
-      await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = -1'));
-  return db;
+      await _db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = -1'));
+  return _db;
 }
 
 Future<String> _fetchJWTToken(String url) async {
-  try {
-    var res = await http.post(url, body: {'imei': await ImeiPlugin.getImei()});
-    if (res.statusCode != 200) {
-      return "Unauthorized";
+  if (token == 'Notoken' || token == 'Unconnect') {
+    try {
+      var res =
+          await http.post(url, body: {'imei': await ImeiPlugin.getImei()});
+      if (res.statusCode != 200) {
+        connected = false;
+        return "Unauthorized";
+      }
+      Map<String, dynamic> tk = jsonDecode(res.body);
+      connected = true;
+      return tk['token'];
+      // } on SocketException catch (e) {
+    } catch (_) {
+      connected = false;
+      return "Unconnect";
     }
-    Map<String, dynamic> tk = jsonDecode(res.body);
-    return tk['token'];
-    // } on SocketException catch (e) {
-  } catch (_) {
-    return "Unconnect";
   }
+  return token;
 }
 
-class ConnectToServer extends StatelessWidget {
+Color _connectColor() {
+  Color colorBackground;
+  colorBackground = connected ? Colors.blueGrey : Colors.red;
+  return colorBackground;
+}
+
+class ConnectToServer extends StatefulWidget {
+  @override
+  _ConnectToServerState createState() => _ConnectToServerState();
+}
+
+class _ConnectToServerState extends State<ConnectToServer> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<String>(
@@ -110,11 +129,16 @@ class ConnectToServer extends StatelessWidget {
         if (token == 'Unconnect') {
           return AlertDialog(
             title: Text('Unconnect'),
-            content: Text('Нет связи с сервером...'),
+            content: Text('Нет связи с сервером...\nДанные не актуальны.'),
             actions: <Widget>[
               FlatButton(
-                  onPressed: () => SystemNavigator.pop(),
-                  child: Text('Выйти из программы')),
+                onPressed: () => setState(() {}),
+                child: Text('Попробывать еще раз'),
+              ),
+              FlatButton(
+                onPressed: () => Navigator.pushNamed(context, '/initDB'),
+                child: Text('Продолжить'),
+              ),
             ],
           );
         }
@@ -129,7 +153,12 @@ class ConnectToServer extends StatelessWidget {
   }
 }
 
-class InitDB extends StatelessWidget {
+class InitDB extends StatefulWidget {
+  @override
+  _InitDBState createState() => _InitDBState();
+}
+
+class _InitDBState extends State<InitDB> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Database>(
@@ -204,6 +233,7 @@ class _OrdersPageState extends State<OrdersPage> {
     return Scaffold(
       appBar: AppBar(
         // title: Text(mainTitle),
+        backgroundColor: _connectColor(),
         title: TitleOrders(
           countTitle,
           countAll,
