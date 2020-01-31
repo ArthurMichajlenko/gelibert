@@ -80,7 +80,7 @@ Future<String> _fetchJWTToken(String url) async {
   return token;
 }
 
-Color _connectColor() {
+Color connectColor() {
   Color colorBackground;
   colorBackground = connected ? Colors.blueGrey : Colors.red;
   return colorBackground;
@@ -132,12 +132,15 @@ class _ConnectToServerState extends State<ConnectToServer> {
             content: Text('Нет связи с сервером...\nДанные не актуальны.'),
             actions: <Widget>[
               FlatButton(
+                child: Text('Подключитьcя...'),
                 onPressed: () => setState(() {}),
-                child: Text('Попробывать еще раз'),
               ),
               FlatButton(
-                onPressed: () => Navigator.pushNamed(context, '/initDB'),
                 child: Text('Продолжить'),
+                onPressed: () {
+                  setState(() => connected = false);
+                  return Navigator.pushNamed(context, '/initDB');
+                },
               ),
             ],
           );
@@ -233,7 +236,7 @@ class _OrdersPageState extends State<OrdersPage> {
     return Scaffold(
       appBar: AppBar(
         // title: Text(mainTitle),
-        backgroundColor: _connectColor(),
+        backgroundColor: connectColor(),
         title: TitleOrders(
           countTitle,
           countAll,

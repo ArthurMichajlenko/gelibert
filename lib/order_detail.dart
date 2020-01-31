@@ -31,6 +31,7 @@ class _OrderDetailState extends State<OrderDetail> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
+        backgroundColor: connectColor(),
         title: Text("Заказ № ${widget.order.id}"),
       ),
       body: SingleChildScrollView(

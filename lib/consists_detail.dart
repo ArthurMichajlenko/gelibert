@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'main.dart';
 import 'models/orders.dart';
 
 class ConsistsDetail extends StatelessWidget {
@@ -10,6 +11,7 @@ class ConsistsDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: connectColor(),
         title: Text('Заказ № ${order.id}'),
       ),
       body:  SingleChildScrollView(
