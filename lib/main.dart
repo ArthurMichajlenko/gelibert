@@ -200,7 +200,7 @@ class GelibertApp extends StatelessWidget {
       routes: {
         '/connectToServer': (context) => ConnectToServer(),
         '/initDB': (context) => InitDB(),
-        'ordersPage': (context) => OrdersPage(title: 'Заказы'),
+        '/ordersPage': (context) => OrdersPage(title: 'Заказы'),
       },
       debugShowCheckedModeBanner: false,
     );
@@ -242,6 +242,27 @@ class _OrdersPageState extends State<OrdersPage> {
           countAll,
           orderDelivered,
         ),
+        actions: <Widget>[
+          if (connected)
+            IconButton(
+              icon: Icon(
+                Icons.autorenew,
+                color: Colors.white,
+              ),
+              onPressed: null,
+            )
+          else
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                child: Center(
+                  child: CircularProgressIndicator(
+                    backgroundColor: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
       body: _orders.ordersListWidget(db, orderDelivered),
       drawer: Drawer(
