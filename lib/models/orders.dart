@@ -217,18 +217,21 @@ class Consist {
   String product;
   double quantity;
   double price;
+  String extInfo;
 
   Consist({
     this.id,
     this.product,
     this.quantity,
     this.price,
+    this.extInfo,
   });
 
   factory Consist.fromJson(Map<String, dynamic> json) => new Consist(
         product: json["product"],
         quantity: json["quantity"].toDouble(),
         price: json["price"],
+        extInfo: json["ext_info"],
       );
 
   factory Consist.fromSQL(Map<String, dynamic> sql) {
@@ -237,6 +240,7 @@ class Consist {
       product: sql["product"],
       quantity: sql["quantity"],
       price: sql["price"],
+      extInfo: sql["ext_info"],
     );
   }
 
@@ -244,5 +248,6 @@ class Consist {
         "product": product,
         "quantity": quantity,
         "price": price,
+        "ext_info": extInfo,
       };
 }

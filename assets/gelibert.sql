@@ -2,13 +2,15 @@ CREATE TABLE IF NOT EXISTS "consists_from" (
 	"id"	INTEGER,
 	"product"	TEXT,
 	"quantity"	REAL,
-	"price"	REAL
+	"price"	REAL,
+	"ext_info" TEXT
 );
 CREATE TABLE IF NOT EXISTS "consists_to" (
 	"id"	INTEGER,
 	"product"	TEXT,
 	"quantity"	REAL,
-	"price"	REAL
+	"price"	REAL,
+	"ext_info" TEXT
 );
 CREATE TABLE IF NOT EXISTS "orders" (
 	"id"	INTEGER NOT NULL UNIQUE,

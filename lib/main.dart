@@ -1,6 +1,8 @@
 // import 'dart:io';
 
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,7 +20,8 @@ import 'title_orders.dart';
 // void main() => runApp(GelibertApp());
 Database db;
 String token = 'Notoken';
-final serverURL = 'http://10.10.11.135:1323/login';
+// final serverURL = 'http://10.10.11.135:1323/login';
+final serverURL = 'http://10.10.11.135:1323';
 bool connected = false;
 int orderDelivered;
 int countTitle;
@@ -62,8 +65,8 @@ Future<Database> _openDB() async {
 Future<String> _fetchJWTToken(String url) async {
   if (token == 'Notoken' || token == 'Unconnect') {
     try {
-      var res =
-          await http.post(url, body: {'imei': await ImeiPlugin.getImei()});
+      var res = await http
+          .post(url + "/login", body: {'imei': await ImeiPlugin.getImei()});
       if (res.statusCode != 200) {
         connected = false;
         return "Unauthorized";
@@ -78,6 +81,17 @@ Future<String> _fetchJWTToken(String url) async {
     }
   }
   return token;
+}
+
+void _fetchDataToSQL(String url) async {
+  final response = await http.read(url + "/data/orders",
+      headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
+  final responseJSON = jsonDecode(response);
+  print(responseJSON);
+  print("-------------------------------------");
+  print(response);
+  var orders = ordersFromJson(response);
+  print(orders);
 }
 
 Color connectColor() {
@@ -249,7 +263,12 @@ class _OrdersPageState extends State<OrdersPage> {
                 Icons.autorenew,
                 color: Colors.white,
               ),
-              onPressed: null,
+              // onPressed: () {
+              //   setState(() => connected = false);
+              //   Timer(const Duration(seconds: 10),
+              //       () => setState(() => connected = true));
+              // },
+              onPressed: () => _fetchDataToSQL(serverURL),
             )
           else
             Padding(

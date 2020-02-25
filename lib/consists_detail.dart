@@ -1,21 +1,28 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'main.dart';
 import 'models/orders.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 
-class ConsistsDetail extends StatelessWidget {
+class ConsistsDetail extends StatefulWidget {
   final Orders order;
-  String serialNumber;
 
   ConsistsDetail({Key key, @required this.order}) : super(key: key);
+
+  @override
+  _ConsistsDetailState createState() => _ConsistsDetailState();
+}
+
+class _ConsistsDetailState extends State<ConsistsDetail> {
+  String extInfo;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: connectColor(),
-        title: Text('Заказ № ${order.id}'),
+        title: Text('Заказ № ${widget.order.id}'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -34,13 +41,13 @@ class ConsistsDetail extends StatelessWidget {
             ListTile(
               title: Text('Общая сумма'),
               trailing: Text(
-                order.orderCost.toString() + ' Lei',
+                widget.order.orderCost.toString() + ' Lei',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              subtitle: Text('Оплата ${order.paymentMethod}'),
+              subtitle: Text('Оплата ${widget.order.paymentMethod}'),
             ),
             Divider(),
             Padding(
@@ -54,18 +61,52 @@ class ConsistsDetail extends StatelessWidget {
               ),
             ),
             Divider(),
-            for (int i = 0; i < order.consistsTo.length; i++)
+            for (int i = 0; i < widget.order.consistsTo.length; i++)
               Column(
                 children: [
                   ListTile(
                     isThreeLine: true,
                     title: Text(
-                      (i + 1).toString() + '. ' + order.consistsTo[i].product,
+                      (i + 1).toString() +
+                          '. ' +
+                          widget.order.consistsTo[i].product,
                     ),
-                    subtitle: Text(
-                        '${order.consistsTo[i].price}x${order.consistsTo[i].quantity} шт.'),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                              '${widget.order.consistsTo[i].price}x${widget.order.consistsTo[i].quantity} шт.'),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: TextField(
+                            controller: TextEditingController(
+                              text: widget.order.consistsTo[i].extInfo,
+                            ),
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.symmetric(
+                                vertical: 1.0,
+                                horizontal: 4.0,
+                              ),
+                              border: OutlineInputBorder(),
+                              labelText: 'Доп.инф (S/N...)',
+                              suffixIcon: GestureDetector(
+                                dragStartBehavior: DragStartBehavior.down,
+                                child: Icon(
+                                  Icons.camera_alt,
+                                  size: 40,
+                                ),
+                                onTap: scan,
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                     trailing: Text('Кол-во: \n' +
-                        order.consistsTo[i].quantity.toString() +
+                        widget.order.consistsTo[i].quantity.toString() +
                         ' шт.'),
                   ),
                   Divider(),
@@ -82,31 +123,42 @@ class ConsistsDetail extends StatelessWidget {
               ),
             ),
             Divider(),
-            for (int i = 0; i < order.consistsFrom.length; i++)
+            for (int i = 0; i < widget.order.consistsFrom.length; i++)
               Column(
                 children: [
                   ListTile(
                     isThreeLine: true,
                     title: Text(
-                      (i + 1).toString() + '. ' + order.consistsFrom[i].product,
+                      (i + 1).toString() +
+                          '. ' +
+                          widget.order.consistsFrom[i].product,
                     ),
-                    subtitle: TextField(
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: 1.0,
-                          horizontal: 4.0,
+                    subtitle: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        controller: TextEditingController(
+                          text: widget.order.consistsFrom[i].extInfo,
                         ),
-                        border: OutlineInputBorder(),
-                        labelText: 'S/N',
-                        suffixIcon: GestureDetector(
-                          dragStartBehavior: DragStartBehavior.down,
-                          child: Icon(Icons.scanner),
-                          onTap: () => print('scan'),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 1.0,
+                            horizontal: 4.0,
+                          ),
+                          border: OutlineInputBorder(),
+                          labelText: 'Доп.инф (S/N...)',
+                          suffixIcon: GestureDetector(
+                            dragStartBehavior: DragStartBehavior.down,
+                            child: Icon(
+                              Icons.camera_alt,
+                              size: 40,
+                            ),
+                            onTap: scan,
+                          ),
                         ),
                       ),
                     ),
                     trailing: Text('Кол-во: \n' +
-                        order.consistsFrom[i].quantity.toString() +
+                        widget.order.consistsFrom[i].quantity.toString() +
                         ' шт.'),
                   ),
                   Divider(),
@@ -121,7 +173,19 @@ class ConsistsDetail extends StatelessWidget {
   Future scan() async {
     try {
       String code = await BarcodeScanner.scan();
-      setState(()=>this.serialNumber=code)
-    } catch (e) {}
+      setState(() => extInfo = code);
+    } on PlatformException catch (e) {
+      if (e.code == BarcodeScanner.CameraAccessDenied) {
+        setState(() => extInfo = 'Camera permission not granted');
+      } else {
+        setState(() => extInfo = 'Unknown error: $e');
+      }
+    } on FormatException {
+      setState(() => extInfo =
+          'null (User returned using the "back"-button before scanning anything)');
+    } catch (e) {
+      setState(() => extInfo = 'Unknown error: $e');
+    }
+    print(extInfo);
   }
 }
