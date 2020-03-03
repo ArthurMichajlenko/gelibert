@@ -143,4 +143,11 @@ class Clients {
         "tel": tel,
         "address": address,
       };
+
+  Map<String, dynamic> toSQL() => {
+        "id": id,
+        "name": name,
+        "tel": tel,
+        "address": address,
+      };
 }

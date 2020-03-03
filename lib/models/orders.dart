@@ -34,6 +34,7 @@ class Orders {
   int deliveryDelay;
   String dateStart;
   String dateFinish;
+  // String timestamp;
 
   Orders({
     this.id,
@@ -47,6 +48,7 @@ class Orders {
     this.deliveryDelay,
     this.dateStart,
     this.dateFinish,
+    // this.timestamp,
   });
 
   factory Orders.fromJson(Map<String, dynamic> json) => new Orders(
@@ -55,14 +57,15 @@ class Orders {
         clientId: json["client_id"],
         paymentMethod: json["payment_method"],
         consistsTo: new List<Consist>.from(
-            json["consists"].map((x) => Consist.fromJson(x))),
+            json["consists_to"].map((x) => Consist.fromJson(x))),
         consistsFrom: new List<Consist>.from(
-            json["consists"].map((x) => Consist.fromJson(x))),
+            json["consists_from"].map((x) => Consist.fromJson(x))),
         orderCost: json["order_cost"].toDouble(),
         delivered: json["delivered"],
         deliveryDelay: json["delivery_delay"],
         dateStart: json["date_start"],
         dateFinish: json["date_finish"],
+        // timestamp: json["timestamp"],
       );
 
   factory Orders.fromSQL(Map<String, dynamic> sqlOrders) {
@@ -95,6 +98,20 @@ class Orders {
         "delivery_delay": deliveryDelay,
         "date_start": dateStart,
         "date_finish": dateFinish,
+        // "timestamp": timestamp,
+      };
+
+  Map<String, dynamic> toSQL() => {
+        "id": id,
+        "courier_id": courierId,
+        "client_id": clientId,
+        "payment_method": paymentMethod,
+        "order_cost": orderCost,
+        "delivered": delivered,
+        "delivery_delay": deliveryDelay,
+        "date_start": dateStart,
+        "date_finish": dateFinish,
+        // "timestamp": timestamp,
       };
 
   Widget ordersListWidget(Database db, int delivered) {
@@ -245,6 +262,14 @@ class Consist {
   }
 
   Map<String, dynamic> toJson() => {
+        "product": product,
+        "quantity": quantity,
+        "price": price,
+        "ext_info": extInfo,
+      };
+
+  Map<String, dynamic> toSQL() => {
+        "id": id,
         "product": product,
         "quantity": quantity,
         "price": price,

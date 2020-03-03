@@ -11,16 +11,18 @@ import 'package:sqflite/sqflite.dart';
 import 'package:http/http.dart' as http;
 import 'package:imei_plugin/imei_plugin.dart';
 
-//* uncomment when begin using models
 import 'models/orders.dart';
-// import 'models/couriers.dart';
-// import 'models/clients.dart';
+import 'models/couriers.dart';
+import 'models/clients.dart';
 import 'title_orders.dart';
 
 // void main() => runApp(GelibertApp());
 Database db;
 String token = 'Notoken';
+int imei;
+// Couriers courier;
 // final serverURL = 'http://10.10.11.135:1323/login';
+// final serverURL = 'http://192.168.0.113:1323';
 final serverURL = 'http://10.10.11.135:1323';
 bool connected = false;
 int orderDelivered;
@@ -40,8 +42,8 @@ Future<Database> _openDB() async {
     path,
     onCreate: (_db, version) async {
       String script =
-          // await rootBundle.loadString(join("assets", "gelibert.sql"));
-          await rootBundle.loadString(join("assets", "gelibert_data.sql"));
+          await rootBundle.loadString(join("assets", "gelibert.sql"));
+      // await rootBundle.loadString(join("assets", "gelibert_data.sql"));
       List<String> scripts = script.split(";");
       scripts.forEach((v) {
         if (v.isNotEmpty) {
@@ -63,10 +65,11 @@ Future<Database> _openDB() async {
 }
 
 Future<String> _fetchJWTToken(String url) async {
+  imei = int.parse(await ImeiPlugin.getImei());
   if (token == 'Notoken' || token == 'Unconnect') {
     try {
-      var res = await http
-          .post(url + "/login", body: {'imei': await ImeiPlugin.getImei()});
+      var res =
+          await http.post(url + "/login", body: {'imei': imei.toString()});
       if (res.statusCode != 200) {
         connected = false;
         return "Unauthorized";
@@ -83,15 +86,78 @@ Future<String> _fetchJWTToken(String url) async {
   return token;
 }
 
-void _fetchDataToSQL(String url) async {
-  final response = await http.read(url + "/data/orders",
-      headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
-  final responseJSON = jsonDecode(response);
-  print(responseJSON);
-  print("-------------------------------------");
-  print(response);
-  var orders = ordersFromJson(response);
-  print(orders);
+Future _fetchDataToSQL(String url) async {
+  http.Response response;
+  List<Orders> orders;
+  List<Couriers> couriers;
+  List<Clients> clients;
+  try {
+    response = await http.get(url + "/data/orders",
+        headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
+    if (response.statusCode != 200) {
+      connected = false;
+      return;
+    } else {
+      connected = true;
+      orders = ordersFromJson(response.body);
+      var sqlRes = await db.query('orders');
+      if (sqlRes.isNotEmpty) {
+        await db.delete('orders');
+        await db.delete('consists_to');
+        await db.delete('consists_from');
+      }
+      orders.forEach((x) async {
+        await db.insert('orders', x.toSQL());
+        x.consistsTo.forEach((y) async {
+          y.id = x.id;
+          return await db.insert('consists_to', y.toSQL());
+        });
+        x.consistsFrom.forEach((y) async {
+          y.id = x.id;
+          return await db.insert('consists_from', y.toSQL());
+        });
+        return;
+      });
+    }
+    response = await http.get(url + "/data/couriers",
+        headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
+    if (response.statusCode != 200) {
+      connected = false;
+      return;
+    } else {
+      connected = true;
+      couriers = couriersFromJson(response.body);
+      var sqlRes = await db.query('couriers');
+      if (sqlRes.isNotEmpty) {
+        await db.delete('couriers');
+      }
+      couriers.forEach((x) async {
+        await db.insert('couriers', x.toSQL());
+        return;
+      });
+    }
+    response = await http.get(url + "/data/clients",
+        headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
+    if (response.statusCode != 200) {
+      connected = false;
+      return;
+    } else {
+      connected = true;
+      clients = clientsFromJson(response.body);
+      var sqlRes = await db.query('clients');
+      if (sqlRes.isNotEmpty) {
+        await db.delete('clients');
+      }
+      clients.forEach((x) async {
+        await db.insert('clients', x.toSQL());
+        return;
+      });
+    }
+  } catch (e) {
+    print(e);
+    connected = false;
+    return;
+  }
 }
 
 Color connectColor() {
@@ -231,6 +297,7 @@ class OrdersPage extends StatefulWidget {
 
 class _OrdersPageState extends State<OrdersPage> {
   var _orders = Orders();
+  var _courier = Couriers();
 
   @override
   void initState() {
@@ -268,7 +335,10 @@ class _OrdersPageState extends State<OrdersPage> {
               //   Timer(const Duration(seconds: 10),
               //       () => setState(() => connected = true));
               // },
-              onPressed: () => _fetchDataToSQL(serverURL),
+              onPressed: () async {
+                await _fetchDataToSQL(serverURL);
+                setState(() {});
+              },
             )
           else
             Padding(
@@ -288,8 +358,8 @@ class _OrdersPageState extends State<OrdersPage> {
         child: Column(
           children: <Widget>[
             UserAccountsDrawerHeader(
-              accountEmail: Text('BLAV437'),
-              accountName: Text('Name'),
+              accountEmail: _courier.courierCarNumber(db, imei),
+              accountName: _courier.courierName(db, imei),
               currentAccountPicture: CircleAvatar(
                 backgroundImage: AssetImage('assets/images/Aqua.png'),
               ),
