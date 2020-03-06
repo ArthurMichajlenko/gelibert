@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'main.dart';
+// import 'main.dart';
 import 'models/orders.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 
@@ -15,13 +15,32 @@ class ConsistsDetail extends StatefulWidget {
 }
 
 class _ConsistsDetailState extends State<ConsistsDetail> {
-  String extInfo;
+  // String extInfo;
+  // var extInfoTo = List<String>();
+  // var extInfoFrom = List<String>();
+
+  // @override
+  // initState() {
+  //   if (extInfoTo.isEmpty) {
+  //     for (var i = 0; i < widget.order.consistsTo.length; i++) {
+  //       extInfoTo.add(widget.order.consistsTo[i].extInfo);
+  //       // extInfoTo[i] = widget.order.consistsTo[i].extInfo;
+  //     }
+  //   }
+  //   if (extInfoFrom.isEmpty) {
+  //     for (var i = 0; i < widget.order.consistsFrom.length; i++) {
+  //       extInfoFrom.add(widget.order.consistsFrom[i].extInfo);
+  //       // extInfoFrom[i] = widget.order.consistsFrom[i].extInfo;
+  //     }
+  //   }
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: connectColor(),
+        // backgroundColor: connectColor(),
         title: Text('Заказ № ${widget.order.id}'),
       ),
       body: SingleChildScrollView(
@@ -98,7 +117,11 @@ class _ConsistsDetailState extends State<ConsistsDetail> {
                                   Icons.camera_alt,
                                   size: 40,
                                 ),
-                                onTap: scan,
+                                onTap: () async {
+                                  widget.order.consistsTo[i].extInfo =
+                                      await scan();
+                                  setState(() {});
+                                },
                               ),
                             ),
                           ),
@@ -152,7 +175,11 @@ class _ConsistsDetailState extends State<ConsistsDetail> {
                               Icons.camera_alt,
                               size: 40,
                             ),
-                            onTap: scan,
+                            onTap: () async {
+                              widget.order.consistsFrom[i].extInfo =
+                                  await scan();
+                              setState(() {});
+                            },
                           ),
                         ),
                       ),
@@ -170,22 +197,32 @@ class _ConsistsDetailState extends State<ConsistsDetail> {
     );
   }
 
+//   Future scan() async {
+//     try {
+//       String code = await BarcodeScanner.scan();
+//       setState(() => extInfo = code);
+//     } on PlatformException catch (e) {
+//       if (e.code == BarcodeScanner.CameraAccessDenied) {
+//         setState(() => extInfo = 'Camera permission not granted');
+//       } else {
+//         setState(() => extInfo = 'Unknown error: $e');
+//       }
+//     } on FormatException {
+//       setState(() => extInfo =
+//           'null (User returned using the "back"-button before scanning anything)');
+//     } catch (e) {
+//       setState(() => extInfo = 'Unknown error: $e');
+//     }
+//     print(extInfo);
+//   }
+// }
   Future scan() async {
+    String extInfo;
     try {
       String code = await BarcodeScanner.scan();
-      setState(() => extInfo = code);
-    } on PlatformException catch (e) {
-      if (e.code == BarcodeScanner.CameraAccessDenied) {
-        setState(() => extInfo = 'Camera permission not granted');
-      } else {
-        setState(() => extInfo = 'Unknown error: $e');
-      }
-    } on FormatException {
-      setState(() => extInfo =
-          'null (User returned using the "back"-button before scanning anything)');
-    } catch (e) {
-      setState(() => extInfo = 'Unknown error: $e');
-    }
-    print(extInfo);
+      extInfo = code;
+    } catch (_) {}
+    // print(extInfo);
+    return extInfo;
   }
 }

@@ -2,7 +2,7 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
+// import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,18 +13,20 @@ import 'package:imei_plugin/imei_plugin.dart';
 
 import 'models/orders.dart';
 import 'models/couriers.dart';
-import 'models/clients.dart';
+// import 'models/clients.dart';
 import 'title_orders.dart';
 
 // void main() => runApp(GelibertApp());
 Database db;
+
 String token = 'Notoken';
-int imei;
+int imei=123456789012300;
+
 // Couriers courier;
 // final serverURL = 'http://10.10.11.135:1323/login';
 // final serverURL = 'http://192.168.0.113:1323';
 final serverURL = 'http://10.10.11.135:1323';
-bool connected = false;
+bool connected = true;
 int orderDelivered;
 int countTitle;
 
@@ -42,8 +44,8 @@ Future<Database> _openDB() async {
     path,
     onCreate: (_db, version) async {
       String script =
-          await rootBundle.loadString(join("assets", "gelibert.sql"));
-      // await rootBundle.loadString(join("assets", "gelibert_data.sql"));
+          // await rootBundle.loadString(join("assets", "gelibert.sql"));
+      await rootBundle.loadString(join("assets", "gelibert_data.sql"));
       List<String> scripts = script.split(";");
       scripts.forEach((v) {
         if (v.isNotEmpty) {
@@ -86,79 +88,79 @@ Future<String> _fetchJWTToken(String url) async {
   return token;
 }
 
-Future _fetchDataToSQL(String url) async {
-  http.Response response;
-  List<Orders> orders;
-  List<Couriers> couriers;
-  List<Clients> clients;
-  try {
-    response = await http.get(url + "/data/orders",
-        headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
-    if (response.statusCode != 200) {
-      connected = false;
-      return;
-    } else {
-      connected = true;
-      orders = ordersFromJson(response.body);
-      var sqlRes = await db.query('orders');
-      if (sqlRes.isNotEmpty) {
-        await db.delete('orders');
-        await db.delete('consists_to');
-        await db.delete('consists_from');
-      }
-      orders.forEach((x) async {
-        await db.insert('orders', x.toSQL());
-        x.consistsTo.forEach((y) async {
-          y.id = x.id;
-          return await db.insert('consists_to', y.toSQL());
-        });
-        x.consistsFrom.forEach((y) async {
-          y.id = x.id;
-          return await db.insert('consists_from', y.toSQL());
-        });
-        return;
-      });
-    }
-    response = await http.get(url + "/data/couriers",
-        headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
-    if (response.statusCode != 200) {
-      connected = false;
-      return;
-    } else {
-      connected = true;
-      couriers = couriersFromJson(response.body);
-      var sqlRes = await db.query('couriers');
-      if (sqlRes.isNotEmpty) {
-        await db.delete('couriers');
-      }
-      couriers.forEach((x) async {
-        await db.insert('couriers', x.toSQL());
-        return;
-      });
-    }
-    response = await http.get(url + "/data/clients",
-        headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
-    if (response.statusCode != 200) {
-      connected = false;
-      return;
-    } else {
-      connected = true;
-      clients = clientsFromJson(response.body);
-      var sqlRes = await db.query('clients');
-      if (sqlRes.isNotEmpty) {
-        await db.delete('clients');
-      }
-      clients.forEach((x) async {
-        await db.insert('clients', x.toSQL());
-        return;
-      });
-    }
-  } catch (e) {
-    print(e);
-    connected = false;
-    return;
-  }
-}
+// Future _fetchDataToSQL(String url) async {
+//   http.Response response;
+//   List<Orders> orders;
+//   List<Couriers> couriers;
+//   List<Clients> clients;
+//   try {
+//     response = await http.get(url + "/data/orders",
+//         headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
+//     if (response.statusCode != 200) {
+//       connected = false;
+//       return;
+//     } else {
+//       connected = true;
+//       orders = ordersFromJson(response.body);
+//       var sqlRes = await db.query('orders');
+//       if (sqlRes.isNotEmpty) {
+//         await db.delete('orders');
+//         await db.delete('consists_to');
+//         await db.delete('consists_from');
+//       }
+//       orders.forEach((x) async {
+//         await db.insert('orders', x.toSQL());
+//         x.consistsTo.forEach((y) async {
+//           y.id = x.id;
+//           return await db.insert('consists_to', y.toSQL());
+//         });
+//         x.consistsFrom.forEach((y) async {
+//           y.id = x.id;
+//           return await db.insert('consists_from', y.toSQL());
+//         });
+//         return;
+//       });
+//     }
+//     response = await http.get(url + "/data/couriers",
+//         headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
+//     if (response.statusCode != 200) {
+//       connected = false;
+//       return;
+//     } else {
+//       connected = true;
+//       couriers = couriersFromJson(response.body);
+//       var sqlRes = await db.query('couriers');
+//       if (sqlRes.isNotEmpty) {
+//         await db.delete('couriers');
+//       }
+//       couriers.forEach((x) async {
+//         await db.insert('couriers', x.toSQL());
+//         return;
+//       });
+//     }
+//     response = await http.get(url + "/data/clients",
+//         headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
+//     if (response.statusCode != 200) {
+//       connected = false;
+//       return;
+//     } else {
+//       connected = true;
+//       clients = clientsFromJson(response.body);
+//       var sqlRes = await db.query('clients');
+//       if (sqlRes.isNotEmpty) {
+//         await db.delete('clients');
+//       }
+//       clients.forEach((x) async {
+//         await db.insert('clients', x.toSQL());
+//         return;
+//       });
+//     }
+//   } catch (e) {
+//     print(e);
+//     connected = false;
+//     return;
+//   }
+// }
 
 Color connectColor() {
   Color colorBackground;
@@ -276,7 +278,8 @@ class GelibertApp extends StatelessWidget {
       ),
       // home: OrdersPage(title: 'Заказы'),
       // home: ConnectToServer(),
-      initialRoute: '/connectToServer',
+      // initialRoute: '/connectToServer',
+      initialRoute: '/initDB',
       routes: {
         '/connectToServer': (context) => ConnectToServer(),
         '/initDB': (context) => InitDB(),
@@ -317,41 +320,41 @@ class _OrdersPageState extends State<OrdersPage> {
     return Scaffold(
       appBar: AppBar(
         // title: Text(mainTitle),
-        backgroundColor: connectColor(),
+        // backgroundColor: connectColor(),
         title: TitleOrders(
           countTitle,
           countAll,
           orderDelivered,
         ),
-        actions: <Widget>[
-          if (connected)
-            IconButton(
-              icon: Icon(
-                Icons.autorenew,
-                color: Colors.white,
-              ),
-              // onPressed: () {
-              //   setState(() => connected = false);
-              //   Timer(const Duration(seconds: 10),
-              //       () => setState(() => connected = true));
-              // },
-              onPressed: () async {
-                await _fetchDataToSQL(serverURL);
-                setState(() {});
-              },
-            )
-          else
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                child: Center(
-                  child: CircularProgressIndicator(
-                    backgroundColor: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-        ],
+        // actions: <Widget>[
+        //   if (connected)
+        //     IconButton(
+        //       icon: Icon(
+        //         Icons.autorenew,
+        //         color: Colors.white,
+        //       ),
+        //       // onPressed: () {
+        //       //   setState(() => connected = false);
+        //       //   Timer(const Duration(seconds: 10),
+        //       //       () => setState(() => connected = true));
+        //       // },
+        //       onPressed: () async {
+        //         await _fetchDataToSQL(serverURL);
+        //         setState(() {});
+        //       },
+        //     )
+        //   else
+        //     Padding(
+        //       padding: const EdgeInsets.all(8.0),
+        //       child: Container(
+        //         child: Center(
+        //           child: CircularProgressIndicator(
+        //             backgroundColor: Colors.white,
+        //           ),
+        //         ),
+        //       ),
+        //     ),
+        // ],
       ),
       body: _orders.ordersListWidget(db, orderDelivered),
       drawer: Drawer(
