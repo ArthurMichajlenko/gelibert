@@ -230,6 +230,7 @@ Future<List<Orders>> getOrdersList(Database db, int delivered) async {
 }
 
 class Consist {
+  int di;
   int id;
   String product;
   double quantity;
@@ -237,6 +238,7 @@ class Consist {
   String extInfo;
 
   Consist({
+    this.di,
     this.id,
     this.product,
     this.quantity,
@@ -253,6 +255,7 @@ class Consist {
 
   factory Consist.fromSQL(Map<String, dynamic> sql) {
     return new Consist(
+      di: sql["di"],
       id: sql["id"],
       product: sql["product"],
       quantity: sql["quantity"],
@@ -269,6 +272,7 @@ class Consist {
       };
 
   Map<String, dynamic> toSQL() => {
+        "di": di,
         "id": id,
         "product": product,
         "quantity": quantity,

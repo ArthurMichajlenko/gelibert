@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-// import 'main.dart';
+// import 'package:flutter/services.dart';
+import 'main.dart';
 import 'models/orders.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 
@@ -101,6 +101,20 @@ class _ConsistsDetailState extends State<ConsistsDetail> {
                         Padding(
                           padding: const EdgeInsets.only(left: 8.0),
                           child: TextField(
+                            onSubmitted: (text) async {
+                              widget.order.consistsTo[i].extInfo = text;
+                              await db.update(
+                                  'consists_to',
+                                  {
+                                    'ext_info':
+                                        widget.order.consistsTo[i].extInfo,
+                                  },
+                                  where: 'id=? AND di=?',
+                                  whereArgs: [
+                                    widget.order.id,
+                                    widget.order.consistsTo[i].di
+                                  ]);
+                            },
                             controller: TextEditingController(
                               text: widget.order.consistsTo[i].extInfo,
                             ),
@@ -120,6 +134,17 @@ class _ConsistsDetailState extends State<ConsistsDetail> {
                                 onTap: () async {
                                   widget.order.consistsTo[i].extInfo =
                                       await scan();
+                                  await db.update(
+                                      'consists_to',
+                                      {
+                                        'ext_info':
+                                            widget.order.consistsTo[i].extInfo,
+                                      },
+                                      where: 'id=? AND di=?',
+                                      whereArgs: [
+                                        widget.order.id,
+                                        widget.order.consistsTo[i].di
+                                      ]);
                                   setState(() {});
                                 },
                               ),
@@ -159,6 +184,20 @@ class _ConsistsDetailState extends State<ConsistsDetail> {
                     subtitle: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextField(
+                        onSubmitted: (text) async {
+                          widget.order.consistsFrom[i].extInfo = text;
+                          await db.update(
+                              'consists_from',
+                              {
+                                'ext_info':
+                                    widget.order.consistsFrom[i].extInfo,
+                              },
+                              where: 'id=? AND di=?',
+                              whereArgs: [
+                                widget.order.id,
+                                widget.order.consistsFrom[i].di
+                              ]);
+                        },
                         controller: TextEditingController(
                           text: widget.order.consistsFrom[i].extInfo,
                         ),
@@ -178,6 +217,17 @@ class _ConsistsDetailState extends State<ConsistsDetail> {
                             onTap: () async {
                               widget.order.consistsFrom[i].extInfo =
                                   await scan();
+                              await db.update(
+                                  'consists_from',
+                                  {
+                                    'ext_info':
+                                        widget.order.consistsFrom[i].extInfo,
+                                  },
+                                  where: 'id=? AND di=?',
+                                  whereArgs: [
+                                    widget.order.id,
+                                    widget.order.consistsFrom[i].di
+                                  ]);
                               setState(() {});
                             },
                           ),
