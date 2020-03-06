@@ -193,7 +193,7 @@ class _ConsistsDetailState extends State<ConsistsDetail> {
                         if (widget.order.delivered == 1)
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text(widget.order.consistsTo[i].extInfo),
+                            child: Text(widget.order.consistsFrom[i].extInfo),
                           )
                         else
                           Padding(
