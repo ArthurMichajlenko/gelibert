@@ -42,8 +42,8 @@ Future<Database> _openDB() async {
     path,
     onCreate: (_db, version) async {
       String script =
-          await rootBundle.loadString(join("assets", "gelibert.sql"));
-      // await rootBundle.loadString(join("assets", "gelibert_data.sql"));
+          // await rootBundle.loadString(join("assets", "gelibert.sql"));
+      await rootBundle.loadString(join("assets", "gelibert_data.sql"));
       List<String> scripts = script.split(";");
       scripts.forEach((v) {
         if (v.isNotEmpty) {
