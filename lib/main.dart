@@ -42,8 +42,8 @@ Future<Database> _openDB() async {
     path,
     onCreate: (_db, version) async {
       String script =
-          // await rootBundle.loadString(join("assets", "gelibert.sql"));
-      await rootBundle.loadString(join("assets", "gelibert_data.sql"));
+          await rootBundle.loadString(join("assets", "gelibert.sql"));
+      // await rootBundle.loadString(join("assets", "gelibert_data.sql"));
       List<String> scripts = script.split(";");
       scripts.forEach((v) {
         if (v.isNotEmpty) {
@@ -53,6 +53,7 @@ Future<Database> _openDB() async {
     },
     version: 1,
   );
+  await _fetchDataToSQL(_db, serverURL);
   countAll =
       Sqflite.firstIntValue(await _db.rawQuery('SELECT COUNT(*) FROM orders'));
   countInWork = Sqflite.firstIntValue(
@@ -86,7 +87,7 @@ Future<String> _fetchJWTToken(String url) async {
   return token;
 }
 
-Future _fetchDataToSQL(String url) async {
+Future _fetchDataToSQL(Database db, String url) async {
   http.Response response;
   List<Orders> orders;
   List<Couriers> couriers;
@@ -108,12 +109,15 @@ Future _fetchDataToSQL(String url) async {
       }
       orders.forEach((x) async {
         await db.insert('orders', x.toSQL());
+        int _di = x.id + 9;
         x.consistsTo.forEach((y) async {
           y.id = x.id;
+          y.di=_di++;
           return await db.insert('consists_to', y.toSQL());
         });
         x.consistsFrom.forEach((y) async {
           y.id = x.id;
+          y.di=_di++;
           return await db.insert('consists_from', y.toSQL());
         });
         return;
@@ -336,7 +340,7 @@ class _OrdersPageState extends State<OrdersPage> {
               //       () => setState(() => connected = true));
               // },
               onPressed: () async {
-                await _fetchDataToSQL(serverURL);
+                await _fetchDataToSQL(db, serverURL);
                 setState(() {});
               },
             )

@@ -1,21 +1,23 @@
 {
     "sqltools.connections": [
         {
-            "connectionTimeout": 30,
-            "database": "ArthurTest",
-            "dialect": "MySQL",
-            "name": "Dev",
-            "password": "Nfnmzyf",
-            "port": 3306,
-            "server": "217.12.127.253",
-            "username": "arthur"
-        },
-        {
             "database": "./assets/gelibert.db",
             "dialect": "SQLite",
             "isActive": true,
             "isConnected": true,
             "name": "gelibert"
+        },
+        {
+            "connectionTimeout": 30,
+            "database": "gelibert",
+            "dialect": "MySQL",
+            "isActive": false,
+            "isConnected": false,
+            "name": "Local",
+            "password": "Nfnmzyf",
+            "port": 3306,
+            "server": "localhost",
+            "username": "root"
         }
     ]
 }

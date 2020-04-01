@@ -70,7 +70,6 @@ class Couriers {
     );
   }
 
-
   factory Couriers.fromJson(Map<String, dynamic> json) => new Couriers(
         id: json["id"],
         imei: json["imei"],
