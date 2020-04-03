@@ -310,11 +310,11 @@ class _OrdersPageState extends State<OrdersPage> {
     super.initState();
   }
 
-  @override
-  void dispose() {
-    db.close();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   db.close();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
