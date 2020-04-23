@@ -30,6 +30,7 @@ class Couriers {
   double latitude;
   double longitude;
   String address;
+  String timestamp;
 
   Couriers({
     this.id,
@@ -40,6 +41,7 @@ class Couriers {
     this.latitude,
     this.longitude,
     this.address,
+    this.timestamp,
   });
 
   Widget courierName(Database db, int imei) {
@@ -79,6 +81,7 @@ class Couriers {
         latitude: json["latitude"].toDouble(),
         longitude: json["longitude"].toDouble(),
         address: json["address"],
+        timestamp: json["timestamp"],
       );
 
   factory Couriers.fromSQL(Map<String, dynamic> sql) => new Couriers(
@@ -90,6 +93,7 @@ class Couriers {
         latitude: sql["latitude"],
         longitude: sql["longitude"],
         address: sql["address"],
+        timestamp: sql["timestamp"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -101,6 +105,7 @@ class Couriers {
         "latitude": latitude,
         "longitude": longitude,
         "address": address,
+        "timestamp": timestamp,
       };
 
   Map<String, dynamic> toSQL() => {
@@ -112,5 +117,6 @@ class Couriers {
         "latitude": latitude,
         "longitude": longitude,
         "address": address,
+        "timestamp": timestamp,
       };
 }
