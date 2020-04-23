@@ -35,12 +35,28 @@ CREATE TABLE IF NOT EXISTS "clients" (
 );
 CREATE TABLE IF NOT EXISTS "couriers" (
   "id" INTEGER NOT NULL UNIQUE,
-  "imei" INTEGER NOT NULL UNIQUE,
+  "imei" INTEGER NOT NULL,
   "tel" TEXT,
   "name" TEXT,
   "car_number" TEXT,
   "latitude" REAL,
   "longitude" REAL,
   "address" TEXT,
-  PRIMARY KEY("id")
+  "timestamp" DateTime NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')) PRIMARY KEY("id")
 );
+CREATE TRIGGER IF NOT EXISTS insert_timestamp_trigger
+AFTER
+INSERT ON couriers BEGIN
+UPDATE couriers
+SET
+  timestamp = datetime(CURRENT_TIMESTAMP, 'localtime')
+WHERE
+  id = NEW.id;
+CREATE TRIGGER IF NOT EXISTS update_timestamp_trigger
+AFTER
+UPDATE ON couriers BEGIN
+UPDATE couriers
+SET
+  timestamp = datetime(CURRENT_TIMESTAMP, 'localtime')
+WHERE
+  id = NEW.id;
