@@ -73,7 +73,6 @@
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 
-
 temp.*
 android/.project
 android/.settings/org.eclipse.buildship.core.prefs
@@ -81,3 +80,4 @@ android/app/.classpath
 android/app/.project
 android/app/.settings/org.eclipse.buildship.core.prefs
 gelibert.db
+gelibertd.db

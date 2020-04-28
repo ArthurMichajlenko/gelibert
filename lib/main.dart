@@ -38,21 +38,20 @@ void main() => runApp(GelibertApp());
 Future<Database> _openDB() async {
   var databasePath = await getDatabasesPath();
   var path = join(databasePath, "gelibert.db");
-  final _db = await openDatabase(
-    path,
-    onCreate: (_db, version) async {
-      String script =
-          await rootBundle.loadString(join("assets", "gelibert.sql"));
-      // await rootBundle.loadString(join("assets", "gelibert_data.sql"));
-      List<String> scripts = script.split(";");
-      scripts.forEach((v) {
-        if (v.isNotEmpty) {
-          _db.execute(v.trim());
-        }
-      });
-    },
-    version: 1,
-  );
+  var exists = await databaseExists(path);
+  if (!exists) {
+    try {
+      await Directory(dirname(path)).create(recursive: true);
+    } catch (e) {
+      print(e);
+    }
+    //Copy from assets
+    ByteData data = await rootBundle.load(join("assets", "gelibert.db"));
+    List<int> bytes =
+        data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+    await File(path).writeAsBytes(bytes, flush: true);
+  }
+  final _db = await openDatabase(path);
   await _fetchDataToSQL(_db, serverURL);
   countAll =
       Sqflite.firstIntValue(await _db.rawQuery('SELECT COUNT(*) FROM orders'));
@@ -112,12 +111,12 @@ Future _fetchDataToSQL(Database db, String url) async {
         int _di = x.id + 9;
         x.consistsTo.forEach((y) async {
           y.id = x.id;
-          y.di=_di++;
+          y.di = _di++;
           return await db.insert('consists_to', y.toSQL());
         });
         x.consistsFrom.forEach((y) async {
           y.id = x.id;
-          y.di=_di++;
+          y.di = _di++;
           return await db.insert('consists_from', y.toSQL());
         });
         return;
