@@ -89,7 +89,7 @@ Future<String> _fetchJWTToken(String url) async {
 Future _fetchDataToSQL(Database db, String url) async {
   http.Response response;
   List<Orders> orders;
-  List<Couriers> couriers;
+  Couriers couriers;
   List<Clients> clients;
   try {
     response = await http.get(url + "/data/orders",
@@ -134,10 +134,7 @@ Future _fetchDataToSQL(Database db, String url) async {
       if (sqlRes.isNotEmpty) {
         await db.delete('couriers');
       }
-      couriers.forEach((x) async {
-        await db.insert('couriers', x.toSQL());
-        return;
-      });
+        await db.insert('couriers', couriers.toSQL());
     }
     response = await http.get(url + "/data/clients",
         headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
@@ -228,7 +225,6 @@ class _ConnectToServerState extends State<ConnectToServer> {
             ],
           );
         }
-        print(token);
         // return OrdersPage(title: 'Заказы');
         // return InitDB();
         // Navigator.of(context).pushReplacementNamed('/initDB');
@@ -261,7 +257,6 @@ class _InitDBState extends State<InitDB> {
           );
         }
         db = dbSnap.data;
-        print(db);
         return OrdersPage(title: 'Заказы');
       },
       future: _openDB(),

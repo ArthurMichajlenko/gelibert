@@ -4,13 +4,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqlite_api.dart';
 
-List<Couriers> couriersFromJson(String str) {
+Couriers couriersFromJson(String str) {
   final jsonData = json.decode(str);
-  return new List<Couriers>.from(jsonData.map((x) => Couriers.fromJson(x)));
+  return Couriers.fromJson(jsonData);
 }
 
-String couriersToJson(List<Couriers> data) {
-  final dyn = new List<dynamic>.from(data.map((x) => x.toJson()));
+String couriersToJson(Couriers data) {
+  final dyn = data.toJson();
   return json.encode(dyn);
 }
 

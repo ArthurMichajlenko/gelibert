@@ -251,7 +251,6 @@ class _ConsistsDetailState extends State<ConsistsDetail> {
       String code = await BarcodeScanner.scan();
       extInfo = code;
     } catch (_) {}
-    // print(extInfo);
     return extInfo;
   }
 }
