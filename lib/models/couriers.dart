@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqlite_api.dart';
+import 'package:geolocator/geolocator.dart';
 
 Couriers couriersFromJson(String str) {
   final jsonData = json.decode(str);

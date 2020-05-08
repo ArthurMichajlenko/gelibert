@@ -134,7 +134,7 @@ Future _fetchDataToSQL(Database db, String url) async {
       if (sqlRes.isNotEmpty) {
         await db.delete('couriers');
       }
-        await db.insert('couriers', couriers.toSQL());
+      await db.insert('couriers', couriers.toSQL());
     }
     response = await http.get(url + "/data/clients",
         headers: {HttpHeaders.authorizationHeader: "Bearer " + token});

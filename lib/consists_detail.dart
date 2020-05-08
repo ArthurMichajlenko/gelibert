@@ -248,7 +248,8 @@ class _ConsistsDetailState extends State<ConsistsDetail> {
   Future scan() async {
     String extInfo;
     try {
-      String code = await BarcodeScanner.scan();
+      var code = await BarcodeScanner.scan();
+      // extInfo = code.rawContent;
       extInfo = code;
     } catch (_) {}
     return extInfo;

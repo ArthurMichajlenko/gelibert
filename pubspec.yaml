@@ -28,7 +28,8 @@ dependencies:
   flutter_picker:
   http:
   imei_plugin:
-  barcode_scan:
+  barcode_scan: ^2.0.2
+  geolocator:
 
 dev_dependencies:
   flutter_test:
