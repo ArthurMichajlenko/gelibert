@@ -2,7 +2,7 @@
     "sqltools.connections": [
         {
             "database": "./assets/gelibert.db",
-            "dialect": "SQLite",
+            "driver": "SQLite",
             "isActive": true,
             "isConnected": true,
             "name": "gelibert"
@@ -10,7 +10,7 @@
         {
             "connectionTimeout": 30,
             "database": "gelibert",
-            "dialect": "MySQL",
+            "driver": "MySQL",
             "isActive": false,
             "isConnected": false,
             "name": "Local",

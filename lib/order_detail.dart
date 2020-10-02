@@ -329,24 +329,30 @@ class _OrderDetailState extends State<OrderDetail> {
               Icons.av_timer,
               color: Colors.red,
             ),
-            title: Text(
+            label: Text(
               'Отложить',
               style: TextStyle(
                 color: Colors.red,
               ),
-            ),
+            ).toString(),
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.check,
               color: Colors.green,
             ),
-            title: Text(
+            label: Text(
               'Завершить',
               style: TextStyle(
                 color: Colors.green,
               ),
-            ),
+            ).toString(),
+            // title: Text(
+            //   'Завершить',
+            //   style: TextStyle(
+            //     color: Colors.green,
+            //   ),
+            // ),
           ),
         ],
       ),
