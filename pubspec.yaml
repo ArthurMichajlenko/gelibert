@@ -27,9 +27,10 @@ dependencies:
   sqflite:
   flutter_picker:
   http:
-  imei_plugin:
+  # imei_plugin:
   barcode_scan: ^2.0.2
   geolocator:
+  get_mac:
 
 dev_dependencies:
   flutter_test:

@@ -95,6 +95,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.3.1"
+  get_mac:
+    dependency: "direct main"
+    description:
+      name: get_mac
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1"
   google_api_availability:
     dependency: transitive
     description:
@@ -116,13 +123,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.4"
-  imei_plugin:
-    dependency: "direct main"
-    description:
-      name: imei_plugin
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.6"
   location_permissions:
     dependency: transitive
     description:

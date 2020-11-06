@@ -9,12 +9,12 @@ import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:http/http.dart' as http;
-import 'package:imei_plugin/imei_plugin.dart';
 
 import 'models/orders.dart';
 import 'models/couriers.dart';
 import 'models/clients.dart';
 import 'title_orders.dart';
+import 'package:get_mac/get_mac.dart';
 
 // void main() => runApp(GelibertApp());
 Database db;
@@ -25,7 +25,8 @@ int imei;
 // final serverURL = 'http://192.168.0.113:1323';
 // final serverURL = 'http://10.10.11.135:1323';
 // final serverURL = 'http://192.168.0.3:1323';
-final serverURL = 'http://10.10.11.98:1323';
+// final serverURL = 'http://10.10.11.98:1323';
+final serverURL = 'http://192.168.0.182:1323';
 bool connected = false;
 int orderDelivered;
 int countTitle;
@@ -68,8 +69,9 @@ Future<Database> _openDB() async {
 
 Future<String> _fetchJWTToken(String url) async {
   // imei = int.parse(await ImeiPlugin.getImei());
-  print("ID:" + await ImeiPlugin.getId());
-  imei = int.parse(await ImeiPlugin.getId());
+  String _mac = await GetMac.macAddress;
+  imei = int.parse(_mac.replaceAll(":", ""), radix: 16);
+  print("MAC: " + imei.toString());
   if (token == 'Notoken' || token == 'Unconnect') {
     try {
       var res =
