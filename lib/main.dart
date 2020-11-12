@@ -19,14 +19,14 @@ import 'package:get_mac/get_mac.dart';
 // void main() => runApp(GelibertApp());
 Database db;
 String token = 'Notoken';
-int imei;
+String macAddress;
 // Couriers courier;
 // final serverURL = 'http://10.10.11.135:1323/login';
 // final serverURL = 'http://192.168.0.113:1323';
 // final serverURL = 'http://10.10.11.135:1323';
 // final serverURL = 'http://192.168.0.3:1323';
-// final serverURL = 'http://10.10.11.98:1323';
-final serverURL = 'http://192.168.0.182:1323';
+final serverURL = 'http://10.10.11.98:1323';
+// final serverURL = 'http://192.168.0.182:1323';
 bool connected = false;
 int orderDelivered;
 int countTitle;
@@ -40,7 +40,7 @@ void main() => runApp(GelibertApp());
 
 Future<Database> _openDB() async {
   var databasePath = await getDatabasesPath();
-  var path = join(databasePath, "gelibert.db");
+  var path = join(databasePath, "gelibert.db3");
   var exists = await databaseExists(path);
   if (!exists) {
     try {
@@ -49,7 +49,7 @@ Future<Database> _openDB() async {
       print(e);
     }
     //Copy from assets
-    ByteData data = await rootBundle.load(join("assets", "gelibert.db"));
+    ByteData data = await rootBundle.load(join("assets", "gelibert.db3"));
     List<int> bytes =
         data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
     await File(path).writeAsBytes(bytes, flush: true);
@@ -68,14 +68,12 @@ Future<Database> _openDB() async {
 }
 
 Future<String> _fetchJWTToken(String url) async {
-  // imei = int.parse(await ImeiPlugin.getImei());
-  String _mac = await GetMac.macAddress;
-  imei = int.parse(_mac.replaceAll(":", ""), radix: 16);
-  print("MAC: " + imei.toString());
+  macAddress = await GetMac.macAddress;
+  print("MAC: " + macAddress);
   if (token == 'Notoken' || token == 'Unconnect') {
     try {
       var res =
-          await http.post(url + "/login", body: {'imei': imei.toString()});
+          await http.post(url + "/login", body: {'macAddress': macAddress});
       if (res.statusCode != 200) {
         connected = false;
         return "Unauthorized";
@@ -114,7 +112,7 @@ Future _fetchDataToSQL(Database db, String url) async {
       }
       orders.forEach((x) async {
         await db.insert('orders', x.toSQL());
-        int _di = x.id + 9;
+        int _di = x.id.hashCode + 9;
         x.consistsTo.forEach((y) async {
           y.id = x.id;
           y.di = _di++;
@@ -362,8 +360,8 @@ class _OrdersPageState extends State<OrdersPage> {
         child: Column(
           children: <Widget>[
             UserAccountsDrawerHeader(
-              accountEmail: _courier.courierCarNumber(db, imei),
-              accountName: _courier.courierName(db, imei),
+              accountEmail: _courier.courierCarNumber(db, macAddress),
+              accountName: _courier.courierName(db, macAddress),
               currentAccountPicture: CircleAvatar(
                 backgroundImage: AssetImage('assets/images/Aqua.png'),
               ),

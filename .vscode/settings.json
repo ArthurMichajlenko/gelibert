@@ -1,13 +1,6 @@
 {
     "sqltools.connections": [
         {
-            "database": "./assets/gelibert.db",
-            "driver": "SQLite",
-            "isActive": true,
-            "isConnected": true,
-            "name": "gelibert"
-        },
-        {
             "connectionTimeout": 30,
             "database": "gelibert",
             "driver": "MySQL",
@@ -18,6 +11,13 @@
             "port": 3306,
             "server": "localhost",
             "username": "root"
+        },
+        {
+            "previewLimit": 50,
+            "database": "./assets/gelibert.db3",
+            "driver": "SQLite",
+            "name": "gelibert"
         }
-    ]
+    ],
+    "sqltools.useNodeRuntime": true
 }
