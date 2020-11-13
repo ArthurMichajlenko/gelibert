@@ -15,16 +15,16 @@ String couriersToJson(Couriers data) {
   return json.encode(dyn);
 }
 
-Future<Couriers> getCourier(Database db, int imei) async {
-  List<Map<String, dynamic>> sqlDataCouriers =
-      await db.query('couriers', where: 'imei = ?', whereArgs: [imei]);
+Future<Couriers> getCourier(Database db, String macAddress) async {
+  List<Map<String, dynamic>> sqlDataCouriers = await db
+      .query('couriers', where: 'mac_address = ?', whereArgs: [macAddress]);
   return List<Couriers>.from(
       sqlDataCouriers.map((x) => Couriers.fromSQL(x)))[0];
 }
 
 class Couriers {
-  int id;
-  int imei;
+  String id;
+  String macAddress;
   String tel;
   String name;
   String carNumber;
@@ -35,7 +35,7 @@ class Couriers {
 
   Couriers({
     this.id,
-    this.imei,
+    this.macAddress,
     this.tel,
     this.name,
     this.carNumber,
@@ -45,7 +45,7 @@ class Couriers {
     this.timestamp,
   });
 
-  Widget courierName(Database db, int imei) {
+  Widget courierName(Database db, String macAddress) {
     return FutureBuilder<Couriers>(
       builder: (context, snap) {
         if (snap.connectionState == ConnectionState.none ||
@@ -55,11 +55,11 @@ class Couriers {
         }
         return Text(snap.data.name);
       },
-      future: getCourier(db, imei),
+      future: getCourier(db, macAddress),
     );
   }
 
-  Widget courierCarNumber(Database db, int imei) {
+  Widget courierCarNumber(Database db, String macAddress) {
     return FutureBuilder<Couriers>(
       builder: (context, snap) {
         if (snap.connectionState == ConnectionState.none ||
@@ -69,13 +69,13 @@ class Couriers {
         }
         return Text(snap.data.carNumber);
       },
-      future: getCourier(db, imei),
+      future: getCourier(db, macAddress),
     );
   }
 
   factory Couriers.fromJson(Map<String, dynamic> json) => new Couriers(
         id: json["id"],
-        imei: json["imei"],
+        macAddress: json["mac_address"],
         tel: json["tel"],
         name: json["name"],
         carNumber: json["car_number"],
@@ -87,7 +87,7 @@ class Couriers {
 
   factory Couriers.fromSQL(Map<String, dynamic> sql) => new Couriers(
         id: sql["id"],
-        imei: sql["imei"],
+        macAddress: sql["mac_address"],
         tel: sql["tel"],
         name: sql["name"],
         carNumber: sql["car_number"],
@@ -99,7 +99,7 @@ class Couriers {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "imei": imei,
+        "mac_address": macAddress,
         "tel": tel,
         "name": name,
         "car_number": carNumber,
@@ -111,7 +111,7 @@ class Couriers {
 
   Map<String, dynamic> toSQL() => {
         "id": id,
-        "imei": imei,
+        "mac_address": macAddress,
         "tel": tel,
         "name": name,
         "car_number": carNumber,

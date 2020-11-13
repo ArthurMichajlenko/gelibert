@@ -12,14 +12,14 @@ String clientsToJson(List<Clients> data) {
   return json.encode(dyn);
 }
 
-Future<Clients> getClient(Database db, int orderId) async {
+Future<Clients> getClient(Database db, String orderId) async {
   List<Map<String, dynamic>> sqlDataClients =
       await db.query('clients', where: 'id = ?', whereArgs: [orderId]);
   return List<Clients>.from(sqlDataClients.map((x) => Clients.fromSQL(x)))[0];
 }
 
 class Clients {
-  int id;
+  String id;
   String name;
   String tel;
   String address;
@@ -31,7 +31,7 @@ class Clients {
     this.address,
   });
 
-  Widget clientData(Database db, int id) {
+  Widget clientData(Database db, String id) {
     return FutureBuilder<Clients>(
       builder: (context, clientSnap) {
         if (clientSnap.connectionState == ConnectionState.none ||
@@ -81,7 +81,7 @@ class Clients {
     );
   }
 
-  Widget clientName(Database db, int id) {
+  Widget clientName(Database db, String id) {
     return FutureBuilder<Clients>(
       builder: (context, snap) {
         if (snap.connectionState == ConnectionState.none ||
@@ -95,7 +95,7 @@ class Clients {
     );
   }
 
-  Widget clientAddress(Database db, int id) {
+  Widget clientAddress(Database db, String id) {
     return FutureBuilder<Clients>(
       builder: (context, snap) {
         if (snap.connectionState == ConnectionState.none ||
@@ -109,7 +109,7 @@ class Clients {
     );
   }
 
-  Widget clientTel(Database db, int id) {
+  Widget clientTel(Database db, String id) {
     return FutureBuilder<Clients>(
       builder: (context, snap) {
         if (snap.connectionState == ConnectionState.none ||

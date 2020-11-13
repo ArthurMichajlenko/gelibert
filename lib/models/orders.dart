@@ -23,9 +23,9 @@ int countDeffered;
 class Orders {
   var _client = Clients();
 
-  int id;
-  int courierId;
-  int clientId;
+  String id;
+  String courierId;
+  String clientId;
   String paymentMethod;
   List<Consist> consistsTo;
   List<Consist> consistsFrom;
@@ -231,7 +231,7 @@ Future<List<Orders>> getOrdersList(Database db, int delivered) async {
 
 class Consist {
   int di;
-  int id;
+  String id;
   String product;
   double quantity;
   double price;
