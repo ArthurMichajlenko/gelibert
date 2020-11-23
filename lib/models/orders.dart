@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:gilebert/models/clients.dart';
+// import 'package:gilebert/temp.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:gilebert/order_detail.dart';
 
@@ -27,13 +28,13 @@ class Orders {
   String courierId;
   String clientId;
   String paymentMethod;
-  List<Consist> consistsTo;
-  List<Consist> consistsFrom;
+  List<Consist> consists;
   double orderCost;
   int delivered;
   int deliveryDelay;
   String dateStart;
   String dateFinish;
+  String address;
   // String timestamp;
 
   Orders({
@@ -41,13 +42,13 @@ class Orders {
     this.courierId,
     this.clientId,
     this.paymentMethod,
-    this.consistsTo,
-    this.consistsFrom,
+    this.consists,
     this.orderCost,
     this.delivered,
     this.deliveryDelay,
     this.dateStart,
     this.dateFinish,
+    this.address,
     // this.timestamp,
   });
 
@@ -56,15 +57,14 @@ class Orders {
         courierId: json["courier_id"],
         clientId: json["client_id"],
         paymentMethod: json["payment_method"],
-        consistsTo: new List<Consist>.from(
-            json["consists_to"].map((x) => Consist.fromJson(x))),
-        consistsFrom: new List<Consist>.from(
-            json["consists_from"].map((x) => Consist.fromJson(x))),
+        consists: new List<Consist>.from(
+            json["consists"].map((x) => Consist.fromJson(x))),
         orderCost: json["order_cost"].toDouble(),
         delivered: json["delivered"],
         deliveryDelay: json["delivery_delay"],
         dateStart: json["date_start"],
         dateFinish: json["date_finish"],
+        address: json["address"],
         // timestamp: json["timestamp"],
       );
 
@@ -74,13 +74,13 @@ class Orders {
       courierId: sqlOrders["courier_id"],
       clientId: sqlOrders["client_id"],
       paymentMethod: sqlOrders["payment_method"],
-      consistsTo: List<Consist>(),
-      consistsFrom: List<Consist>(),
+      consists: List<Consist>(),
       orderCost: sqlOrders["order_cost"],
       delivered: sqlOrders["delivered"],
       deliveryDelay: sqlOrders["delivery_delay"],
       dateStart: sqlOrders["date_start"],
       dateFinish: sqlOrders["date_finish"],
+      address: sqlOrders["address"],
     );
   }
 
@@ -89,15 +89,13 @@ class Orders {
         "courier_id": courierId,
         "client_id": clientId,
         "payment_method": paymentMethod,
-        "consists_to":
-            new List<dynamic>.from(consistsTo.map((x) => x.toJson())),
-        "consists_from":
-            new List<dynamic>.from(consistsFrom.map((x) => x.toJson())),
+        "consists": new List<dynamic>.from(consists.map((x) => x.toJson())),
         "order_cost": orderCost,
         "delivered": delivered,
         "delivery_delay": deliveryDelay,
         "date_start": dateStart,
         "date_finish": dateFinish,
+        "address": address,
         // "timestamp": timestamp,
       };
 
@@ -111,6 +109,7 @@ class Orders {
         "delivery_delay": deliveryDelay,
         "date_start": dateStart,
         "date_finish": dateFinish,
+        "address": address,
         // "timestamp": timestamp,
       };
 
@@ -129,27 +128,64 @@ class Orders {
             return Card(
               child: ListTile(
                 dense: true,
-                leading: Column(
-                  children: <Widget>[
+                // leading: Column(
+                //   children: <Widget>[
+                //     if (ordersSnap.data[index].delivered == -1)
+                //       CircleAvatar(
+                //         child: Text(ordersSnap.data[index].id.toString()),
+                //         backgroundColor: Colors.red,
+                //       ),
+                //     if (ordersSnap.data[index].delivered == 1)
+                //       CircleAvatar(
+                //         child: Text(ordersSnap.data[index].id.toString()),
+                //         backgroundColor: Colors.green,
+                //       ),
+                //     if (ordersSnap.data[index].delivered == 0)
+                //       CircleAvatar(
+                //         child: Text(ordersSnap.data[index].id.toString()),
+                //         backgroundColor: Colors.blue,
+                //       ),
+                //   ],
+                // ),
+                isThreeLine: true,
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     if (ordersSnap.data[index].delivered == -1)
-                      CircleAvatar(
-                        child: Text(ordersSnap.data[index].id.toString()),
-                        backgroundColor: Colors.red,
+                      Text(
+                        ordersSnap.data[index].id,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Colors.red,
+                        ),
                       ),
                     if (ordersSnap.data[index].delivered == 1)
-                      CircleAvatar(
-                        child: Text(ordersSnap.data[index].id.toString()),
-                        backgroundColor: Colors.green,
+                      Text(
+                        ordersSnap.data[index].id,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Colors.green,
+                        ),
                       ),
                     if (ordersSnap.data[index].delivered == 0)
-                      CircleAvatar(
-                        child: Text(ordersSnap.data[index].id.toString()),
-                        backgroundColor: Colors.blue,
+                      Text(
+                        ordersSnap.data[index].id,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Colors.blue,
+                        ),
                       ),
+                    _client.clientData(db, ordersSnap.data[index].clientId),
+                    Text('Адрес'),
+                    Text(
+                      ordersSnap.data[index].address,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   ],
                 ),
-                isThreeLine: true,
-                title: _client.clientData(db, ordersSnap.data[index].clientId),
                 subtitle: Row(
                   children: <Widget>[
                     Text(ordersSnap.data[index].paymentMethod),
@@ -158,9 +194,9 @@ class Orders {
                 trailing: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
-                    Text(ordersSnap.data[index].consistsTo[0].product),
-                    Text(ordersSnap.data[index].consistsTo[0].quantity
-                        .toString()),
+                    Text(ordersSnap.data[index].consists[0].product),
+                    Text(
+                        ordersSnap.data[index].consists[0].quantity.toString()),
                     Text(ordersSnap.data[index].orderCost.toString() + ' Lei'),
                   ],
                 ),
@@ -205,23 +241,14 @@ Future<List<Orders>> getOrdersList(Database db, int delivered) async {
     default:
       sqlDataOrders = await db.query('orders');
   }
-  List<Map<String, dynamic>> sqlDataConsistsTo = await db.query('consists_to');
-  var consistsTo =
-      List<Consist>.from(sqlDataConsistsTo.map((x) => Consist.fromSQL(x)));
-  List<Map<String, dynamic>> sqlDataConsistsFrom =
-      await db.query('consists_from');
-  var consistsFrom =
-      List<Consist>.from(sqlDataConsistsFrom.map((x) => Consist.fromSQL(x)));
+  List<Map<String, dynamic>> sqlDataConsists = await db.query('consists');
+  var consists =
+      List<Consist>.from(sqlDataConsists.map((x) => Consist.fromSQL(x)));
   var orders = List<Orders>.from(sqlDataOrders.map((x) {
     var result = Orders.fromSQL(x);
-    consistsTo.forEach((y) {
-      if (y.id == result.id) {
-        result.consistsTo.add(y);
-      }
-    });
-    consistsFrom.forEach((y) {
-      if (y.id == result.id) {
-        result.consistsFrom.add(y);
+    consists.forEach((y) {
+      if (y.ordersID == result.id) {
+        result.consists.add(y);
       }
     });
     return result;
@@ -230,53 +257,63 @@ Future<List<Orders>> getOrdersList(Database db, int delivered) async {
 }
 
 class Consist {
-  int di;
-  String id;
+  int id;
+  String ordersID;
   String product;
   double quantity;
   double price;
   String extInfo;
+  int direction;
 
   Consist({
-    this.di,
     this.id,
+    this.ordersID,
     this.product,
     this.quantity,
     this.price,
     this.extInfo,
+    this.direction,
   });
 
   factory Consist.fromJson(Map<String, dynamic> json) => new Consist(
+        id: json["id"],
+        ordersID: json["orders_id"],
         product: json["product"],
         quantity: json["quantity"].toDouble(),
-        price: json["price"],
+        price: json["price"].toDouble(),
         extInfo: json["ext_info"],
+        direction: json["direction"],
       );
 
   factory Consist.fromSQL(Map<String, dynamic> sql) {
     return new Consist(
-      di: sql["di"],
       id: sql["id"],
+      ordersID: sql["orders_id"],
       product: sql["product"],
       quantity: sql["quantity"],
       price: sql["price"],
       extInfo: sql["ext_info"],
+      direction: sql["direction"],
     );
   }
 
   Map<String, dynamic> toJson() => {
+        "id": id,
+        "orders_id": ordersID,
         "product": product,
         "quantity": quantity,
         "price": price,
         "ext_info": extInfo,
+        "direction": direction,
       };
 
   Map<String, dynamic> toSQL() => {
-        "di": di,
         "id": id,
+        "orders_id": ordersID,
         "product": product,
         "quantity": quantity,
         "price": price,
         "ext_info": extInfo,
+        "direction": direction,
       };
 }

@@ -43,7 +43,17 @@ class _OrderDetailState extends State<OrderDetail> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: client.clientData(db, widget.order.clientId),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  client.clientData(db, widget.order.clientId),
+                  Text('Адрес доставки'),
+                  Text(
+                    widget.order.address,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
             ),
             Card(
               child: ListTile(
@@ -325,35 +335,37 @@ class _OrderDetailState extends State<OrderDetail> {
         },
         items: [
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.av_timer,
-              color: Colors.red,
-            ),
-            label: Text(
-              'Отложить',
-              style: TextStyle(
+              icon: Icon(
+                Icons.av_timer,
                 color: Colors.red,
               ),
-            ).toString(),
-          ),
+              label: 'Отложить'
+              // label: Text(
+              //   'Отложить',
+              //   style: TextStyle(
+              //     color: Colors.red,
+              //   ),
+              // ).toString(),
+              ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.check,
-              color: Colors.green,
-            ),
-            label: Text(
-              'Завершить',
-              style: TextStyle(
+              icon: Icon(
+                Icons.check,
                 color: Colors.green,
               ),
-            ).toString(),
-            // title: Text(
-            //   'Завершить',
-            //   style: TextStyle(
-            //     color: Colors.green,
-            //   ),
-            // ),
-          ),
+              label: 'Завершить'
+              // label: Text(
+              //   'Завершить',
+              //   style: TextStyle(
+              //     color: Colors.green,
+              //   ),
+              // ).toString(),
+              // title: Text(
+              //   'Завершить',
+              //   style: TextStyle(
+              //     color: Colors.green,
+              //   ),
+              // ),
+              ),
         ],
       ),
     );

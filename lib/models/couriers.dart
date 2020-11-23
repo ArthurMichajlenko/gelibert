@@ -28,9 +28,6 @@ class Couriers {
   String tel;
   String name;
   String carNumber;
-  double latitude;
-  double longitude;
-  String address;
   String timestamp;
 
   Couriers({
@@ -39,9 +36,6 @@ class Couriers {
     this.tel,
     this.name,
     this.carNumber,
-    this.latitude,
-    this.longitude,
-    this.address,
     this.timestamp,
   });
 
@@ -79,9 +73,6 @@ class Couriers {
         tel: json["tel"],
         name: json["name"],
         carNumber: json["car_number"],
-        latitude: json["latitude"].toDouble(),
-        longitude: json["longitude"].toDouble(),
-        address: json["address"],
         timestamp: json["timestamp"],
       );
 
@@ -91,9 +82,6 @@ class Couriers {
         tel: sql["tel"],
         name: sql["name"],
         carNumber: sql["car_number"],
-        latitude: sql["latitude"],
-        longitude: sql["longitude"],
-        address: sql["address"],
         timestamp: sql["timestamp"],
       );
 
@@ -103,9 +91,6 @@ class Couriers {
         "tel": tel,
         "name": name,
         "car_number": carNumber,
-        "latitude": latitude,
-        "longitude": longitude,
-        "address": address,
         "timestamp": timestamp,
       };
 
@@ -115,9 +100,6 @@ class Couriers {
         "tel": tel,
         "name": name,
         "car_number": carNumber,
-        "latitude": latitude,
-        "longitude": longitude,
-        "address": address,
         "timestamp": timestamp,
       };
 }

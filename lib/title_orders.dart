@@ -20,15 +20,15 @@ class _TitleOrdersState extends State<TitleOrders> {
 
     switch (widget._delivered) {
       case -1:
-        _textTitle = 'Заказы отложенные ';
+        _textTitle = 'Отложенные ';
         _colorCounter = Colors.red;
         break;
       case 0:
-        _textTitle = 'Заказы в работе ';
+        _textTitle = 'В работе ';
         _colorCounter = Colors.blue;
         break;
       case 1:
-        _textTitle = 'Заказы выполненные ';
+        _textTitle = 'Выполненные ';
         _colorCounter = Colors.green;
         break;
       default:

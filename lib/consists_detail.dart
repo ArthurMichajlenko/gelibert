@@ -61,89 +61,90 @@ class _ConsistsDetailState extends State<ConsistsDetail> {
               ),
             ),
             Divider(),
-            for (int i = 0; i < widget.order.consistsTo.length; i++)
+            for (int i = 0; i < widget.order.consists.length; i++)
               Column(
                 children: [
-                  ListTile(
-                    isThreeLine: true,
-                    title: Text(
-                      (i + 1).toString() +
-                          '. ' +
-                          widget.order.consistsTo[i].product,
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                              '${widget.order.consistsTo[i].price}x${widget.order.consistsTo[i].quantity} шт.'),
-                        ),
-                        if (widget.order.delivered == 1)
+                  if (widget.order.consists[i].direction == 0)
+                    ListTile(
+                      isThreeLine: true,
+                      title: Text(
+                        (i + 1).toString() +
+                            '. ' +
+                            widget.order.consists[i].product,
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text(widget.order.consistsTo[i].extInfo),
-                          )
-                        else
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: TextField(
-                              onSubmitted: (text) async {
-                                widget.order.consistsTo[i].extInfo = text;
-                                await db.update(
-                                    'consists_to',
-                                    {
-                                      'ext_info':
-                                          widget.order.consistsTo[i].extInfo,
-                                    },
-                                    where: 'id=? AND di=?',
-                                    whereArgs: [
-                                      widget.order.id,
-                                      widget.order.consistsTo[i].di
-                                    ]);
-                              },
-                              controller: TextEditingController(
-                                text: widget.order.consistsTo[i].extInfo,
-                              ),
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(
-                                  vertical: 1.0,
-                                  horizontal: 4.0,
+                            child: Text(
+                                '${widget.order.consists[i].price}x${widget.order.consists[i].quantity} шт.'),
+                          ),
+                          if (widget.order.delivered == 1)
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(widget.order.consists[i].extInfo),
+                            )
+                          else
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: TextField(
+                                onSubmitted: (text) async {
+                                  widget.order.consists[i].extInfo = text;
+                                  await db.update(
+                                      'consists_to',
+                                      {
+                                        'ext_info':
+                                            widget.order.consists[i].extInfo,
+                                      },
+                                      where: 'id=? AND orders_id=?',
+                                      whereArgs: [
+                                        widget.order.id,
+                                        widget.order.consists[i].ordersID
+                                      ]);
+                                },
+                                controller: TextEditingController(
+                                  text: widget.order.consists[i].extInfo,
                                 ),
-                                border: OutlineInputBorder(),
-                                labelText: 'Доп.инф (S/N...)',
-                                suffixIcon: GestureDetector(
-                                  dragStartBehavior: DragStartBehavior.down,
-                                  child: Icon(
-                                    Icons.camera_alt,
-                                    size: 40,
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.symmetric(
+                                    vertical: 1.0,
+                                    horizontal: 4.0,
                                   ),
-                                  onTap: () async {
-                                    widget.order.consistsTo[i].extInfo =
-                                        await scan();
-                                    await db.update(
-                                        'consists_to',
-                                        {
-                                          'ext_info': widget
-                                              .order.consistsTo[i].extInfo,
-                                        },
-                                        where: 'id=? AND di=?',
-                                        whereArgs: [
-                                          widget.order.id,
-                                          widget.order.consistsTo[i].di
-                                        ]);
-                                    setState(() {});
-                                  },
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Доп.инф (S/N...)',
+                                  suffixIcon: GestureDetector(
+                                    dragStartBehavior: DragStartBehavior.down,
+                                    child: Icon(
+                                      Icons.camera_alt,
+                                      size: 40,
+                                    ),
+                                    onTap: () async {
+                                      widget.order.consists[i].extInfo =
+                                          await scan();
+                                      await db.update(
+                                          'consists_to',
+                                          {
+                                            'ext_info': widget
+                                                .order.consists[i].extInfo,
+                                          },
+                                          where: 'id=? AND orders_id=?',
+                                          whereArgs: [
+                                            widget.order.id,
+                                            widget.order.consists[i].ordersID
+                                          ]);
+                                      setState(() {});
+                                    },
+                                  ),
                                 ),
                               ),
-                            ),
-                          )
-                      ],
+                            )
+                        ],
+                      ),
+                      trailing: Text('Кол-во: \n' +
+                          widget.order.consists[i].quantity.toString() +
+                          ' шт.'),
                     ),
-                    trailing: Text('Кол-во: \n' +
-                        widget.order.consistsTo[i].quantity.toString() +
-                        ' шт.'),
-                  ),
                   Divider(),
                 ],
               ),
@@ -158,84 +159,85 @@ class _ConsistsDetailState extends State<ConsistsDetail> {
               ),
             ),
             Divider(),
-            for (int i = 0; i < widget.order.consistsFrom.length; i++)
+            for (int i = 0; i < widget.order.consists.length; i++)
               Column(
                 children: [
-                  ListTile(
-                    isThreeLine: true,
-                    title: Text(
-                      (i + 1).toString() +
-                          '. ' +
-                          widget.order.consistsFrom[i].product,
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        if (widget.order.delivered == 1)
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(widget.order.consistsFrom[i].extInfo),
-                          )
-                        else
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextField(
-                              onSubmitted: (text) async {
-                                widget.order.consistsFrom[i].extInfo = text;
-                                await db.update(
-                                    'consists_from',
-                                    {
-                                      'ext_info':
-                                          widget.order.consistsFrom[i].extInfo,
-                                    },
-                                    where: 'id=? AND di=?',
-                                    whereArgs: [
-                                      widget.order.id,
-                                      widget.order.consistsFrom[i].di
-                                    ]);
-                              },
-                              controller: TextEditingController(
-                                text: widget.order.consistsFrom[i].extInfo,
-                              ),
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(
-                                  vertical: 1.0,
-                                  horizontal: 4.0,
+                  if (widget.order.consists[i].direction != 0)
+                    ListTile(
+                      isThreeLine: true,
+                      title: Text(
+                        (i + 1).toString() +
+                            '. ' +
+                            widget.order.consists[i].product,
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          if (widget.order.delivered == 1)
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(widget.order.consists[i].extInfo),
+                            )
+                          else
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextField(
+                                onSubmitted: (text) async {
+                                  widget.order.consists[i].extInfo = text;
+                                  await db.update(
+                                      'consists_from',
+                                      {
+                                        'ext_info': widget
+                                            .order.consists[i].extInfo,
+                                      },
+                                      where: 'id=? AND orders_id=?',
+                                      whereArgs: [
+                                        widget.order.id,
+                                        widget.order.consists[i].ordersID
+                                      ]);
+                                },
+                                controller: TextEditingController(
+                                  text: widget.order.consists[i].extInfo,
                                 ),
-                                border: OutlineInputBorder(),
-                                labelText: 'Доп.инф (S/N...)',
-                                suffixIcon: GestureDetector(
-                                  dragStartBehavior: DragStartBehavior.down,
-                                  child: Icon(
-                                    Icons.camera_alt,
-                                    size: 40,
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.symmetric(
+                                    vertical: 1.0,
+                                    horizontal: 4.0,
                                   ),
-                                  onTap: () async {
-                                    widget.order.consistsFrom[i].extInfo =
-                                        await scan();
-                                    await db.update(
-                                        'consists_from',
-                                        {
-                                          'ext_info': widget
-                                              .order.consistsFrom[i].extInfo,
-                                        },
-                                        where: 'id=? AND di=?',
-                                        whereArgs: [
-                                          widget.order.id,
-                                          widget.order.consistsFrom[i].di
-                                        ]);
-                                    setState(() {});
-                                  },
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Доп.инф (S/N...)',
+                                  suffixIcon: GestureDetector(
+                                    dragStartBehavior: DragStartBehavior.down,
+                                    child: Icon(
+                                      Icons.camera_alt,
+                                      size: 40,
+                                    ),
+                                    onTap: () async {
+                                      widget.order.consists[i].extInfo =
+                                          await scan();
+                                      await db.update(
+                                          'consists_from',
+                                          {
+                                            'ext_info': widget
+                                                .order.consists[i].extInfo,
+                                          },
+                                          where: 'id=? AND orders_id=?',
+                                          whereArgs: [
+                                            widget.order.id,
+                                            widget.order.consists[i].ordersID
+                                          ]);
+                                      setState(() {});
+                                    },
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                      ],
+                        ],
+                      ),
+                      trailing: Text('Кол-во: \n' +
+                          widget.order.consists[i].quantity.toString() +
+                          ' шт.'),
                     ),
-                    trailing: Text('Кол-во: \n' +
-                        widget.order.consistsFrom[i].quantity.toString() +
-                        ' шт.'),
-                  ),
                   Divider(),
                 ],
               ),

@@ -25,7 +25,9 @@ String macAddress;
 // final serverURL = 'http://192.168.0.113:1323';
 // final serverURL = 'http://10.10.11.135:1323';
 // final serverURL = 'http://192.168.0.3:1323';
+// Work
 final serverURL = 'http://10.10.11.98:1323';
+// Home
 // final serverURL = 'http://192.168.0.182:1323';
 bool connected = false;
 int orderDelivered;
@@ -104,24 +106,16 @@ Future _fetchDataToSQL(Database db, String url) async {
     } else {
       connected = true;
       orders = ordersFromJson(response.body);
+
       var sqlRes = await db.query('orders');
       if (sqlRes.isNotEmpty) {
         await db.delete('orders');
-        await db.delete('consists_to');
-        await db.delete('consists_from');
+        await db.delete('consists');
       }
       orders.forEach((x) async {
         await db.insert('orders', x.toSQL());
-        int _di = x.id.hashCode + 9;
-        x.consistsTo.forEach((y) async {
-          y.id = x.id;
-          y.di = _di++;
-          return await db.insert('consists_to', y.toSQL());
-        });
-        x.consistsFrom.forEach((y) async {
-          y.id = x.id;
-          y.di = _di++;
-          return await db.insert('consists_from', y.toSQL());
+        x.consists.forEach((y) async {
+          return await db.insert('consists', y.toSQL());
         });
         return;
       });
@@ -153,7 +147,8 @@ Future _fetchDataToSQL(Database db, String url) async {
         await db.delete('clients');
       }
       clients.forEach((x) async {
-        await db.insert('clients', x.toSQL());
+        await db.insert('clients', x.toSQL(),
+            conflictAlgorithm: ConflictAlgorithm.ignore);
         return;
       });
     }

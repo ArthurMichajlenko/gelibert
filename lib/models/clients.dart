@@ -22,13 +22,11 @@ class Clients {
   String id;
   String name;
   String tel;
-  String address;
 
   Clients({
     this.id,
     this.name,
     this.tel,
-    this.address,
   });
 
   Widget clientData(Database db, String id) {
@@ -46,30 +44,15 @@ class Clients {
               Text(
                 'Контрагент',
                 style: TextStyle(
-                  fontSize: 16,
+                  // fontSize: 12,
                   fontWeight: FontWeight.normal,
-                  color: Colors.grey,
+                  // color: Colors.grey,
                 ),
               ),
               Text(
                 clientSnap.data.name,
                 style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                'Адрес',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.grey,
-                ),
-              ),
-              Text(
-                clientSnap.data.address,
-                style: TextStyle(
-                  fontSize: 18,
+                  // fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -95,19 +78,6 @@ class Clients {
     );
   }
 
-  Widget clientAddress(Database db, String id) {
-    return FutureBuilder<Clients>(
-      builder: (context, snap) {
-        if (snap.connectionState == ConnectionState.none ||
-            snap.connectionState == ConnectionState.waiting ||
-            snap.hasData == null) {
-          return Center(child: CircularProgressIndicator());
-        }
-        return Text(snap.data.address);
-      },
-      future: getClient(db, id),
-    );
-  }
 
   Widget clientTel(Database db, String id) {
     return FutureBuilder<Clients>(
@@ -127,27 +97,23 @@ class Clients {
         id: json["id"],
         name: json["name"],
         tel: json["tel"],
-        address: json["address"],
       );
 
   factory Clients.fromSQL(Map<String, dynamic> sql) => new Clients(
         id: sql["id"],
         name: sql["name"],
         tel: sql["tel"],
-        address: sql["address"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
         "tel": tel,
-        "address": address,
       };
 
   Map<String, dynamic> toSQL() => {
         "id": id,
         "name": name,
         "tel": tel,
-        "address": address,
       };
 }
