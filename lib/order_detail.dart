@@ -141,9 +141,7 @@ class _OrderDetailState extends State<OrderDetail> {
                           ],
                         ),
                         onConfirm: (Picker picker, List value) async {
-                          await db.update('orders',
-                              {'delivery_delay': picker.getSelectedValues()[0]},
-                              where: 'id=?', whereArgs: [widget.order.id]);
+                          await db.update('orders', {'delivery_delay': picker.getSelectedValues()[0]}, where: 'id=?', whereArgs: [widget.order.id]);
                           Scaffold.of(context).showSnackBar(
                             SnackBar(
                               content: Row(
@@ -164,8 +162,7 @@ class _OrderDetailState extends State<OrderDetail> {
                           );
                         },
                         onCancel: () async {
-                          await db.update('orders', {'delivery_delay': 0},
-                              where: 'id=?', whereArgs: [widget.order.id]);
+                          await db.update('orders', {'delivery_delay': 0}, where: 'id=?', whereArgs: [widget.order.id]);
                         },
                       );
                       // picker.show(_scaffoldKey.currentState);
@@ -192,8 +189,14 @@ class _OrderDetailState extends State<OrderDetail> {
                           title: Text('Связаться с клиентом'),
                           content: Row(
                             children: <Widget>[
-                              Text('Позвонить клиенту '),
-                              client.clientName(db, widget.order.clientId),
+                              Text(
+                                'Позвонить ',
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: false,
+                              ),
+                              Expanded(
+                                child: client.clientName(db, widget.order.clientId),
+                              ),
                               Text(' ?'),
                             ],
                           ),
@@ -210,8 +213,7 @@ class _OrderDetailState extends State<OrderDetail> {
                                     content: Row(
                                       children: <Widget>[
                                         Text('Звонок на номер: '),
-                                        client.clientTel(
-                                            db, widget.order.clientId),
+                                        client.clientTel(db, widget.order.clientId),
                                       ],
                                     ),
                                     duration: Duration(
@@ -253,8 +255,7 @@ class _OrderDetailState extends State<OrderDetail> {
                         FlatButton(
                           child: Text('Нет'),
                           onPressed: () {
-                            Navigator.pop(context);
-                            return Navigator.pop(context);
+                            Navigator.pushNamed(context, '/ordersPage');
                           },
                         ),
                         FlatButton(
@@ -265,10 +266,8 @@ class _OrderDetailState extends State<OrderDetail> {
                               countDeffered++;
                               countTitle = countInWork;
                             });
-                            await db.update('orders', {'delivered': -1},
-                                where: 'id=?', whereArgs: [widget.order.id]);
-                            Navigator.pop(context);
-                            return Navigator.pop(context);
+                            await db.update('orders', {'delivered': -1}, where: 'id=?', whereArgs: [widget.order.id]);
+                            Navigator.pushNamed(context, '/ordersPage');
                           },
                         ),
                       ],
@@ -291,8 +290,7 @@ class _OrderDetailState extends State<OrderDetail> {
                         FlatButton(
                           child: Text('Нет'),
                           onPressed: () {
-                            Navigator.pop(context);
-                            return Navigator.pop(context);
+                            Navigator.pushNamed(context, '/ordersPage');
                           },
                         ),
                         FlatButton(
@@ -320,8 +318,7 @@ class _OrderDetailState extends State<OrderDetail> {
                                 },
                                 where: 'id=?',
                                 whereArgs: [widget.order.id]);
-                            Navigator.pop(context);
-                            return Navigator.pop(context);
+                            Navigator.pushNamed(context, '/ordersPage');
                           },
                         ),
                       ],
@@ -380,8 +377,7 @@ class _OrderDetailState extends State<OrderDetail> {
               'Заказ $reason',
               style: TextStyle(color: Colors.red),
             ),
-            content:
-                Text('Заказ $reason. Данное действие для него не доступно.'),
+            content: Text('Заказ $reason. Данное действие для него не доступно.'),
             actions: <Widget>[
               FlatButton.icon(
                 icon: Icon(Icons.do_not_disturb_alt),

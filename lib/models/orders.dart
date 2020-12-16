@@ -191,15 +191,15 @@ class Orders {
                     Text(ordersSnap.data[index].paymentMethod),
                   ],
                 ),
-                trailing: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    Text(ordersSnap.data[index].consists[0].product),
-                    Text(
-                        ordersSnap.data[index].consists[0].quantity.toString()),
-                    Text(ordersSnap.data[index].orderCost.toString() + ' Lei'),
-                  ],
-                ),
+                // trailing: Column(
+                //   crossAxisAlignment: CrossAxisAlignment.end,
+                //   children: <Widget>[
+                //     Text(ordersSnap.data[index].consists[0].product),
+                //     Text(
+                //         ordersSnap.data[index].consists[0].quantity.toString()),
+                //     Text(ordersSnap.data[index].orderCost.toString() + ' Lei'),
+                //   ],
+                // ),
                 onTap: () {
                   Navigator.push(
                     context,

@@ -28,7 +28,7 @@ dependencies:
   flutter_picker:
   http:
   # imei_plugin:
-  barcode_scan: ^2.0.2
+  barcode_scan: any
   geolocator:
   get_mac:
 

@@ -13,8 +13,7 @@ String clientsToJson(List<Clients> data) {
 }
 
 Future<Clients> getClient(Database db, String orderId) async {
-  List<Map<String, dynamic>> sqlDataClients =
-      await db.query('clients', where: 'id = ?', whereArgs: [orderId]);
+  List<Map<String, dynamic>> sqlDataClients = await db.query('clients', where: 'id = ?', whereArgs: [orderId]);
   return List<Clients>.from(sqlDataClients.map((x) => Clients.fromSQL(x)))[0];
 }
 
@@ -32,9 +31,7 @@ class Clients {
   Widget clientData(Database db, String id) {
     return FutureBuilder<Clients>(
       builder: (context, clientSnap) {
-        if (clientSnap.connectionState == ConnectionState.none ||
-            clientSnap.connectionState == ConnectionState.waiting ||
-            clientSnap.hasData == null) {
+        if (clientSnap.connectionState == ConnectionState.none || clientSnap.connectionState == ConnectionState.waiting || clientSnap.hasData == null) {
           return Center(child: CircularProgressIndicator());
         }
         return Container(
@@ -67,24 +64,23 @@ class Clients {
   Widget clientName(Database db, String id) {
     return FutureBuilder<Clients>(
       builder: (context, snap) {
-        if (snap.connectionState == ConnectionState.none ||
-            snap.connectionState == ConnectionState.waiting ||
-            snap.hasData == null) {
+        if (snap.connectionState == ConnectionState.none || snap.connectionState == ConnectionState.waiting || snap.hasData == null) {
           return Center(child: CircularProgressIndicator());
         }
-        return Text(snap.data.name);
+        return Text(
+          snap.data.name,
+          overflow: TextOverflow.fade,
+          // softWrap: false,
+        );
       },
       future: getClient(db, id),
     );
   }
 
-
   Widget clientTel(Database db, String id) {
     return FutureBuilder<Clients>(
       builder: (context, snap) {
-        if (snap.connectionState == ConnectionState.none ||
-            snap.connectionState == ConnectionState.waiting ||
-            snap.hasData == null) {
+        if (snap.connectionState == ConnectionState.none || snap.connectionState == ConnectionState.waiting || snap.hasData == null) {
           return Center(child: CircularProgressIndicator());
         }
         return Text(snap.data.tel);

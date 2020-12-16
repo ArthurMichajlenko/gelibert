@@ -68,17 +68,14 @@ class _ConsistsDetailState extends State<ConsistsDetail> {
                     ListTile(
                       isThreeLine: true,
                       title: Text(
-                        (i + 1).toString() +
-                            '. ' +
-                            widget.order.consists[i].product,
+                        (i + 1).toString() + '. ' + widget.order.consists[i].product,
                       ),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                                '${widget.order.consists[i].price}x${widget.order.consists[i].quantity} шт.'),
+                            child: Text('${widget.order.consists[i].price}x${widget.order.consists[i].quantity} шт.'),
                           ),
                           if (widget.order.delivered == 1)
                             Padding(
@@ -92,16 +89,12 @@ class _ConsistsDetailState extends State<ConsistsDetail> {
                                 onSubmitted: (text) async {
                                   widget.order.consists[i].extInfo = text;
                                   await db.update(
-                                      'consists_to',
+                                      'consists',
                                       {
-                                        'ext_info':
-                                            widget.order.consists[i].extInfo,
+                                        'ext_info': widget.order.consists[i].extInfo,
                                       },
                                       where: 'id=? AND orders_id=?',
-                                      whereArgs: [
-                                        widget.order.id,
-                                        widget.order.consists[i].ordersID
-                                      ]);
+                                      whereArgs: [widget.order.id, widget.order.consists[i].ordersID]);
                                 },
                                 controller: TextEditingController(
                                   text: widget.order.consists[i].extInfo,
@@ -120,19 +113,14 @@ class _ConsistsDetailState extends State<ConsistsDetail> {
                                       size: 40,
                                     ),
                                     onTap: () async {
-                                      widget.order.consists[i].extInfo =
-                                          await scan();
+                                      widget.order.consists[i].extInfo = await scan();
                                       await db.update(
-                                          'consists_to',
+                                          'consists',
                                           {
-                                            'ext_info': widget
-                                                .order.consists[i].extInfo,
+                                            'ext_info': widget.order.consists[i].extInfo,
                                           },
                                           where: 'id=? AND orders_id=?',
-                                          whereArgs: [
-                                            widget.order.id,
-                                            widget.order.consists[i].ordersID
-                                          ]);
+                                          whereArgs: [widget.order.id, widget.order.consists[i].ordersID]);
                                       setState(() {});
                                     },
                                   ),
@@ -141,9 +129,7 @@ class _ConsistsDetailState extends State<ConsistsDetail> {
                             )
                         ],
                       ),
-                      trailing: Text('Кол-во: \n' +
-                          widget.order.consists[i].quantity.toString() +
-                          ' шт.'),
+                      trailing: Text('Кол-во: \n' + widget.order.consists[i].quantity.toString() + ' шт.'),
                     ),
                   Divider(),
                 ],
@@ -166,9 +152,7 @@ class _ConsistsDetailState extends State<ConsistsDetail> {
                     ListTile(
                       isThreeLine: true,
                       title: Text(
-                        (i + 1).toString() +
-                            '. ' +
-                            widget.order.consists[i].product,
+                        (i + 1).toString() + '. ' + widget.order.consists[i].product,
                       ),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,16 +169,12 @@ class _ConsistsDetailState extends State<ConsistsDetail> {
                                 onSubmitted: (text) async {
                                   widget.order.consists[i].extInfo = text;
                                   await db.update(
-                                      'consists_from',
+                                      'consists',
                                       {
-                                        'ext_info': widget
-                                            .order.consists[i].extInfo,
+                                        'ext_info': widget.order.consists[i].extInfo,
                                       },
                                       where: 'id=? AND orders_id=?',
-                                      whereArgs: [
-                                        widget.order.id,
-                                        widget.order.consists[i].ordersID
-                                      ]);
+                                      whereArgs: [widget.order.id, widget.order.consists[i].ordersID]);
                                 },
                                 controller: TextEditingController(
                                   text: widget.order.consists[i].extInfo,
@@ -213,19 +193,14 @@ class _ConsistsDetailState extends State<ConsistsDetail> {
                                       size: 40,
                                     ),
                                     onTap: () async {
-                                      widget.order.consists[i].extInfo =
-                                          await scan();
+                                      widget.order.consists[i].extInfo = await scan();
                                       await db.update(
-                                          'consists_from',
+                                          'consists',
                                           {
-                                            'ext_info': widget
-                                                .order.consists[i].extInfo,
+                                            'ext_info': widget.order.consists[i].extInfo,
                                           },
                                           where: 'id=? AND orders_id=?',
-                                          whereArgs: [
-                                            widget.order.id,
-                                            widget.order.consists[i].ordersID
-                                          ]);
+                                          whereArgs: [widget.order.id, widget.order.consists[i].ordersID]);
                                       setState(() {});
                                     },
                                   ),
@@ -234,9 +209,7 @@ class _ConsistsDetailState extends State<ConsistsDetail> {
                             ),
                         ],
                       ),
-                      trailing: Text('Кол-во: \n' +
-                          widget.order.consists[i].quantity.toString() +
-                          ' шт.'),
+                      trailing: Text('Кол-во: \n' + widget.order.consists[i].quantity.toString() + ' шт.'),
                     ),
                   Divider(),
                 ],
@@ -253,7 +226,10 @@ class _ConsistsDetailState extends State<ConsistsDetail> {
       var code = await BarcodeScanner.scan();
       // extInfo = code.rawContent;
       extInfo = code;
-    } catch (_) {}
+      // } catch (_) {}
+    } catch (e) {
+      print(e);
+    }
     return extInfo;
   }
 }

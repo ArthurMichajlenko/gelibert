@@ -26,7 +26,11 @@ String macAddress;
 // final serverURL = 'http://10.10.11.135:1323';
 // final serverURL = 'http://192.168.0.3:1323';
 // Work
-final serverURL = 'http://10.10.11.98:1323';
+// final serverURL = 'http://10.10.11.98:1323';
+// DevServer work
+final serverURL = 'http://10.10.11.156:1323';
+//DevServer home
+// final serverURL = "http://188.237.114.90:1323";
 // Home
 // final serverURL = 'http://192.168.0.182:1323';
 bool connected = false;
@@ -52,30 +56,23 @@ Future<Database> _openDB() async {
     }
     //Copy from assets
     ByteData data = await rootBundle.load(join("assets", "gelibert.db3"));
-    List<int> bytes =
-        data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+    List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
     await File(path).writeAsBytes(bytes, flush: true);
   }
   final _db = await openDatabase(path);
   await _fetchDataToSQL(_db, serverURL);
-  countAll =
-      Sqflite.firstIntValue(await _db.rawQuery('SELECT COUNT(*) FROM orders'));
-  countInWork = Sqflite.firstIntValue(
-      await _db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 0'));
-  countComplete = Sqflite.firstIntValue(
-      await _db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 1'));
-  countDeffered = Sqflite.firstIntValue(
-      await _db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = -1'));
+  countAll = Sqflite.firstIntValue(await _db.rawQuery('SELECT COUNT(*) FROM orders'));
+  countInWork = Sqflite.firstIntValue(await _db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 0'));
+  countComplete = Sqflite.firstIntValue(await _db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 1'));
+  countDeffered = Sqflite.firstIntValue(await _db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = -1'));
   return _db;
 }
 
 Future<String> _fetchJWTToken(String url) async {
   macAddress = await GetMac.macAddress;
-  print("MAC: " + macAddress);
   if (token == 'Notoken' || token == 'Unconnect') {
     try {
-      var res =
-          await http.post(url + "/login", body: {'macAddress': macAddress});
+      var res = await http.post(url + "/login", body: {'macAddress': macAddress});
       if (res.statusCode != 200) {
         connected = false;
         return "Unauthorized";
@@ -98,8 +95,7 @@ Future _fetchDataToSQL(Database db, String url) async {
   Couriers couriers;
   List<Clients> clients;
   try {
-    response = await http.get(url + "/data/orders",
-        headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
+    response = await http.get(url + "/data/orders", headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
     if (response.statusCode != 200) {
       connected = false;
       return;
@@ -120,8 +116,7 @@ Future _fetchDataToSQL(Database db, String url) async {
         return;
       });
     }
-    response = await http.get(url + "/data/couriers",
-        headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
+    response = await http.get(url + "/data/couriers", headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
     if (response.statusCode != 200) {
       connected = false;
       return;
@@ -134,8 +129,7 @@ Future _fetchDataToSQL(Database db, String url) async {
       }
       await db.insert('couriers', couriers.toSQL());
     }
-    response = await http.get(url + "/data/clients",
-        headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
+    response = await http.get(url + "/data/clients", headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
     if (response.statusCode != 200) {
       connected = false;
       return;
@@ -147,8 +141,7 @@ Future _fetchDataToSQL(Database db, String url) async {
         await db.delete('clients');
       }
       clients.forEach((x) async {
-        await db.insert('clients', x.toSQL(),
-            conflictAlgorithm: ConflictAlgorithm.ignore);
+        await db.insert('clients', x.toSQL(), conflictAlgorithm: ConflictAlgorithm.ignore);
         return;
       });
     }
@@ -175,8 +168,7 @@ class _ConnectToServerState extends State<ConnectToServer> {
   Widget build(BuildContext context) {
     return FutureBuilder<String>(
       builder: (context, startSnap) {
-        if (startSnap.connectionState == ConnectionState.none ||
-            startSnap.connectionState == ConnectionState.waiting) {
+        if (startSnap.connectionState == ConnectionState.none || startSnap.connectionState == ConnectionState.waiting) {
           return Scaffold(
             appBar: AppBar(
               title: Text("Подключение..."),
@@ -199,9 +191,7 @@ class _ConnectToServerState extends State<ConnectToServer> {
             title: Text('Unauthorized'),
             content: Text('Устройство не зарегистрированно...'),
             actions: <Widget>[
-              FlatButton(
-                  onPressed: () => SystemNavigator.pop(),
-                  child: Text('Выйти из программы')),
+              FlatButton(onPressed: () => SystemNavigator.pop(), child: Text('Выйти из программы')),
             ],
           );
         }
@@ -244,8 +234,7 @@ class _InitDBState extends State<InitDB> {
   Widget build(BuildContext context) {
     return FutureBuilder<Database>(
       builder: (context, dbSnap) {
-        if (dbSnap.connectionState == ConnectionState.none ||
-            dbSnap.connectionState == ConnectionState.waiting) {
+        if (dbSnap.connectionState == ConnectionState.none || dbSnap.connectionState == ConnectionState.waiting) {
           return Scaffold(
             appBar: AppBar(
               title: Text("Инициализация данных..."),
@@ -334,6 +323,11 @@ class _OrdersPageState extends State<OrdersPage> {
               // },
               onPressed: () async {
                 await _fetchDataToSQL(db, serverURL);
+                countAll = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders'));
+                countInWork = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 0'));
+                countComplete = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 1'));
+                countDeffered = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = -1'));
+                orderDelivered = 2;
                 setState(() {});
               },
             )
