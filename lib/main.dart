@@ -96,25 +96,35 @@ Future _fetchDataToSQL(Database db, String url) async {
   List<Clients> clients;
   try {
     response = await http.get(url + "/data/orders", headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
-    if (response.statusCode != 200) {
-      connected = false;
-      return;
-    } else {
-      connected = true;
-      orders = ordersFromJson(response.body);
-
-      var sqlRes = await db.query('orders');
-      if (sqlRes.isNotEmpty) {
-        await db.delete('orders');
-        await db.delete('consists');
-      }
-      orders.forEach((x) async {
-        await db.insert('orders', x.toSQL());
-        x.consists.forEach((y) async {
-          return await db.insert('consists', y.toSQL());
+    switch (response.statusCode) {
+      case 200:
+        connected = true;
+        isOrdersEmpty = false;
+        orders = ordersFromJson(response.body);
+        var sqlRes = await db.query('orders');
+        if (sqlRes.isNotEmpty) {
+          await db.delete('orders');
+          await db.delete('consists');
+        }
+        orders.forEach((x) async {
+          await db.insert('orders', x.toSQL());
+          x.consists.forEach((y) async {
+            return await db.insert('consists', y.toSQL());
+          });
+          return;
         });
+        break;
+      case 204:
+        isOrdersEmpty = true;
+        var sqlRes = await db.query('orders');
+        if (sqlRes.isNotEmpty) {
+          await db.delete('orders');
+          await db.delete('consists');
+        }
+        break;
+      default:
+        connected = false;
         return;
-      });
     }
     response = await http.get(url + "/data/couriers", headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
     if (response.statusCode != 200) {

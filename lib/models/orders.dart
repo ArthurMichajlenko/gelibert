@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:gilebert/main.dart';
 import 'package:gilebert/models/clients.dart';
 // import 'package:gilebert/temp.dart';
 import 'package:sqflite/sqflite.dart';
@@ -20,6 +21,7 @@ int countAll;
 int countInWork;
 int countComplete;
 int countDeffered;
+bool isOrdersEmpty;
 
 class Orders {
   var _client = Clients();
@@ -57,8 +59,7 @@ class Orders {
         courierId: json["courier_id"],
         clientId: json["client_id"],
         paymentMethod: json["payment_method"],
-        consists: new List<Consist>.from(
-            json["consists"].map((x) => Consist.fromJson(x))),
+        consists: new List<Consist>.from(json["consists"].map((x) => Consist.fromJson(x))),
         orderCost: json["order_cost"].toDouble(),
         delivered: json["delivered"],
         deliveryDelay: json["delivery_delay"],
@@ -114,11 +115,27 @@ class Orders {
       };
 
   Widget ordersListWidget(Database db, int delivered) {
+    if (isOrdersEmpty) {
+      countAll = 0;
+      countInWork = 0;
+      countComplete = 0;
+      countDeffered = 0;
+      countTitle = 0;
+      return Center(
+        child: Text(
+          'Список заказов пуст.',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.red,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+      );
+    }
     return FutureBuilder<List<Orders>>(
       builder: (context, ordersSnap) {
-        if (ordersSnap.connectionState == ConnectionState.none ||
-            ordersSnap.connectionState == ConnectionState.waiting ||
-            ordersSnap.hasData == null) {
+        if (ordersSnap.connectionState == ConnectionState.none || ordersSnap.connectionState == ConnectionState.waiting || ordersSnap.hasData == null) {
           return Center(child: CircularProgressIndicator());
         }
         return ListView.builder(
@@ -204,8 +221,7 @@ class Orders {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          OrderDetail(order: ordersSnap.data[index]),
+                      builder: (context) => OrderDetail(order: ordersSnap.data[index]),
                     ),
                   );
                 },
@@ -222,28 +238,22 @@ class Orders {
 Future<List<Orders>> getOrdersList(Database db, int delivered) async {
   List<Map<String, dynamic>> sqlDataOrders;
 
-  countAll =
-      Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders'));
-  countInWork = Sqflite.firstIntValue(
-      await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 0'));
-  countComplete = Sqflite.firstIntValue(
-      await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 1'));
-  countDeffered = Sqflite.firstIntValue(
-      await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = -1'));
+  countAll = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders'));
+  countInWork = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 0'));
+  countComplete = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 1'));
+  countDeffered = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = -1'));
 
   switch (delivered) {
     case -1:
     case 0:
     case 1:
-      sqlDataOrders = await db
-          .query('orders', where: 'delivered=?', whereArgs: [delivered]);
+      sqlDataOrders = await db.query('orders', where: 'delivered=?', whereArgs: [delivered]);
       break;
     default:
       sqlDataOrders = await db.query('orders');
   }
   List<Map<String, dynamic>> sqlDataConsists = await db.query('consists');
-  var consists =
-      List<Consist>.from(sqlDataConsists.map((x) => Consist.fromSQL(x)));
+  var consists = List<Consist>.from(sqlDataConsists.map((x) => Consist.fromSQL(x)));
   var orders = List<Orders>.from(sqlDataOrders.map((x) {
     var result = Orders.fromSQL(x);
     consists.forEach((y) {
