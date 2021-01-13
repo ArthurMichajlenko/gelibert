@@ -123,6 +123,7 @@ Future _fetchDataToSQL(Database db, String url) async {
         }
         break;
       default:
+        (Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders')) == 0) ? isOrdersEmpty = true : isOrdersEmpty = false;
         connected = false;
         return;
     }
@@ -157,6 +158,7 @@ Future _fetchDataToSQL(Database db, String url) async {
     }
   } catch (e) {
     print(e);
+    (Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders')) == 0) ? isOrdersEmpty = true : isOrdersEmpty = false;
     connected = false;
     return;
   }
