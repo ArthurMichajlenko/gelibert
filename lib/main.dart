@@ -302,6 +302,7 @@ class OrdersPage extends StatefulWidget {
 class _OrdersPageState extends State<OrdersPage> {
   var _orders = Orders();
   var _courier = Couriers();
+  var _listener;
 
   @override
   void initState() {
@@ -314,18 +315,7 @@ class _OrdersPageState extends State<OrdersPage> {
         port: serverPort,
       )
     ];
-  }
-
-  // @override
-  // void dispose() {
-  //   // db.close();
-  //   listener.cancel();
-  //   super.dispose();
-  // }
-
-  @override
-  Widget build(BuildContext context) {
-    DataConnectionChecker().onStatusChange.listen((status) {
+    _listener = DataConnectionChecker().onStatusChange.listen((status) {
       switch (status) {
         case DataConnectionStatus.connected:
           print('Server available');
@@ -337,6 +327,17 @@ class _OrdersPageState extends State<OrdersPage> {
           break;
       }
     });
+  }
+
+  @override
+  void dispose() {
+    // db.close();
+    _listener.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         // title: Text(mainTitle),
