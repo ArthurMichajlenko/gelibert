@@ -22,26 +22,14 @@ Database db;
 String token = 'Notoken';
 String macAddress;
 // Couriers courier;
-// final serverURL = 'http://10.10.11.135:1323/login';
-// final serverURL = 'http://192.168.0.113:1323';
-// final serverURL = 'http://10.10.11.135:1323';
-// final serverURL = 'http://192.168.0.3:1323';
-// Work
-// final serverURL = 'http://10.10.11.98:1323';
 // DevServer work
 final serverProtocol = 'http';
 final serverAddress = '10.10.11.156';
 final serverPort = 1323;
-// final serverURL = 'http://10.10.11.156:1323';
 final serverURL = serverProtocol + '://' + serverAddress + ':' + serverPort.toString();
-//DevServer home
-// final serverURL = "http://188.237.114.90:1323";
-// Home
-// final serverURL = 'http://192.168.0.182:1323';
 bool connected = false;
 int orderDelivered;
 int countTitle;
-// var connectionChecker = DataConnectionChecker();
 
 // void main() async {
 //   WidgetsFlutterBinding.ensureInitialized();
