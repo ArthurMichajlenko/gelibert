@@ -89,6 +89,7 @@ Future _fetchDataToSQL(Database db, String url) async {
   Couriers couriers;
   List<Clients> clients;
   try {
+    // Fetch orders
     response = await http.get(url + "/data/orders", headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
     switch (response.statusCode) {
       case 200:
@@ -121,6 +122,7 @@ Future _fetchDataToSQL(Database db, String url) async {
         connected = false;
         return;
     }
+    //Fetch couriers
     response = await http.get(url + "/data/couriers", headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
     if (response.statusCode != 200) {
       connected = false;
@@ -134,6 +136,7 @@ Future _fetchDataToSQL(Database db, String url) async {
       }
       await db.insert('couriers', couriers.toSQL());
     }
+    //Fetch clients
     response = await http.get(url + "/data/clients", headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
     if (response.statusCode != 200) {
       connected = false;
