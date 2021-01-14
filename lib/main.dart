@@ -15,6 +15,7 @@ import 'models/couriers.dart';
 import 'models/clients.dart';
 import 'title_orders.dart';
 import 'package:get_mac/get_mac.dart';
+import 'package:data_connection_checker/data_connection_checker.dart';
 
 // void main() => runApp(GelibertApp());
 Database db;
@@ -28,7 +29,11 @@ String macAddress;
 // Work
 // final serverURL = 'http://10.10.11.98:1323';
 // DevServer work
-final serverURL = 'http://10.10.11.156:1323';
+final serverProtocol = 'http';
+final serverAddress = '10.10.11.156';
+final serverPort = 1323;
+// final serverURL = 'http://10.10.11.156:1323';
+final serverURL = serverProtocol + '://' + serverAddress + ':' + serverPort.toString();
 //DevServer home
 // final serverURL = "http://188.237.114.90:1323";
 // Home
@@ -36,6 +41,7 @@ final serverURL = 'http://10.10.11.156:1323';
 bool connected = false;
 int orderDelivered;
 int countTitle;
+// var connectionChecker = DataConnectionChecker();
 
 // void main() async {
 //   WidgetsFlutterBinding.ensureInitialized();
@@ -299,19 +305,38 @@ class _OrdersPageState extends State<OrdersPage> {
 
   @override
   void initState() {
+    super.initState();
     orderDelivered = 2;
     countTitle = countAll;
-    super.initState();
+    DataConnectionChecker().addresses = [
+      AddressCheckOptions(
+        InternetAddress(serverAddress),
+        port: serverPort,
+      )
+    ];
   }
 
   // @override
   // void dispose() {
-  //   db.close();
+  //   // db.close();
+  //   listener.cancel();
   //   super.dispose();
   // }
 
   @override
   Widget build(BuildContext context) {
+    DataConnectionChecker().onStatusChange.listen((status) {
+      switch (status) {
+        case DataConnectionStatus.connected:
+          print('Server available');
+          setState(() => connected = true);
+          break;
+        case DataConnectionStatus.disconnected:
+          print('Server unavailable');
+          setState(() => connected = false);
+          break;
+      }
+    });
     return Scaffold(
       appBar: AppBar(
         // title: Text(mainTitle),

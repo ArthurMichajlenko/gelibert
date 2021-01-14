@@ -31,6 +31,7 @@ dependencies:
   barcode_scan: any
   geolocator:
   get_mac:
+  data_connection_checker:
 
 dev_dependencies:
   flutter_test:
