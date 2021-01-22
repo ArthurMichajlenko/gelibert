@@ -53,7 +53,10 @@ Future<Database> _openDB() async {
     List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
     await File(path).writeAsBytes(bytes, flush: true);
   }
-  final _db = await openDatabase(path);
+  final _db = await openDatabase(
+    path,
+    onConfigure: (db) async => await db.execute('PRAGMA foreign_keys = ON'),
+  );
   await _fetchDataToSQL(_db, serverURL);
   countAll = Sqflite.firstIntValue(await _db.rawQuery('SELECT COUNT(*) FROM orders'));
   countInWork = Sqflite.firstIntValue(await _db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 0'));
@@ -89,39 +92,6 @@ Future _fetchDataToSQL(Database db, String url) async {
   Couriers couriers;
   List<Clients> clients;
   try {
-    // Fetch orders
-    response = await http.get(url + "/data/orders", headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
-    switch (response.statusCode) {
-      case 200:
-        connected = true;
-        isOrdersEmpty = false;
-        orders = ordersFromJson(response.body);
-        var sqlRes = await db.query('orders');
-        if (sqlRes.isNotEmpty) {
-          await db.delete('orders');
-          await db.delete('consists');
-        }
-        orders.forEach((x) async {
-          await db.insert('orders', x.toSQL());
-          x.consists.forEach((y) async {
-            return await db.insert('consists', y.toSQL());
-          });
-          return;
-        });
-        break;
-      case 204:
-        isOrdersEmpty = true;
-        var sqlRes = await db.query('orders');
-        if (sqlRes.isNotEmpty) {
-          await db.delete('orders');
-          await db.delete('consists');
-        }
-        break;
-      default:
-        (Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders')) == 0) ? isOrdersEmpty = true : isOrdersEmpty = false;
-        connected = false;
-        return;
-    }
     //Fetch couriers
     response = await http.get(url + "/data/couriers", headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
     if (response.statusCode != 200) {
@@ -130,11 +100,7 @@ Future _fetchDataToSQL(Database db, String url) async {
     } else {
       connected = true;
       couriers = couriersFromJson(response.body);
-      var sqlRes = await db.query('couriers');
-      if (sqlRes.isNotEmpty) {
-        await db.delete('couriers');
-      }
-      await db.insert('couriers', couriers.toSQL());
+      await db.insert('couriers', couriers.toSQL(), conflictAlgorithm: ConflictAlgorithm.replace);
     }
     //Fetch clients
     response = await http.get(url + "/data/clients", headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
@@ -144,14 +110,41 @@ Future _fetchDataToSQL(Database db, String url) async {
     } else {
       connected = true;
       clients = clientsFromJson(response.body);
-      var sqlRes = await db.query('clients');
-      if (sqlRes.isNotEmpty) {
-        await db.delete('clients');
-      }
       clients.forEach((x) async {
-        await db.insert('clients', x.toSQL(), conflictAlgorithm: ConflictAlgorithm.ignore);
+        await db.insert('clients', x.toSQL(), conflictAlgorithm: ConflictAlgorithm.replace);
         return;
       });
+    }
+    // Fetch orders
+    response = await http.get(url + "/data/orders", headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
+    switch (response.statusCode) {
+      case 200:
+        connected = true;
+        isOrdersEmpty = false;
+        orders = ordersFromJson(response.body);
+        var sqlRes = await db.query('orders');
+        if (sqlRes.isNotEmpty) {
+          await db.delete('orders', where: "date_start <= date('now', '-1 day')");
+        }
+        orders.forEach((x) async {
+          await db.insert('orders', x.toSQL(), conflictAlgorithm: ConflictAlgorithm.replace);
+          x.consists.forEach((y) async {
+            return await db.insert('consists', y.toSQL(), conflictAlgorithm: ConflictAlgorithm.replace);
+          });
+          return;
+        });
+        break;
+      case 204:
+        isOrdersEmpty = true;
+        var sqlRes = await db.query('orders');
+        if (sqlRes.isNotEmpty) {
+          await db.delete('orders', where: "date_start <= date('now', '-1 day')");
+        }
+        break;
+      default:
+        (Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders')) == 0) ? isOrdersEmpty = true : isOrdersEmpty = false;
+        connected = false;
+        return;
     }
   } catch (e) {
     print(e);
