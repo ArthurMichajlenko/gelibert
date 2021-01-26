@@ -24,7 +24,10 @@ String macAddress;
 // Couriers courier;
 // DevServer work
 final serverProtocol = 'http';
-final serverAddress = '10.10.11.156';
+// Local
+// final serverAddress = '10.10.11.156';
+// Office MoldTelecom
+final serverAddress = '188.237.114.90';
 final serverPort = 1323;
 final serverURL = serverProtocol + '://' + serverAddress + ':' + serverPort.toString();
 bool connected = false;
