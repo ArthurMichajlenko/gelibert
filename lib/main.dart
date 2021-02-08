@@ -329,6 +329,7 @@ class _OrdersPageState extends State<OrdersPage> {
       appBar: AppBar(
         // title: Text(mainTitle),
         backgroundColor: connectColor(),
+        centerTitle: true,
         title: TitleOrders(
           countTitle,
           countAll,
@@ -368,17 +369,36 @@ class _OrdersPageState extends State<OrdersPage> {
               ),
             ),
         ],
+        bottom: PreferredSize(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Маршрутный лист № 000080258',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.white,
+                fontStyle: FontStyle.italic,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          preferredSize: Size.fromHeight(10),
+        ),
       ),
       body: _orders.ordersListWidget(db, orderDelivered),
       drawer: Drawer(
         child: Column(
           children: <Widget>[
-            UserAccountsDrawerHeader(
-              accountEmail: _courier.courierCarNumber(db, macAddress),
-              accountName: _courier.courierName(db, macAddress),
-              currentAccountPicture: CircleAvatar(
-                backgroundImage: AssetImage('assets/images/Aqua.png'),
+            GestureDetector(
+              child: UserAccountsDrawerHeader(
+                accountEmail: _courier.courierCarNumber(db, macAddress),
+                accountName: _courier.courierName(db, macAddress),
+                currentAccountPicture: CircleAvatar(
+                  backgroundImage: AssetImage('assets/images/Aqua.png'),
+                  child: Text('85'),
+                ),
               ),
+              onTap: () => print('Tap'),
             ),
             Expanded(
               child: ListView(

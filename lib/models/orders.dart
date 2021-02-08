@@ -37,6 +37,8 @@ class Orders {
   String dateStart;
   String dateFinish;
   String address;
+  String orderRoutlist;
+  String orderDate;
   // String timestamp;
 
   Orders({
@@ -51,6 +53,8 @@ class Orders {
     this.dateStart,
     this.dateFinish,
     this.address,
+    this.orderRoutlist,
+    this.orderDate,
     // this.timestamp,
   });
 
@@ -66,6 +70,8 @@ class Orders {
         dateStart: json["date_start"],
         dateFinish: json["date_finish"],
         address: json["address"],
+        orderRoutlist: json["order_routlist"],
+        orderDate: json["order_date"],
         // timestamp: json["timestamp"],
       );
 
@@ -82,6 +88,8 @@ class Orders {
       dateStart: sqlOrders["date_start"],
       dateFinish: sqlOrders["date_finish"],
       address: sqlOrders["address"],
+      orderRoutlist: sqlOrders["order_routlist"],
+      orderDate: sqlOrders["order_date"],
     );
   }
 
@@ -97,6 +105,8 @@ class Orders {
         "date_start": dateStart,
         "date_finish": dateFinish,
         "address": address,
+        "order_routlist": orderRoutlist,
+        "order_date": orderDate,
         // "timestamp": timestamp,
       };
 
@@ -111,6 +121,8 @@ class Orders {
         "date_start": dateStart,
         "date_finish": dateFinish,
         "address": address,
+        "order_routlist": orderRoutlist,
+        "order_date": orderDate,
         // "timestamp": timestamp,
       };
 
