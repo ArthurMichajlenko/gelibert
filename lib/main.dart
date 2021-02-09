@@ -14,7 +14,7 @@ import 'models/orders.dart';
 import 'models/couriers.dart';
 import 'models/clients.dart';
 import 'title_orders.dart';
-import 'package:get_mac/get_mac.dart';
+import 'auth_page.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 
 // void main() => runApp(GelibertApp());
@@ -69,7 +69,7 @@ Future<Database> _openDB() async {
 }
 
 Future<String> _fetchJWTToken(String url) async {
-  macAddress = await GetMac.macAddress;
+  macAddress = '84';
   if (token == 'Notoken' || token == 'Unconnect') {
     try {
       var res = await http.post(url + "/login", body: {'macAddress': macAddress});
@@ -95,6 +95,7 @@ Future _fetchDataToSQL(Database db, String url) async {
   Couriers couriers;
   List<Clients> clients;
   try {
+    print(token);
     //Fetch couriers
     response = await http.get(url + "/data/couriers", headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
     if (response.statusCode != 200) {
@@ -184,13 +185,6 @@ class _ConnectToServerState extends State<ConnectToServer> {
           );
         }
         token = startSnap.data;
-        // Navigator.of(context).pushReplacement(
-        //   MaterialPageRoute(
-        //     builder: (BuildContext context) => OrdersPage(
-        //       title: 'Заказы',
-        //     ),
-        //   ),
-        // );
         if (token == 'Unauthorized') {
           return AlertDialog(
             title: Text('Unauthorized'),
@@ -200,28 +194,6 @@ class _ConnectToServerState extends State<ConnectToServer> {
             ],
           );
         }
-        if (token == 'Unconnect') {
-          return AlertDialog(
-            title: Text('Unconnect'),
-            content: Text('Нет связи с сервером...\nДанные не актуальны.'),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('Подключитьcя...'),
-                onPressed: () => setState(() {}),
-              ),
-              FlatButton(
-                child: Text('Продолжить'),
-                onPressed: () {
-                  setState(() => connected = false);
-                  return Navigator.pushNamed(context, '/initDB');
-                },
-              ),
-            ],
-          );
-        }
-        // return OrdersPage(title: 'Заказы');
-        // return InitDB();
-        // Navigator.of(context).pushReplacementNamed('/initDB');
         return InitDB();
       },
       future: _fetchJWTToken(serverURL),
@@ -265,13 +237,13 @@ class GelibertApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
       ),
-      // home: OrdersPage(title: 'Заказы'),
-      // home: ConnectToServer(),
       initialRoute: '/connectToServer',
+      // initialRoute: '/authPage',
       routes: {
         '/connectToServer': (context) => ConnectToServer(),
         '/initDB': (context) => InitDB(),
         '/ordersPage': (context) => OrdersPage(title: 'Заказы'),
+        '/authPage': (context) => AuthPage(),
       },
       debugShowCheckedModeBanner: false,
     );
@@ -306,6 +278,10 @@ class _OrdersPageState extends State<OrdersPage> {
       switch (status) {
         case DataConnectionStatus.connected:
           print('Server available');
+          _fetchJWTToken(serverURL).then((value) {
+            token = value;
+            _fetchDataToSQL(db, serverURL);
+          });
           setState(() => connected = true);
           break;
         case DataConnectionStatus.disconnected:
@@ -329,7 +305,7 @@ class _OrdersPageState extends State<OrdersPage> {
       appBar: AppBar(
         // title: Text(mainTitle),
         backgroundColor: connectColor(),
-        centerTitle: true,
+        // centerTitle: true,
         title: TitleOrders(
           countTitle,
           countAll,
@@ -369,21 +345,21 @@ class _OrdersPageState extends State<OrdersPage> {
               ),
             ),
         ],
-        bottom: PreferredSize(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Маршрутный лист № 000080258',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.white,
-                fontStyle: FontStyle.italic,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          preferredSize: Size.fromHeight(10),
-        ),
+        // bottom: PreferredSize(
+        //   child: Padding(
+        //     padding: const EdgeInsets.all(8.0),
+        //     child: Text(
+        //       'Маршрутный лист № 000080258',
+        //       style: TextStyle(
+        //         fontSize: 14,
+        //         color: Colors.white,
+        //         fontStyle: FontStyle.italic,
+        //         fontWeight: FontWeight.bold,
+        //       ),
+        //     ),
+        //   ),
+        //   preferredSize: Size.fromHeight(10),
+        // ),
       ),
       body: _orders.ordersListWidget(db, orderDelivered),
       drawer: Drawer(
@@ -394,8 +370,13 @@ class _OrdersPageState extends State<OrdersPage> {
                 accountEmail: _courier.courierCarNumber(db, macAddress),
                 accountName: _courier.courierName(db, macAddress),
                 currentAccountPicture: CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/Aqua.png'),
-                  child: Text('85'),
+                  // backgroundImage: AssetImage('assets/images/Aqua.png'),
+                  child: Text(
+                    macAddress,
+                    style: TextStyle(
+                      fontSize: 24,
+                    ),
+                  ),
                 ),
               ),
               onTap: () => print('Tap'),

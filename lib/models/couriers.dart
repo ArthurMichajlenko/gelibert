@@ -16,10 +16,8 @@ String couriersToJson(Couriers data) {
 }
 
 Future<Couriers> getCourier(Database db, String macAddress) async {
-  List<Map<String, dynamic>> sqlDataCouriers = await db
-      .query('couriers', where: 'mac_address = ?', whereArgs: [macAddress]);
-  return List<Couriers>.from(
-      sqlDataCouriers.map((x) => Couriers.fromSQL(x)))[0];
+  List<Map<String, dynamic>> sqlDataCouriers = await db.query('couriers', where: 'mac_address = ?', whereArgs: [macAddress]);
+  return List<Couriers>.from(sqlDataCouriers.map((x) => Couriers.fromSQL(x)))[0];
 }
 
 class Couriers {
@@ -42,12 +40,16 @@ class Couriers {
   Widget courierName(Database db, String macAddress) {
     return FutureBuilder<Couriers>(
       builder: (context, snap) {
-        if (snap.connectionState == ConnectionState.none ||
-            snap.connectionState == ConnectionState.waiting ||
-            snap.hasData == null) {
+        if (snap.connectionState == ConnectionState.none || snap.connectionState == ConnectionState.waiting || snap.hasData == null) {
           return Center(child: CircularProgressIndicator());
         }
-        return Text(snap.data.name);
+        return Text(
+          snap.data.name,
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        );
       },
       future: getCourier(db, macAddress),
     );
@@ -56,12 +58,15 @@ class Couriers {
   Widget courierCarNumber(Database db, String macAddress) {
     return FutureBuilder<Couriers>(
       builder: (context, snap) {
-        if (snap.connectionState == ConnectionState.none ||
-            snap.connectionState == ConnectionState.waiting ||
-            snap.hasData == null) {
+        if (snap.connectionState == ConnectionState.none || snap.connectionState == ConnectionState.waiting || snap.hasData == null) {
           return Center(child: CircularProgressIndicator());
         }
-        return Text(snap.data.carNumber);
+        return Text(
+          snap.data.carNumber,
+          style: TextStyle(
+            fontSize: 24,
+          ),
+        );
       },
       future: getCourier(db, macAddress),
     );

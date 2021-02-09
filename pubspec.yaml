@@ -30,7 +30,6 @@ dependencies:
   # imei_plugin:
   barcode_scan: any
   geolocator:
-  get_mac:
   data_connection_checker:
 
 dev_dependencies:
