@@ -34,12 +34,12 @@ bool connected = false;
 int orderDelivered;
 int countTitle;
 
-// void main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   db = await _openDB();
-//   runApp(GelibertApp());
-// }
-void main() => runApp(GelibertApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  db = await _openDB();
+  runApp(GelibertApp());
+}
+// void main() => runApp(GelibertApp());
 
 Future<Database> _openDB() async {
   var databasePath = await getDatabasesPath();
@@ -60,16 +60,19 @@ Future<Database> _openDB() async {
     path,
     onConfigure: (db) async => await db.execute('PRAGMA foreign_keys = ON'),
   );
-  await _fetchDataToSQL(_db, serverURL);
-  countAll = Sqflite.firstIntValue(await _db.rawQuery('SELECT COUNT(*) FROM orders'));
-  countInWork = Sqflite.firstIntValue(await _db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 0'));
-  countComplete = Sqflite.firstIntValue(await _db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 1'));
-  countDeffered = Sqflite.firstIntValue(await _db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = -1'));
   return _db;
 }
 
+Future<void> _initDB(Database db) async {
+  await _fetchDataToSQL(db, serverURL);
+  countAll = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders'));
+  countInWork = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 0'));
+  countComplete = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 1'));
+  countDeffered = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = -1'));
+}
+
 Future<String> _fetchJWTToken(String url) async {
-  macAddress = '84';
+  // macAddress = '84';
   if (token == 'Notoken' || token == 'Unconnect') {
     try {
       var res = await http.post(url + "/login", body: {'macAddress': macAddress});
@@ -79,7 +82,9 @@ Future<String> _fetchJWTToken(String url) async {
       }
       Map<String, dynamic> tk = jsonDecode(res.body);
       connected = true;
-      return tk['token'];
+      token = tk['token'];
+      // return token;
+      // return tk['token'];
       // } on SocketException catch (e) {
     } catch (_) {
       connected = false;
@@ -89,13 +94,12 @@ Future<String> _fetchJWTToken(String url) async {
   return token;
 }
 
-Future _fetchDataToSQL(Database db, String url) async {
+Future<void> _fetchDataToSQL(Database db, String url) async {
   http.Response response;
   List<Orders> orders;
   Couriers couriers;
   List<Clients> clients;
   try {
-    print(token);
     //Fetch couriers
     response = await http.get(url + "/data/couriers", headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
     if (response.statusCode != 200) {
@@ -188,11 +192,13 @@ class _ConnectToServerState extends State<ConnectToServer> {
         if (token == 'Unauthorized') {
           return AlertDialog(
             title: Text('Unauthorized'),
-            content: Text('Устройство не зарегистрированно...'),
+            content: Text('ID отсутствует в системе...'),
             actions: <Widget>[
               FlatButton(onPressed: () => SystemNavigator.pop(), child: Text('Выйти из программы')),
             ],
           );
+          // Navigator.pushNamed(context, '/authPage');
+          // Navigator.pop(context);
         }
         return InitDB();
       },
@@ -209,7 +215,7 @@ class InitDB extends StatefulWidget {
 class _InitDBState extends State<InitDB> {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Database>(
+    return FutureBuilder<void>(
       builder: (context, dbSnap) {
         if (dbSnap.connectionState == ConnectionState.none || dbSnap.connectionState == ConnectionState.waiting) {
           return Scaffold(
@@ -221,10 +227,9 @@ class _InitDBState extends State<InitDB> {
             ),
           );
         }
-        db = dbSnap.data;
         return OrdersPage(title: 'Заказы');
       },
-      future: _openDB(),
+      future: _initDB(db),
     );
   }
 }
@@ -237,8 +242,8 @@ class GelibertApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
       ),
-      initialRoute: '/connectToServer',
-      // initialRoute: '/authPage',
+      // initialRoute: '/connectToServer',
+      initialRoute: '/authPage',
       routes: {
         '/connectToServer': (context) => ConnectToServer(),
         '/initDB': (context) => InitDB(),
@@ -280,8 +285,9 @@ class _OrdersPageState extends State<OrdersPage> {
           print('Server available');
           _fetchJWTToken(serverURL).then((value) {
             token = value;
-            _fetchDataToSQL(db, serverURL);
+            // _fetchDataToSQL(db, serverURL);
           });
+          _initDB(db);
           setState(() => connected = true);
           break;
         case DataConnectionStatus.disconnected:
@@ -379,7 +385,11 @@ class _OrdersPageState extends State<OrdersPage> {
                   ),
                 ),
               ),
-              onTap: () => print('Tap'),
+              onTap: () async {
+                await db.delete('couriers');
+                Navigator.pushNamed(context, '/authPage');
+                // return AuthPage();
+              },
             ),
             Expanded(
               child: ListView(

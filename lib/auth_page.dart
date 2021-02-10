@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'main.dart';
+// import 'package:sqflite/sqflite.dart';
+import 'main.dart';
 // import 'models/couriers.dart';
 
 class AuthPage extends StatefulWidget {
@@ -11,10 +12,35 @@ class AuthPage extends StatefulWidget {
 class _AuthPageState extends State<AuthPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
-  String courierID;
 
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder<List<Map<String, dynamic>>>(
+      builder: (context, startSnap) {
+        if (startSnap.connectionState == ConnectionState.none || startSnap.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text("Регистрация..."),
+            ),
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+        if (startSnap.data.length == 0) {
+          return buildAuthPage(context);
+        }
+        macAddress = startSnap.data[0]['mac_address'];
+        return ConnectToServer();
+      },
+      future: db.query(
+        'couriers',
+        columns: ['mac_address'],
+      ),
+    );
+  }
+
+  GestureDetector buildAuthPage(BuildContext context) {
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
@@ -47,7 +73,7 @@ class _AuthPageState extends State<AuthPage> {
                     ),
                   ),
                   TextFormField(
-                    initialValue: courierID,
+                    initialValue: macAddress,
                     validator: courierIDValidator,
                     keyboardType: TextInputType.number,
                     inputFormatters: <TextInputFormatter>[
@@ -58,7 +84,11 @@ class _AuthPageState extends State<AuthPage> {
                     ),
                     onFieldSubmitted: (value) {
                       if (_formKey.currentState.validate()) {
-                        _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(courierID + 'value' + value)));
+                        print(macAddress);
+                        // Navigator.pop(context);
+                        // return ConnectToServer();
+                        Navigator.pushNamed(context, '/connectToServer');
+                        // _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(macAddress + 'value' + value)));
                       }
                     },
                   ),
@@ -69,12 +99,17 @@ class _AuthPageState extends State<AuthPage> {
                         child: Text('Зарегистрироваться'),
                         onPressed: () {
                           if (_formKey.currentState.validate()) {
-                            _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(courierID)));
+                            print(macAddress);
+                            // Navigator.pop(context);
+                            // return ConnectToServer();
+                            Navigator.pushNamed(context, '/connectToServer');
+                            // _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(macAddress)));
                           }
                         },
                       ),
                     ),
-                  )
+                  ),
+                  // if (token == 'Unauthorized') Text('ID отсутствует в системе'),
                 ],
               ),
             ),
@@ -86,7 +121,10 @@ class _AuthPageState extends State<AuthPage> {
     if (value.isEmpty) {
       return 'Заполните свой ID';
     }
-    courierID = value;
+    setState(() {
+      macAddress = value;
+      token = 'Notoken';
+    });
     return null;
   }
 }
