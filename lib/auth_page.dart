@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'package:sqflite/sqflite.dart';
 import 'main.dart';
-// import 'models/couriers.dart';
 
 class AuthPage extends StatefulWidget {
   @override
@@ -53,67 +51,85 @@ class _AuthPageState extends State<AuthPage> {
           appBar: AppBar(
             title: Text('Регистрация ...'),
           ),
-          body: Form(
-            key: _formKey,
-            child: Container(
-              padding: const EdgeInsets.all(40.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      'Введите свой ID',
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 24.0,
-                        fontWeight: FontWeight.bold,
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (connected)
+                inputIdForm(context)
+              else
+                Center(
+                  child: Column(
+                    children: [
+                      CircularProgressIndicator(),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text('Подключение к серверу...',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 22,
+                            )),
                       ),
-                    ),
-                  ),
-                  TextFormField(
-                    initialValue: macAddress,
-                    validator: courierIDValidator,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly,
                     ],
-                    style: TextStyle(
-                      fontSize: 24,
-                    ),
-                    onFieldSubmitted: (value) {
-                      if (_formKey.currentState.validate()) {
-                        print(macAddress);
-                        // Navigator.pop(context);
-                        // return ConnectToServer();
-                        Navigator.pushNamed(context, '/connectToServer');
-                        // _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(macAddress + 'value' + value)));
-                      }
-                    },
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    child: Center(
-                      child: RaisedButton(
-                        child: Text('Зарегистрироваться'),
-                        onPressed: () {
-                          if (_formKey.currentState.validate()) {
-                            print(macAddress);
-                            // Navigator.pop(context);
-                            // return ConnectToServer();
-                            Navigator.pushNamed(context, '/connectToServer');
-                            // _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(macAddress)));
-                          }
-                        },
-                      ),
-                    ),
-                  ),
-                  // if (token == 'Unauthorized') Text('ID отсутствует в системе'),
-                ],
+                ),
+            ],
+          )),
+    );
+  }
+
+  Form inputIdForm(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Container(
+        padding: const EdgeInsets.all(40.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                'Введите свой ID',
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          )),
+            TextFormField(
+              initialValue: macAddress,
+              validator: courierIDValidator,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.digitsOnly,
+              ],
+              style: TextStyle(
+                fontSize: 24,
+              ),
+              onFieldSubmitted: (value) {
+                if (_formKey.currentState.validate()) {
+                  Navigator.pushNamed(context, '/connectToServer');
+                }
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: Center(
+                child: RaisedButton(
+                  child: Text('Зарегистрироваться'),
+                  onPressed: () {
+                    if (_formKey.currentState.validate()) {
+                      Navigator.pushNamed(context, '/connectToServer');
+                    }
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

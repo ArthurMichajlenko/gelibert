@@ -33,6 +33,7 @@ final serverURL = serverProtocol + '://' + serverAddress + ':' + serverPort.toSt
 bool connected = false;
 int orderDelivered;
 int countTitle;
+List<String> routLists;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -60,11 +61,20 @@ Future<Database> _openDB() async {
     path,
     onConfigure: (db) async => await db.execute('PRAGMA foreign_keys = ON'),
   );
+  // Create temporary table for route list
+  await _db.execute('CREATE TEMP TABLE IF NOT EXISTS temp_routlist (routlist TEXT NOT NULL UNIQUE ON CONFLICT ignore)');
   return _db;
 }
 
 Future<void> _initDB(Database db) async {
   await _fetchDataToSQL(db, serverURL);
+  await db.execute('DELETE FROM temp_routlist');
+  await db.execute('INSERT INTO temp_routlist SELECT order_routlist FROM orders');
+  db.query('temp_routlist').then((value) {
+    routLists = [];
+    value.forEach((element) => element.forEach((key, value) => routLists.add(value)));
+  });
+  print(Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM temp_routlist')));
   countAll = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders'));
   countInWork = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 0'));
   countComplete = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 1'));
@@ -72,7 +82,6 @@ Future<void> _initDB(Database db) async {
 }
 
 Future<String> _fetchJWTToken(String url) async {
-  // macAddress = '84';
   if (token == 'Notoken' || token == 'Unconnect') {
     try {
       var res = await http.post(url + "/login", body: {'macAddress': macAddress});
@@ -197,8 +206,6 @@ class _ConnectToServerState extends State<ConnectToServer> {
               FlatButton(onPressed: () => SystemNavigator.pop(), child: Text('Выйти из программы')),
             ],
           );
-          // Navigator.pushNamed(context, '/authPage');
-          // Navigator.pop(context);
         }
         return InitDB();
       },
@@ -234,7 +241,41 @@ class _InitDBState extends State<InitDB> {
   }
 }
 
-class GelibertApp extends StatelessWidget {
+class GelibertApp extends StatefulWidget {
+  @override
+  _GelibertAppState createState() => _GelibertAppState();
+}
+
+class _GelibertAppState extends State<GelibertApp> {
+  var _listener;
+  @override
+  void initState() {
+    super.initState();
+    // Check connection with backend server
+    DataConnectionChecker().addresses = [
+      AddressCheckOptions(
+        InternetAddress(serverAddress),
+        port: serverPort,
+      )
+    ];
+    _listener = DataConnectionChecker().onStatusChange.listen((status) {
+      switch (status) {
+        case DataConnectionStatus.connected:
+          setState(() => connected = true);
+          break;
+        case DataConnectionStatus.disconnected:
+          setState(() => connected = false);
+          break;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _listener.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -266,42 +307,17 @@ class OrdersPage extends StatefulWidget {
 class _OrdersPageState extends State<OrdersPage> {
   var _orders = Orders();
   var _courier = Couriers();
-  var _listener;
 
   @override
   void initState() {
     super.initState();
     orderDelivered = 2;
     countTitle = countAll;
-    DataConnectionChecker().addresses = [
-      AddressCheckOptions(
-        InternetAddress(serverAddress),
-        port: serverPort,
-      )
-    ];
-    _listener = DataConnectionChecker().onStatusChange.listen((status) {
-      switch (status) {
-        case DataConnectionStatus.connected:
-          print('Server available');
-          _fetchJWTToken(serverURL).then((value) {
-            token = value;
-            // _fetchDataToSQL(db, serverURL);
-          });
-          _initDB(db);
-          setState(() => connected = true);
-          break;
-        case DataConnectionStatus.disconnected:
-          print('Server unavailable');
-          setState(() => connected = false);
-          break;
-      }
-    });
   }
 
   @override
   void dispose() {
     // db.close();
-    _listener.cancel();
     super.dispose();
   }
 
@@ -386,6 +402,15 @@ class _OrdersPageState extends State<OrdersPage> {
                 ),
               ),
               onTap: () async {
+                // if (!connected) {
+                //   AlertDialog(
+                //     title: Text('Connect'),
+                //     content: Text('Нет соединения с сервером'),
+                //     actions: <Widget>[
+                //       FlatButton(onPressed: () => Navigator.pop(context), child: Text('Ok'),),
+                //     ],
+                //   );
+                // }
                 await db.delete('couriers');
                 Navigator.pushNamed(context, '/authPage');
                 // return AuthPage();
