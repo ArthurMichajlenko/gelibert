@@ -126,7 +126,7 @@ class Orders {
         // "timestamp": timestamp,
       };
 
-  Widget ordersListWidget(Database db, int delivered) {
+  Widget ordersListWidget(Database db, int delivered, String routListNum) {
     if (isOrdersEmpty) {
       countAll = 0;
       countInWork = 0;
@@ -242,27 +242,27 @@ class Orders {
           },
         );
       },
-      future: getOrdersList(db, delivered),
+      future: getOrdersList(db, delivered, routListNum),
     );
   }
 }
 
-Future<List<Orders>> getOrdersList(Database db, int delivered) async {
+Future<List<Orders>> getOrdersList(Database db, int delivered, String routListNum) async {
   List<Map<String, dynamic>> sqlDataOrders;
 
-  countAll = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders'));
-  countInWork = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 0'));
-  countComplete = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 1'));
-  countDeffered = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = -1'));
+  countAll = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE order_routlist = ?', [routListNum]));
+  countInWork = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 0 AND order_routlist = ?', [routListNum]));
+  countComplete = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 1 AND order_routlist = ?', [routListNum]));
+  countDeffered = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = -1 AND order_routlist = ?', [routListNum]));
 
   switch (delivered) {
     case -1:
     case 0:
     case 1:
-      sqlDataOrders = await db.query('orders', where: 'delivered=?', whereArgs: [delivered]);
+      sqlDataOrders = await db.query('orders', where: 'delivered = ? AND order_routlist = ?', whereArgs: [delivered, routListNum]);
       break;
     default:
-      sqlDataOrders = await db.query('orders');
+      sqlDataOrders = await db.query('orders', where: 'order_routlist = ?', whereArgs: [routListNum]);
   }
   List<Map<String, dynamic>> sqlDataConsists = await db.query('consists');
   var consists = List<Consist>.from(sqlDataConsists.map((x) => Consist.fromSQL(x)));

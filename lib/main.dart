@@ -33,7 +33,8 @@ final serverURL = serverProtocol + '://' + serverAddress + ':' + serverPort.toSt
 bool connected = false;
 int orderDelivered;
 int countTitle;
-List<String> routLists;
+Set<String> routLists = {};
+String routList;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,24 +62,23 @@ Future<Database> _openDB() async {
     path,
     onConfigure: (db) async => await db.execute('PRAGMA foreign_keys = ON'),
   );
-  // Create temporary table for route list
-  await _db.execute('CREATE TEMP TABLE IF NOT EXISTS temp_routlist (routlist TEXT NOT NULL UNIQUE ON CONFLICT ignore)');
   return _db;
 }
 
 Future<void> _initDB(Database db) async {
   await _fetchDataToSQL(db, serverURL);
-  await db.execute('DELETE FROM temp_routlist');
-  await db.execute('INSERT INTO temp_routlist SELECT order_routlist FROM orders');
-  db.query('temp_routlist').then((value) {
-    routLists = [];
-    value.forEach((element) => element.forEach((key, value) => routLists.add(value)));
-  });
-  print(Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM temp_routlist')));
-  countAll = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders'));
-  countInWork = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 0'));
-  countComplete = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 1'));
-  countDeffered = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = -1'));
+  if (routLists.isEmpty) {
+    countAll = 0;
+    countInWork = 0;
+    countComplete = 0;
+    countDeffered = 0;
+  } else {
+    routList = routLists.elementAt(0);
+    countAll = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE order_routlist = ?', [routList]));
+    countInWork = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 0 AND order_routlist = ?', [routList]));
+    countComplete = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 1 AND order_routlist = ?', [routList]));
+    countDeffered = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = -1 AND order_routlist = ?', [routList]));
+  }
 }
 
 Future<String> _fetchJWTToken(String url) async {
@@ -134,6 +134,7 @@ Future<void> _fetchDataToSQL(Database db, String url) async {
     }
     // Fetch orders
     response = await http.get(url + "/data/orders", headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
+    routLists.clear();
     switch (response.statusCode) {
       case 200:
         connected = true;
@@ -144,6 +145,7 @@ Future<void> _fetchDataToSQL(Database db, String url) async {
           await db.delete('orders', where: "date_start <= date('now', '-1 day')");
         }
         orders.forEach((x) async {
+          routLists.add(x.orderRoutlist);
           await db.insert('orders', x.toSQL(), conflictAlgorithm: ConflictAlgorithm.replace);
           x.consists.forEach((y) async {
             return await db.insert('consists', y.toSQL(), conflictAlgorithm: ConflictAlgorithm.replace);
@@ -307,6 +309,8 @@ class OrdersPage extends StatefulWidget {
 class _OrdersPageState extends State<OrdersPage> {
   var _orders = Orders();
   var _courier = Couriers();
+  var _routNum = routList;
+  var _routNumItems = routLists.toList();
 
   @override
   void initState() {
@@ -347,10 +351,10 @@ class _OrdersPageState extends State<OrdersPage> {
               // },
               onPressed: () async {
                 await _fetchDataToSQL(db, serverURL);
-                countAll = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders'));
-                countInWork = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 0'));
-                countComplete = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 1'));
-                countDeffered = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = -1'));
+                countAll = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE order_routlist = ?', [_routNum]));
+                countInWork = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 0 AND order_routlist = ?', [_routNum]));
+                countComplete = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 1 AND order_routlist = ?', [_routNum]));
+                countDeffered = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = -1 AND order_routlist = ?', [_routNum]));
                 orderDelivered = 2;
                 setState(() {});
               },
@@ -383,7 +387,55 @@ class _OrdersPageState extends State<OrdersPage> {
         //   preferredSize: Size.fromHeight(10),
         // ),
       ),
-      body: _orders.ordersListWidget(db, orderDelivered),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (routLists.length != 0)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Text(
+                    // 'Маршрутный лист №: ' + routLists.elementAt(0),
+                    'Маршрутный лист №: ',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  // RaisedButton(
+                  //   onPressed: () => print(_routNumItems),
+                  //   child: Text(routList),
+                  // ),
+                  DropdownButton<String>(
+                    value: _routNum,
+                    items: _routNumItems.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        child: Text(
+                          value,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20.0,
+                          ),
+                        ),
+                        value: value,
+                      );
+                    }).toList(),
+                    onChanged: (String newValue) {
+                      setState(() {
+                        _routNum = newValue;
+                        routList = newValue;
+                      });
+                      // print(_routNum);
+                    },
+                  )
+                ],
+              ),
+            ),
+          Flexible(child: _orders.ordersListWidget(db, orderDelivered, _routNum)),
+        ],
+      ),
       drawer: Drawer(
         child: Column(
           children: <Widget>[
