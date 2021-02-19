@@ -6,6 +6,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:http/http.dart' as http;
@@ -250,9 +251,17 @@ class GelibertApp extends StatefulWidget {
 
 class _GelibertAppState extends State<GelibertApp> {
   var _listener;
+
   @override
   void initState() {
     super.initState();
+    // Write geodtat to SQL every 5 min
+    Timer.periodic(Duration(minutes: 5), (Timer timer) {
+      Geolocator.getCurrentPosition().then((value) => db.insert('geodata', {
+            'longitude': value.longitude,
+            'latitude': value.latitude,
+          }));
+    });
     // Check connection with backend server
     DataConnectionChecker().addresses = [
       AddressCheckOptions(

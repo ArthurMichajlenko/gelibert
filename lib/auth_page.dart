@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'main.dart';
 
 class AuthPage extends StatefulWidget {
@@ -10,6 +11,15 @@ class AuthPage extends StatefulWidget {
 class _AuthPageState extends State<AuthPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
+  
+  @override
+  void initState() {
+    super.initState();
+    Geolocator.getCurrentPosition().then((value) => db.insert('geodata', {
+          'longitude': value.longitude,
+          'latitude': value.latitude,
+        }));
+  }
 
   @override
   Widget build(BuildContext context) {
