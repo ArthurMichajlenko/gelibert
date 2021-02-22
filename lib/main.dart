@@ -67,7 +67,7 @@ Future<Database> _openDB() async {
 }
 
 Future<void> _initDB(Database db) async {
-  await _fetchDataToSQL(db, serverURL);
+  await fetchDataToSQL(db, serverURL);
   if (routLists.isEmpty) {
     countAll = 0;
     countInWork = 0;
@@ -104,7 +104,7 @@ Future<String> _fetchJWTToken(String url) async {
   return token;
 }
 
-Future<void> _fetchDataToSQL(Database db, String url) async {
+Future<void> fetchDataToSQL(Database db, String url) async {
   http.Response response;
   List<Orders> orders;
   Couriers couriers;
@@ -359,7 +359,7 @@ class _OrdersPageState extends State<OrdersPage> {
               //       () => setState(() => connected = true));
               // },
               onPressed: () async {
-                await _fetchDataToSQL(db, serverURL);
+                await fetchDataToSQL(db, serverURL);
                 countAll = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE order_routlist = ?', [_routNum]));
                 countInWork = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 0 AND order_routlist = ?', [_routNum]));
                 countComplete = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 1 AND order_routlist = ?', [_routNum]));

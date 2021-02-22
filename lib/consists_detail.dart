@@ -94,7 +94,7 @@ class _ConsistsDetailState extends State<ConsistsDetail> {
                                         'ext_info': widget.order.consists[i].extInfo,
                                       },
                                       where: 'id=? AND orders_id=?',
-                                      whereArgs: [widget.order.id, widget.order.consists[i].ordersID]);
+                                      whereArgs: [widget.order.consists[i].id, widget.order.consists[i].ordersID]);
                                 },
                                 controller: TextEditingController(
                                   text: widget.order.consists[i].extInfo,
@@ -120,7 +120,7 @@ class _ConsistsDetailState extends State<ConsistsDetail> {
                                             'ext_info': widget.order.consists[i].extInfo,
                                           },
                                           where: 'id=? AND orders_id=?',
-                                          whereArgs: [widget.order.id, widget.order.consists[i].ordersID]);
+                                          whereArgs: [widget.order.consists[i].id, widget.order.consists[i].ordersID]);
                                       setState(() {});
                                     },
                                   ),
@@ -174,7 +174,7 @@ class _ConsistsDetailState extends State<ConsistsDetail> {
                                         'ext_info': widget.order.consists[i].extInfo,
                                       },
                                       where: 'id=? AND orders_id=?',
-                                      whereArgs: [widget.order.id, widget.order.consists[i].ordersID]);
+                                      whereArgs: [widget.order.consists[i].id, widget.order.consists[i].ordersID]);
                                 },
                                 controller: TextEditingController(
                                   text: widget.order.consists[i].extInfo,
@@ -200,7 +200,7 @@ class _ConsistsDetailState extends State<ConsistsDetail> {
                                             'ext_info': widget.order.consists[i].extInfo,
                                           },
                                           where: 'id=? AND orders_id=?',
-                                          whereArgs: [widget.order.id, widget.order.consists[i].ordersID]);
+                                          whereArgs: [widget.order.consists[i].id, widget.order.consists[i].ordersID]);
                                       setState(() {});
                                     },
                                   ),
