@@ -82,11 +82,8 @@ Future<void> fetchDataToSQL(Database db, String url) async {
 
 Future<void> sendToServer(Database db, String url, {@required List<String> id}) async {
   http.Response response;
-  List<Orders> orders = [];
-  await getOrdersFromDB(id, db, orders);
+  var ordersJson = await getOrdersFromDbToJson(id, db);
   try {
-    String body = ordersToJson(orders);
-    print(body);
     response = await http.post(
       url + "/data/orders",
       headers: {
@@ -94,10 +91,8 @@ Future<void> sendToServer(Database db, String url, {@required List<String> id}) 
         HttpHeaders.contentTypeHeader: "application/json",
       },
       // body: ordersToJson(orders),
-      body: body,
+      body: ordersJson,
     );
-    print('-----------------------');
-    print(ordersToJson(orders));
     if (response.statusCode != 200) {
       connected = false;
       return;
@@ -107,19 +102,25 @@ Future<void> sendToServer(Database db, String url, {@required List<String> id}) 
   }
 }
 
-Future<void> getOrdersFromDB(List<String> id, Database db, List<Orders> orders) async {
-  return id.forEach((orderId) async {
+Future<String> getOrdersFromDbToJson(List<String> id, Database db) async {
+  String result;
+  List<Orders> orders = [];
   List<Consist> consists = [];
-  await db.query(
-    'consists',
-    where: 'orders_id = ?',
-    whereArgs: [orderId],
-  ).then((sql) => sql.forEach((sqlConsists) => consists.add(Consist.fromSQL(sqlConsists))));
-  await db.query(
-    'orders',
-    where: 'id = ?',
-    whereArgs: [orderId],
-  ).then((sql) => sql.forEach((sqlOrders) => orders.add(Orders.fromSQL(sqlOrders))));
-  orders[0].consists = consists;
-});
+  for (var orderId in id) {
+    var resConsists = await db.query(
+      'consists',
+      where: 'orders_id = ?',
+      whereArgs: [orderId],
+    );
+    var resOrders = await db.query(
+      'orders',
+      where: 'id = ?',
+      whereArgs: [orderId],
+    );
+    resConsists.forEach((sqlConsists) => consists.add(Consist.fromSQL(sqlConsists)));
+    resOrders.forEach((sqlOrders) => orders.add(Orders.fromSQL(sqlOrders)));
+    orders[0].consists = consists;
+    result = ordersToJson(orders);
+  }
+  return result;
 }
