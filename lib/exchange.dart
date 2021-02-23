@@ -1,3 +1,4 @@
+// import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -80,22 +81,45 @@ Future<void> fetchDataToSQL(Database db, String url) async {
 }
 
 Future<void> sendToServer(Database db, String url, {@required List<String> id}) async {
+  http.Response response;
   List<Orders> orders = [];
-  List<Consist> consists = [];
-  id.forEach((orderId) async {
-    await db.query(
-      'consists',
-      where: 'orders_id = ?',
-      whereArgs: [orderId],
-    ).then((sql) => sql.forEach((sqlConsists) => consists.add(Consist.fromSQL(sqlConsists))));
-    await db.query(
-      'orders',
-      where: 'id = ?',
-      whereArgs: [orderId],
-    ).then((sql) => sql.forEach((sqlOrders) => orders.add(Orders.fromSQL(sqlOrders))));
-    orders[0].consists = consists;
-    print(orders[0].consists[1].extInfo);
+  await getOrdersFromDB(id, db, orders);
+  try {
+    String body = ordersToJson(orders);
+    print(body);
+    response = await http.post(
+      url + "/data/orders",
+      headers: {
+        HttpHeaders.authorizationHeader: "Bearer " + token,
+        HttpHeaders.contentTypeHeader: "application/json",
+      },
+      // body: ordersToJson(orders),
+      body: body,
+    );
+    print('-----------------------');
     print(ordersToJson(orders));
-    print(url);
-  });
+    if (response.statusCode != 200) {
+      connected = false;
+      return;
+    }
+  } catch (e) {
+    print(e);
+  }
+}
+
+Future<void> getOrdersFromDB(List<String> id, Database db, List<Orders> orders) async {
+  return id.forEach((orderId) async {
+  List<Consist> consists = [];
+  await db.query(
+    'consists',
+    where: 'orders_id = ?',
+    whereArgs: [orderId],
+  ).then((sql) => sql.forEach((sqlConsists) => consists.add(Consist.fromSQL(sqlConsists))));
+  await db.query(
+    'orders',
+    where: 'id = ?',
+    whereArgs: [orderId],
+  ).then((sql) => sql.forEach((sqlOrders) => orders.add(Orders.fromSQL(sqlOrders))));
+  orders[0].consists = consists;
+});
 }
