@@ -90,7 +90,6 @@ Future<void> sendToServer(Database db, String url, {@required List<String> id}) 
         HttpHeaders.authorizationHeader: "Bearer " + token,
         HttpHeaders.contentTypeHeader: "application/json",
       },
-      // body: ordersToJson(orders),
       body: ordersJson,
     );
     if (response.statusCode != 200) {
