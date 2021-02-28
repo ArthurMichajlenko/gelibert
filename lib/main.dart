@@ -6,7 +6,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:gilebert/models/geodata.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:http/http.dart' as http;
@@ -80,13 +80,19 @@ Future<void> _initDB(Database db) async {
     countComplete = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 1 AND order_routlist = ?', [routList]));
     countDeffered = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = -1 AND order_routlist = ?', [routList]));
   }
+  await saveGeodata(db, macAddress, serverURL);
+  Timer.periodic(Duration(minutes: 5), (Timer timer) => saveGeodata(db, macAddress, serverURL));
+  // Geolocator.getCurrentPosition().then((value) => db.insert('geodata', {
+  //       'longitude': value.longitude,
+  //       'latitude': value.latitude,
+  //     }));
 }
 
 Future<String> _fetchJWTToken(String url) async {
   if (token == 'Notoken' || token == 'Unconnect') {
     try {
       var res = await http.post(url + "/login", body: {'macAddress': macAddress});
-      if (res.statusCode != 200) {
+      if (res.statusCode != HttpStatus.ok) {
         connected = false;
         return "Unauthorized";
       }
@@ -103,7 +109,6 @@ Future<String> _fetchJWTToken(String url) async {
   }
   return token;
 }
-
 
 Color connectColor() {
   Color colorBackground;
@@ -187,12 +192,12 @@ class _GelibertAppState extends State<GelibertApp> {
   void initState() {
     super.initState();
     // Write geodtat to SQL every 5 min
-    Timer.periodic(Duration(minutes: 5), (Timer timer) {
-      Geolocator.getCurrentPosition().then((value) => db.insert('geodata', {
-            'longitude': value.longitude,
-            'latitude': value.latitude,
-          }));
-    });
+    // Timer.periodic(Duration(minutes: 5), (Timer timer) {
+    //   Geolocator.getCurrentPosition().then((value) => db.insert('geodata', {
+    //         'longitude': value.longitude,
+    //         'latitude': value.latitude,
+    //       }));
+    // });
     // Check connection with backend server
     DataConnectionChecker().addresses = [
       AddressCheckOptions(

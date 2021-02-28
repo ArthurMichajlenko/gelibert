@@ -18,7 +18,7 @@ Future<void> fetchDataToSQL(Database db, String url) async {
   try {
     //Fetch couriers
     response = await http.get(url + "/data/couriers", headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
-    if (response.statusCode != 200) {
+    if (response.statusCode != HttpStatus.ok) {
       connected = false;
       return;
     } else {
@@ -28,7 +28,7 @@ Future<void> fetchDataToSQL(Database db, String url) async {
     }
     //Fetch clients
     response = await http.get(url + "/data/clients", headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
-    if (response.statusCode != 200) {
+    if (response.statusCode != HttpStatus.ok) {
       connected = false;
       return;
     } else {
@@ -92,7 +92,7 @@ Future<void> sendToServer(Database db, String url, {@required List<String> id}) 
       },
       body: ordersJson,
     );
-    if (response.statusCode != 200) {
+    if (response.statusCode != HttpStatus.ok) {
       connected = false;
       return;
     }
