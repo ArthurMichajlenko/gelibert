@@ -81,7 +81,7 @@ Future<void> _initDB(Database db) async {
     countDeffered = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = -1 AND order_routlist = ?', [routList]));
   }
   await saveGeodata(db, macAddress, serverURL);
-  Timer.periodic(Duration(minutes: 5), (Timer timer) => saveGeodata(db, macAddress, serverURL));
+  // Timer.periodic(Duration(minutes: 5), (Timer timer) => saveGeodata(db, macAddress, serverURL));
   // Geolocator.getCurrentPosition().then((value) => db.insert('geodata', {
   //       'longitude': value.longitude,
   //       'latitude': value.latitude,
@@ -192,6 +192,7 @@ class _GelibertAppState extends State<GelibertApp> {
   void initState() {
     super.initState();
     // Write geodtat to SQL every 5 min
+    Timer.periodic(Duration(minutes: 5), (Timer timer) => saveGeodata(db, macAddress, serverURL));
     // Timer.periodic(Duration(minutes: 5), (Timer timer) {
     //   Geolocator.getCurrentPosition().then((value) => db.insert('geodata', {
     //         'longitude': value.longitude,

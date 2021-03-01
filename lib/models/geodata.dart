@@ -21,23 +21,35 @@ Future<List<Geodata>> getGeodata(Database db) async {
 }
 
 Future<void> saveGeodata(Database db, String macAddress, String url) async {
-  Geodata geodata;
+  Geodata geodata = Geodata();
   http.Response response;
-  var courierId = await db.query('couriers', columns: ['courier_d'], where: 'mac_address = ?', whereArgs: [macAddress]);
-  geodata.courierId = courierId[0]['courier_id'];
+  var id = await db.query('couriers', columns: ['id'], where: 'mac_address = ?', whereArgs: [macAddress]);
+  geodata.courierId = id[0]['id'];
   geodata.macAddress = macAddress;
   var position = await Geolocator.getCurrentPosition();
   geodata.latitude = position.latitude;
   geodata.longitude = position.longitude;
-  await db.insert('geodata', geodata.toSQL());
+  await db.insert('geodata', {
+    "courier_id": geodata.courierId,
+    "mac_address": geodata.macAddress,
+    "longitude": geodata.longitude,
+    "latitude": geodata.latitude,
+  });
+  var tempDb = await db.query(
+    'geodata',
+    columns: ['id', 'timestamp'],
+    where: 'id = (SELECT MAX(id) FROM geodata)',
+  );
+  geodata.id = tempDb[0]['id'];
+  geodata.timestamp = tempDb[0]['timestamp'];
   try {
     response = await http.post(
-      url + 'data/geodata',
+      url + "/data/geodata",
       headers: {
         HttpHeaders.authorizationHeader: "Bearer " + token,
         HttpHeaders.contentTypeHeader: "application/json",
       },
-      body: geodata.toJson(),
+      body: json.encode(geodata.toJson()),
     );
     if (response.statusCode != HttpStatus.noContent) {
       connected = false;
