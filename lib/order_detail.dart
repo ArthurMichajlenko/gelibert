@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gilebert/consists_detail.dart';
+import 'package:gilebert/exchange.dart';
 import 'models/orders.dart';
 import 'models/clients.dart';
 import 'main.dart';
@@ -142,6 +143,7 @@ class _OrderDetailState extends State<OrderDetail> {
                         ),
                         onConfirm: (Picker picker, List value) async {
                           await db.update('orders', {'delivery_delay': picker.getSelectedValues()[0]}, where: 'id=?', whereArgs: [widget.order.id]);
+                          sendToServer(db, serverURL, id: [widget.order.id]);
                           Scaffold.of(context).showSnackBar(
                             SnackBar(
                               content: Row(
@@ -163,6 +165,7 @@ class _OrderDetailState extends State<OrderDetail> {
                         },
                         onCancel: () async {
                           await db.update('orders', {'delivery_delay': 0}, where: 'id=?', whereArgs: [widget.order.id]);
+                          sendToServer(db, serverURL, id: [widget.order.id]);
                         },
                       );
                       // picker.show(_scaffoldKey.currentState);
@@ -267,6 +270,7 @@ class _OrderDetailState extends State<OrderDetail> {
                               countTitle = countInWork;
                             });
                             await db.update('orders', {'delivered': -1}, where: 'id=?', whereArgs: [widget.order.id]);
+                            sendToServer(db, serverURL, id: [widget.order.id]);
                             Navigator.pushNamed(context, '/ordersPage');
                           },
                         ),
@@ -318,6 +322,7 @@ class _OrderDetailState extends State<OrderDetail> {
                                 },
                                 where: 'id=?',
                                 whereArgs: [widget.order.id]);
+                            sendToServer(db, serverURL, id: [widget.order.id]);
                             Navigator.pushNamed(context, '/ordersPage');
                           },
                         ),
