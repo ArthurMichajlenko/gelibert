@@ -17,6 +17,19 @@
             "database": "./assets/gelibert.db3",
             "driver": "SQLite",
             "name": "gelibert"
+        },
+        {
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "previewLimit": 50,
+            "server": "10.10.11.156",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "Dev",
+            "database": "gelibert",
+            "username": "root",
+            "password": "Nfnmzyf"
         }
     ],
     "sqltools.useNodeRuntime": true,
