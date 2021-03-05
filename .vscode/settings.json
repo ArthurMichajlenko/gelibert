@@ -28,8 +28,8 @@
             "driver": "MySQL",
             "name": "Dev",
             "database": "gelibert",
-            "username": "root",
-            "password": "Nfnmzyf"
+            "username": "gelibert",
+            "password": "gelibert"
         }
     ],
     "sqltools.useNodeRuntime": true,
