@@ -261,7 +261,8 @@ class _OrdersPageState extends State<OrdersPage> {
   @override
   void initState() {
     super.initState();
-    orderDelivered = 2;
+    // orderDelivered = 2;
+    orderDelivered = 0;
     countTitle = countAll;
   }
 
@@ -301,7 +302,8 @@ class _OrdersPageState extends State<OrdersPage> {
                 countInWork = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 0 AND order_routlist = ?', [_routNum]));
                 countComplete = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 1 AND order_routlist = ?', [_routNum]));
                 countDeffered = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = -1 AND order_routlist = ?', [_routNum]));
-                orderDelivered = 2;
+                // orderDelivered = 2;
+                orderDelivered = 0;
                 setState(() {});
               },
             )
