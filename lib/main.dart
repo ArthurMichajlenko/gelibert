@@ -263,7 +263,8 @@ class _OrdersPageState extends State<OrdersPage> {
     super.initState();
     // orderDelivered = 2;
     orderDelivered = 0;
-    countTitle = countAll;
+    // countTitle = countAll;
+    countTitle = countInWork;
   }
 
   @override
@@ -304,7 +305,9 @@ class _OrdersPageState extends State<OrdersPage> {
                 countDeffered = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = -1 AND order_routlist = ?', [_routNum]));
                 // orderDelivered = 2;
                 orderDelivered = 0;
-                setState(() {});
+                setState(() {
+                  countTitle = countInWork;
+                });
               },
             )
           else
@@ -370,10 +373,21 @@ class _OrdersPageState extends State<OrdersPage> {
                         value: value,
                       );
                     }).toList(),
-                    onChanged: (String newValue) {
+                    onChanged: (String newValue) async {
+                      await fetchDataToSQL(db, serverURL);
+                      countAll = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE order_routlist = ?', [newValue]));
+                      countInWork =
+                          Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 0 AND order_routlist = ?', [newValue]));
+                      countComplete =
+                          Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 1 AND order_routlist = ?', [newValue]));
+                      countDeffered =
+                          Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = -1 AND order_routlist = ?', [newValue]));
+                      // orderDelivered = 2;
+                      orderDelivered = 0;
                       setState(() {
                         _routNum = newValue;
                         routList = newValue;
+                        countTitle = countInWork;
                       });
                       // print(_routNum);
                     },
