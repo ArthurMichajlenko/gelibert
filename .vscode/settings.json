@@ -33,5 +33,21 @@
         }
     ],
     "sqltools.useNodeRuntime": true,
-    "dart.flutterSdkPath": "/Users/arthur/fvm/versions/1.22.6"
+    "dart.flutterSdkPath": "/Users/arthur/fvm/versions/1.22.6",
+    "cSpell.words": [
+        "ADRESA",
+        "BULGARA",
+        "CRISTALINA",
+        "DRAGOMIR",
+        "EMINESCU",
+        "FEROVIARILOR",
+        "LIBERTATII",
+        "SALCAMILOR",
+        "SCARA",
+        "SOFIEI",
+        "SUCEAVA",
+        "TIMEREAZEV",
+        "TIMPLARILOR",
+        "UNIQA"
+    ]
 }
