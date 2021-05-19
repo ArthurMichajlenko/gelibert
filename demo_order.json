@@ -1,0 +1,557 @@
+[
+    {
+        "id": "uAQ01195829    ",
+        "order_routlist": "000087275",
+        "order_date": "20210518",
+        "courier_id": "u00000100",
+        "client_id": "u00000909",
+        "payment_method": "Брак",
+        "consists": [
+            {
+                "id": 28998,
+                "product": "A/U CRISTALINA 19.0L N/G",
+                "quantity": 1,
+                "price": 26.5,
+                "ext_info": "",
+                "direction": 0,
+                "orders_id": "uAQ01195829    "
+            }
+        ],
+        "order_cost": 26.5,
+        "delivered": 0,
+        "delivery_delay": 0,
+        "date_start": "2021-05-19 11:15:57",
+        "date_finish": "1000-01-01 00:00:00",
+        "timestamp": "2021-05-19 11:15:57",
+        "address": "ADRESA"
+    },
+    {
+        "id": "uAQ01196142    ",
+        "order_routlist": "000087275",
+        "order_date": "20210519",
+        "courier_id": "u00000100",
+        "client_id": "000001396",
+        "payment_method": "Перечисление",
+        "consists": [
+            {
+                "id": 28985,
+                "product": "A/P AQUA UNIQA 19.0 N",
+                "quantity": 1,
+                "price": 60,
+                "ext_info": "",
+                "direction": 0,
+                "orders_id": "uAQ01196142    "
+            }
+        ],
+        "order_cost": 60,
+        "delivered": 0,
+        "delivery_delay": 0,
+        "date_start": "2021-05-19 11:15:57",
+        "date_finish": "1000-01-01 00:00:00",
+        "timestamp": "2021-05-19 11:15:57",
+        "address": "OR.BALTI STR.INDEPENDENTEI 33"
+    },
+    {
+        "id": "uAQ01196143    ",
+        "order_routlist": "000087275",
+        "order_date": "20210519",
+        "courier_id": "u00000100",
+        "client_id": "u00009140",
+        "payment_method": "Перечисление",
+        "consists": [
+            {
+                "id": 28986,
+                "product": "A/U CRISTALINA 19.0L N/G",
+                "quantity": 3,
+                "price": 50,
+                "ext_info": "",
+                "direction": 0,
+                "orders_id": "uAQ01196143    "
+            }
+        ],
+        "order_cost": 150,
+        "delivered": 0,
+        "delivery_delay": 0,
+        "date_start": "2021-05-19 11:15:57",
+        "date_finish": "1000-01-01 00:00:00",
+        "timestamp": "2021-05-19 11:15:57",
+        "address": "OR.BALTI STR.KIEV 20"
+    },
+    {
+        "id": "uAQ01196144    ",
+        "order_routlist": "000087275",
+        "order_date": "20210518",
+        "courier_id": "u00000100",
+        "client_id": "u00003949",
+        "payment_method": "Кеш",
+        "consists": [
+            {
+                "id": 28995,
+                "product": "A/U CRISTALINA 19.0L N/G",
+                "quantity": 2,
+                "price": 50,
+                "ext_info": "",
+                "direction": 0,
+                "orders_id": "uAQ01196144    "
+            }
+        ],
+        "order_cost": 100,
+        "delivered": 0,
+        "delivery_delay": 0,
+        "date_start": "2021-05-19 11:15:57",
+        "date_finish": "1000-01-01 00:00:00",
+        "timestamp": "2021-05-19 11:15:57",
+        "address": "OR.BALTI SCOALA PRIMARA L.EMINESCU CAB.503"
+    },
+    {
+        "id": "uAQ01196145    ",
+        "order_routlist": "000087275",
+        "order_date": "20210519",
+        "courier_id": "u00000100",
+        "client_id": "000001165",
+        "payment_method": "Перечисление",
+        "consists": [
+            {
+                "id": 28983,
+                "product": "A/U CRISTALINA 19.0L N/G",
+                "quantity": 2,
+                "price": 50,
+                "ext_info": "",
+                "direction": 0,
+                "orders_id": "uAQ01196145    "
+            }
+        ],
+        "order_cost": 100,
+        "delivered": 0,
+        "delivery_delay": 0,
+        "date_start": "2021-05-19 11:15:57",
+        "date_finish": "1000-01-01 00:00:00",
+        "timestamp": "2021-05-19 11:15:57",
+        "address": "OR.BALTI STR.SOFIEI 27 ET.2"
+    },
+    {
+        "id": "uAQ01196146    ",
+        "order_routlist": "000087275",
+        "order_date": "20210518",
+        "courier_id": "u00000100",
+        "client_id": "000001165",
+        "payment_method": "Кеш",
+        "consists": [
+            {
+                "id": 28993,
+                "product": "Pahar carton AQUA UNIQA 180ml/50 buc",
+                "quantity": 5,
+                "price": 16,
+                "ext_info": "",
+                "direction": 0,
+                "orders_id": "uAQ01196146    "
+            }
+        ],
+        "order_cost": 80,
+        "delivered": 0,
+        "delivery_delay": 0,
+        "date_start": "2021-05-19 11:15:57",
+        "date_finish": "1000-01-01 00:00:00",
+        "timestamp": "2021-05-19 11:15:57",
+        "address": "OR.BALTI STR.SOFIEI 27 ET.2"
+    },
+    {
+        "id": "uAQ01196147    ",
+        "order_routlist": "000087275",
+        "order_date": "20210518",
+        "courier_id": "u00000100",
+        "client_id": "u00009597",
+        "payment_method": "Кеш",
+        "consists": [
+            {
+                "id": 28991,
+                "product": "A/P AQUA UNIQA 19.0 N",
+                "quantity": 1,
+                "price": 60,
+                "ext_info": "",
+                "direction": 0,
+                "orders_id": "uAQ01196147    "
+            }
+        ],
+        "order_cost": 60,
+        "delivered": 0,
+        "delivery_delay": 0,
+        "date_start": "2021-05-19 11:15:57",
+        "date_finish": "1000-01-01 00:00:00",
+        "timestamp": "2021-05-19 11:15:57",
+        "address": "OR.BALTI STR.BULGARA 50 AP.28 ET.3 SC.2 (COD 26)"
+    },
+    {
+        "id": "uAQ01196148    ",
+        "order_routlist": "000087275",
+        "order_date": "20210518",
+        "courier_id": "u00000100",
+        "client_id": "u00013241",
+        "payment_method": "Кеш",
+        "consists": [
+            {
+                "id": 28992,
+                "product": "A/U CRISTALINA 19.0L N/G",
+                "quantity": 2,
+                "price": 50,
+                "ext_info": "",
+                "direction": 0,
+                "orders_id": "uAQ01196148    "
+            }
+        ],
+        "order_cost": 100,
+        "delivered": 0,
+        "delivery_delay": 0,
+        "date_start": "2021-05-19 11:15:57",
+        "date_finish": "1000-01-01 00:00:00",
+        "timestamp": "2021-05-19 11:15:57",
+        "address": "OR.BALTI STR.SALCAMILOR 99 (CASA PE PAMINT)"
+    },
+    {
+        "id": "uAQ01196149    ",
+        "order_routlist": "000087275",
+        "order_date": "20210518",
+        "courier_id": "u00000100",
+        "client_id": "u00006804",
+        "payment_method": "Кеш",
+        "consists": [
+            {
+                "id": 28990,
+                "product": "A/U CRISTALINA 19.0L N/G",
+                "quantity": 3,
+                "price": 50,
+                "ext_info": "",
+                "direction": 0,
+                "orders_id": "uAQ01196149    "
+            }
+        ],
+        "order_cost": 150,
+        "delivered": 0,
+        "delivery_delay": 0,
+        "date_start": "2021-05-19 11:15:57",
+        "date_finish": "1000-01-01 00:00:00",
+        "timestamp": "2021-05-19 11:15:57",
+        "address": "OR.BALTI STR.SUCEAVA 17 AP.49 SC.2"
+    },
+    {
+        "id": "uAQ01196150    ",
+        "order_routlist": "000087275",
+        "order_date": "20210519",
+        "courier_id": "u00000100",
+        "client_id": "u00009213",
+        "payment_method": "Перечисление",
+        "consists": [
+            {
+                "id": 28984,
+                "product": "A/U CRISTALINA 19.0L N/G",
+                "quantity": 2,
+                "price": 50,
+                "ext_info": "",
+                "direction": 0,
+                "orders_id": "uAQ01196150    "
+            }
+        ],
+        "order_cost": 100,
+        "delivered": 0,
+        "delivery_delay": 0,
+        "date_start": "2021-05-19 11:15:57",
+        "date_finish": "1000-01-01 00:00:00",
+        "timestamp": "2021-05-19 11:15:57",
+        "address": "OR. BALTI  STR.DRAGOMIR 4"
+    },
+    {
+        "id": "uAQ01196151    ",
+        "order_routlist": "000087275",
+        "order_date": "20210519",
+        "courier_id": "u00000100",
+        "client_id": "u00007178",
+        "payment_method": "Перечисление",
+        "consists": [
+            {
+                "id": 28979,
+                "product": "A/U CRISTALINA 19.0L N/G",
+                "quantity": 2,
+                "price": 50,
+                "ext_info": "",
+                "direction": 0,
+                "orders_id": "uAQ01196151    "
+            }
+        ],
+        "order_cost": 100,
+        "delivered": 0,
+        "delivery_delay": 0,
+        "date_start": "2021-05-19 11:15:57",
+        "date_finish": "1000-01-01 00:00:00",
+        "timestamp": "2021-05-19 11:15:57",
+        "address": "OR.BALTI STR.KIEV 145"
+    },
+    {
+        "id": "uAQ01196152    ",
+        "order_routlist": "000087275",
+        "order_date": "20210518",
+        "courier_id": "u00000100",
+        "client_id": "u00000544",
+        "payment_method": "Ведомость",
+        "consists": [
+            {
+                "id": 28978,
+                "product": "A/U CRISTALINA 19.0L N/G",
+                "quantity": 5,
+                "price": 45,
+                "ext_info": "",
+                "direction": 0,
+                "orders_id": "uAQ01196152    "
+            }
+        ],
+        "order_cost": 225,
+        "delivered": 0,
+        "delivery_delay": 0,
+        "date_start": "2021-05-19 11:15:57",
+        "date_finish": "1000-01-01 00:00:00",
+        "timestamp": "2021-05-19 11:15:57",
+        "address": "OR.BALTI STR.KIEV 30 *№6"
+    },
+    {
+        "id": "uAQ01196153    ",
+        "order_routlist": "000087275",
+        "order_date": "20210518",
+        "courier_id": "u00000100",
+        "client_id": "u00006728",
+        "payment_method": "Кеш",
+        "consists": [
+            {
+                "id": 28996,
+                "product": "A/U CRISTALINA 19.0L N/G",
+                "quantity": 1,
+                "price": 50,
+                "ext_info": "",
+                "direction": 0,
+                "orders_id": "uAQ01196153    "
+            }
+        ],
+        "order_cost": 50,
+        "delivered": 0,
+        "delivery_delay": 0,
+        "date_start": "2021-05-19 11:15:57",
+        "date_finish": "1000-01-01 00:00:00",
+        "timestamp": "2021-05-19 11:15:57",
+        "address": "OR.BALTI STR.INDEPENDENTEI 28(19 L)"
+    },
+    {
+        "id": "uAQ01196154    ",
+        "order_routlist": "000087275",
+        "order_date": "20210518",
+        "courier_id": "u00000100",
+        "client_id": "u00005130",
+        "payment_method": "Кеш",
+        "consists": [
+            {
+                "id": 28994,
+                "product": "A/U CRISTALINA 19.0L N/G",
+                "quantity": 1,
+                "price": 50,
+                "ext_info": "",
+                "direction": 0,
+                "orders_id": "uAQ01196154    "
+            }
+        ],
+        "order_cost": 50,
+        "delivered": 0,
+        "delivery_delay": 0,
+        "date_start": "2021-05-19 11:15:57",
+        "date_finish": "1000-01-01 00:00:00",
+        "timestamp": "2021-05-19 11:15:57",
+        "address": "OR.BALTI STR.TIMEREAZEV 2 AP.56 ET.4 SCARA 4"
+    },
+    {
+        "id": "uAQ01196157    ",
+        "order_routlist": "000087275",
+        "order_date": "20210519",
+        "courier_id": "u00000100",
+        "client_id": "u00009865",
+        "payment_method": "Перечисление",
+        "consists": [
+            {
+                "id": 28988,
+                "product": "A/P AQUA UNIQA 19.0 N",
+                "quantity": 1,
+                "price": 60,
+                "ext_info": "",
+                "direction": 0,
+                "orders_id": "uAQ01196157    "
+            },
+            {
+                "id": 28989,
+                "product": "A/I AQUA UNIQA 6.0+1.0 N",
+                "quantity": 6,
+                "price": 20,
+                "ext_info": "",
+                "direction": 0,
+                "orders_id": "uAQ01196157    "
+            }
+        ],
+        "order_cost": 180,
+        "delivered": 0,
+        "delivery_delay": 0,
+        "date_start": "2021-05-19 11:15:57",
+        "date_finish": "1000-01-01 00:00:00",
+        "timestamp": "2021-05-19 11:15:57",
+        "address": "OR.BALTI STR.DECEBAL 126/5"
+    },
+    {
+        "id": "uAQ01196173    ",
+        "order_routlist": "000087275",
+        "order_date": "20210519",
+        "courier_id": "u00000100",
+        "client_id": "u00010706",
+        "payment_method": "Перечисление",
+        "consists": [
+            {
+                "id": 28982,
+                "product": "A/U CRISTALINA 19.0L N/G",
+                "quantity": 10,
+                "price": 50,
+                "ext_info": "",
+                "direction": 0,
+                "orders_id": "uAQ01196173    "
+            }
+        ],
+        "order_cost": 500,
+        "delivered": 0,
+        "delivery_delay": 0,
+        "date_start": "2021-05-19 11:15:57",
+        "date_finish": "1000-01-01 00:00:00",
+        "timestamp": "2021-05-19 11:15:57",
+        "address": "OR.BALTI STR.DECEBAL 134 A"
+    },
+    {
+        "id": "uAQ01196174    ",
+        "order_routlist": "000087275",
+        "order_date": "20210519",
+        "courier_id": "u00000100",
+        "client_id": "000001620",
+        "payment_method": "Перечисление",
+        "consists": [
+            {
+                "id": 28987,
+                "product": "A/U CRISTALINA 19.0L N/G",
+                "quantity": 3,
+                "price": 50,
+                "ext_info": "",
+                "direction": 0,
+                "orders_id": "uAQ01196174    "
+            }
+        ],
+        "order_cost": 150,
+        "delivered": 0,
+        "delivery_delay": 0,
+        "date_start": "2021-05-19 11:15:57",
+        "date_finish": "1000-01-01 00:00:00",
+        "timestamp": "2021-05-19 11:15:57",
+        "address": "OR.BALTI STR.LIBERTATII 2"
+    },
+    {
+        "id": "uAQ01196175    ",
+        "order_routlist": "000087275",
+        "order_date": "20210518",
+        "courier_id": "u00000100",
+        "client_id": "u00012174",
+        "payment_method": "Ведомость",
+        "consists": [
+            {
+                "id": 28977,
+                "product": "A/P AQUA UNIQA 19.0 N",
+                "quantity": 7,
+                "price": 60,
+                "ext_info": "",
+                "direction": 0,
+                "orders_id": "uAQ01196175    "
+            }
+        ],
+        "order_cost": 420,
+        "delivered": 0,
+        "delivery_delay": 0,
+        "date_start": "2021-05-19 11:15:57",
+        "date_finish": "1000-01-01 00:00:00",
+        "timestamp": "2021-05-19 11:15:57",
+        "address": "OR.BALTI STR.TIMPLARILOR 1A"
+    },
+    {
+        "id": "uAQ01196176    ",
+        "order_routlist": "000087275",
+        "order_date": "20210519",
+        "courier_id": "u00000100",
+        "client_id": "000000810",
+        "payment_method": "Перечисление",
+        "consists": [
+            {
+                "id": 28981,
+                "product": "A/P AQUA UNIQA 19.0 N",
+                "quantity": 2,
+                "price": 60,
+                "ext_info": "",
+                "direction": 0,
+                "orders_id": "uAQ01196176    "
+            }
+        ],
+        "order_cost": 120,
+        "delivered": 0,
+        "delivery_delay": 0,
+        "date_start": "2021-05-19 11:15:57",
+        "date_finish": "1000-01-01 00:00:00",
+        "timestamp": "2021-05-19 11:15:57",
+        "address": "BALTI STR.FEROVIARILOR 38A"
+    },
+    {
+        "id": "uAQ01196177    ",
+        "order_routlist": "000087275",
+        "order_date": "20210518",
+        "courier_id": "u00000100",
+        "client_id": "u00012745",
+        "payment_method": "Кеш",
+        "consists": [
+            {
+                "id": 28997,
+                "product": "A/P AQUA UNIQA 19.0 N",
+                "quantity": 2,
+                "price": 60,
+                "ext_info": "",
+                "direction": 0,
+                "orders_id": "uAQ01196177    "
+            }
+        ],
+        "order_cost": 120,
+        "delivered": 0,
+        "delivery_delay": 0,
+        "date_start": "2021-05-19 11:15:57",
+        "date_finish": "1000-01-01 00:00:00",
+        "timestamp": "2021-05-19 11:15:57",
+        "address": "OR.BALTI STR.ST.CEL MARE 57 OF.4 ET.2(NAIL STUDIO)"
+    },
+    {
+        "id": "uAQ01196178    ",
+        "order_routlist": "000087275",
+        "order_date": "20210519",
+        "courier_id": "u00000100",
+        "client_id": "000000810",
+        "payment_method": "Перечисление",
+        "consists": [
+            {
+                "id": 28980,
+                "product": "A/P AQUA UNIQA 19.0 N",
+                "quantity": 1,
+                "price": 60,
+                "ext_info": "",
+                "direction": 0,
+                "orders_id": "uAQ01196178    "
+            }
+        ],
+        "order_cost": 60,
+        "delivered": 0,
+        "delivery_delay": 0,
+        "date_start": "2021-05-19 11:15:57",
+        "date_finish": "1000-01-01 00:00:00",
+        "timestamp": "2021-05-19 11:15:57",
+        "address": "BALTI STR.FEROVIARILOR 38A"
+    }
+]
