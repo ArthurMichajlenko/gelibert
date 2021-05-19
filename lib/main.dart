@@ -4,19 +4,20 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gilebert/models/geodata.dart';
+import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:http/http.dart' as http;
 
-import 'models/orders.dart';
-import 'models/couriers.dart';
-import 'title_orders.dart';
 import 'package:gilebert/exchange.dart';
+import 'package:gilebert/models/geodata.dart';
+
 import 'auth_page.dart';
-import 'package:data_connection_checker/data_connection_checker.dart';
+import 'models/couriers.dart';
+import 'models/orders.dart';
+import 'title_orders.dart';
 
 // void main() => runApp(GelibertApp());
 Database db;
