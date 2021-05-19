@@ -54,6 +54,7 @@ flutter:
   #  - images/a_dot_ham.jpeg
   assets:
     - assets/gelibert.db3
+    - assets/demo_order.json
   #  - assets/gelibert.sql
   #  - assets/gelibert_data.sql
     - assets/images/
