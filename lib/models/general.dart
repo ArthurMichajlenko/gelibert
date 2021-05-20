@@ -5,115 +5,155 @@ List<GeneralData> generalDataFromJson(String str) {
   return List<GeneralData>.from(jsonData.map((x) => GeneralData.fromJson(x)));
 }
 
-String generalDataToJson(List<GeneralData> data) {
-  final dyn = List<dynamic>.from(data.map((x) => x.toJson()));
+String generaldataToJson(List<GeneralData> data) {
+  final dyn = new List<dynamic>.from(data.map((x) => x.toJson()));
   return json.encode(dyn);
 }
 
 class GeneralData {
-  String id;
-  String orderRoutlist;
-  String orderDate;
   String courierId;
-  String clientId;
-  String paymentMethod;
-  List<Consist> consists;
-  double orderCost;
-  int delivered;
-  int deliveryDelay;
-  String dateStart;
-  String dateFinish;
-  String timestamp;
-  String address;
+  String courierImei;
+  String courierTel;
+  String courierName;
+  String courierCarNumber;
+  String courierTimestamp;
+  List<Client> clients;
+  List<GeneralConsist> consists;
 
   GeneralData({
-    this.id,
-    this.orderRoutlist,
-    this.orderDate,
     this.courierId,
-    this.clientId,
-    this.paymentMethod,
+    this.courierImei,
+    this.courierTel,
+    this.courierName,
+    this.courierCarNumber,
+    this.courierTimestamp,
+    this.clients,
     this.consists,
+  });
+
+  factory GeneralData.fromJson(Map<String, dynamic> json) => GeneralData(
+        courierId: json["courier_id"],
+        courierImei: json["courier_imei"],
+        courierTel: json["courier_tel"],
+        courierName: json["courier_name"],
+        courierCarNumber: json["courier_car_number"],
+        courierTimestamp: json["courier_timestamp"],
+        clients: List<Client>.from(json["Clients"].map((x) => Client.fromJson(x))),
+        consists: List<GeneralConsist>.from(json["Consists"].map((x) => GeneralConsist.fromJson(x))),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "courier_id": courierId,
+        "courier_imei": courierImei,
+        "courier_tel": courierTel,
+        "courier_name": courierName,
+        "courier_car_number": courierCarNumber,
+        "courier_timestamp": courierTimestamp,
+        "Clients": List<dynamic>.from(clients.map((x) => x.toJson())),
+        "Consists": List<dynamic>.from(consists.map((x) => x.toJson())),
+      };
+}
+
+class Client {
+  String orderRoutlist;
+  String clientId;
+  String clientName;
+  String clientTel;
+  String orderId;
+  String orderDate;
+  String paymentMethod;
+  int orderCost;
+  String delivered;
+  String deliveryDelay;
+  String dateStart;
+  String dateFinish;
+  String timeStamp;
+  String address;
+
+  Client({
+    this.orderRoutlist,
+    this.clientId,
+    this.clientName,
+    this.clientTel,
+    this.orderId,
+    this.orderDate,
+    this.paymentMethod,
     this.orderCost,
     this.delivered,
     this.deliveryDelay,
     this.dateStart,
     this.dateFinish,
-    this.timestamp,
+    this.timeStamp,
     this.address,
   });
 
-  factory GeneralData.fromJson(Map<String, dynamic> json) => GeneralData(
-    id: json["id"],
-    orderRoutlist: json["order_routlist"],
-    orderDate: json["order_date"],
-    courierId: json["courier_id"],
-    clientId: json["client_id"],
-    paymentMethod: json["payment_method"],
-    consists: List<Consist>.from(json["consists"].map((x) => Consist.fromJson(x))),
-    orderCost: json["order_cost"].toDouble(),
-    delivered: json["delivered"],
-    deliveryDelay: json["delivery_delay"],
-    dateStart: json["date_start"],
-    dateFinish: json["date_finish"],
-    timestamp: json["timestamp"],
-    address: json["address"],
-  );
+  factory Client.fromJson(Map<String, dynamic> json) => Client(
+        orderRoutlist: json["order_routlist"],
+        clientId: json["client_id"],
+        clientName: json["client_name"],
+        clientTel: json["client_tel"],
+        orderId: json["order_id"],
+        orderDate: json["order_date"],
+        paymentMethod: json["payment_method"],
+        orderCost: json["order_cost"],
+        delivered: json["delivered"],
+        deliveryDelay: json["delivery_delay"],
+        dateStart: json["date_start"],
+        dateFinish: json["date_finish"],
+        timeStamp: json["time_stamp"],
+        address: json["address"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "order_routlist": orderRoutlist,
-    "order_date": orderDate,
-    "courier_id": courierId,
-    "client_id": clientId,
-    "payment_method": paymentMethod,
-    "consists": List<dynamic>.from(consists.map((x) => x.toJson())),
-    "order_cost": orderCost,
-    "delivered": delivered,
-    "delivery_delay": deliveryDelay,
-    "date_start": dateStart,
-    "date_finish": dateFinish,
-    "timestamp": timestamp,
-    "address": address,
-  };
+        "order_routlist": orderRoutlist,
+        "client_id": clientId,
+        "client_name": clientName,
+        "client_tel": clientTel,
+        "order_id": orderId,
+        "order_date": orderDate,
+        "payment_method": paymentMethod,
+        "order_cost": orderCost,
+        "delivered": delivered,
+        "delivery_delay": deliveryDelay,
+        "date_start": dateStart,
+        "date_finish": dateFinish,
+        "time_stamp": timeStamp,
+        "address": address,
+      };
 }
 
-class Consist {
-  int id;
+class GeneralConsist {
+  String id;
   String product;
   int quantity;
-  double price;
+  int price;
   String extInfo;
-  int direction;
-  String ordersId;
+  String direction;
 
-  Consist({
+  GeneralConsist({
     this.id,
     this.product,
     this.quantity,
     this.price,
     this.extInfo,
     this.direction,
-    this.ordersId,
   });
 
-  factory Consist.fromJson(Map<String, dynamic> json) => Consist(
-    id: json["id"],
-    product: json["product"],
-    quantity: json["quantity"],
-    price: json["price"].toDouble(),
-    extInfo: json["ext_info"],
-    direction: json["direction"],
-    ordersId: json["orders_id"],
-  );
+  factory GeneralConsist.fromJson(Map<String, dynamic> json) => GeneralConsist(
+        id: json["id"],
+        product: json["product"],
+        quantity: json["quantity"],
+        price: json["price"],
+        extInfo: json["ext_info"],
+        direction: json["direction"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "product": product,
-    "quantity": quantity,
-    "price": price,
-    "ext_info": extInfo,
-    "direction": direction,
-    "orders_id": ordersId,
-  };
+        "id": id,
+        "product": product,
+        "quantity": quantity,
+        "price": price,
+        "ext_info": extInfo,
+        "direction": direction,
+      };
 }
