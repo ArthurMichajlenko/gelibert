@@ -1,6 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:gilebert/exchange.dart';
 // import 'package:flutter/services.dart';
 import 'main.dart';
 import 'models/orders.dart';
@@ -96,7 +95,6 @@ class _ConsistsDetailState extends State<ConsistsDetail> {
                                       },
                                       where: 'id=? AND orders_id=?',
                                       whereArgs: [widget.order.consists[i].id, widget.order.consists[i].ordersID]);
-                                  sendToServer(db, serverURL, id: [widget.order.id]);
                                 },
                                 controller: TextEditingController(
                                   text: widget.order.consists[i].extInfo,
@@ -123,7 +121,6 @@ class _ConsistsDetailState extends State<ConsistsDetail> {
                                           },
                                           where: 'id=? AND orders_id=?',
                                           whereArgs: [widget.order.consists[i].id, widget.order.consists[i].ordersID]);
-                                      sendToServer(db, serverURL, id: [widget.order.id]);
                                       setState(() {});
                                     },
                                   ),
@@ -178,7 +175,6 @@ class _ConsistsDetailState extends State<ConsistsDetail> {
                                       },
                                       where: 'id=? AND orders_id=?',
                                       whereArgs: [widget.order.consists[i].id, widget.order.consists[i].ordersID]);
-                                  sendToServer(db, serverURL, id: [widget.order.id]);
                                 },
                                 controller: TextEditingController(
                                   text: widget.order.consists[i].extInfo,
@@ -205,7 +201,6 @@ class _ConsistsDetailState extends State<ConsistsDetail> {
                                           },
                                           where: 'id=? AND orders_id=?',
                                           whereArgs: [widget.order.consists[i].id, widget.order.consists[i].ordersID]);
-                                      sendToServer(db, serverURL, id: [widget.order.id]);
                                       setState(() {});
                                     },
                                   ),

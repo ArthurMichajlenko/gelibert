@@ -1,38 +1,24 @@
 // import 'dart:io';
 
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'package:gilebert/exchange.dart';
-import 'package:gilebert/models/geodata.dart';
 
-import 'auth_page.dart';
 import 'models/couriers.dart';
 import 'models/orders.dart';
 import 'title_orders.dart';
 
 // void main() => runApp(GelibertApp());
 Database db;
-String token = 'Notoken';
+String dataJson;
 String macAddress;
-// Couriers courier;
-// DevServer work
-final serverProtocol = 'http';
-// Local
-final serverAddress = '10.10.11.156';
-// Office MoldTelecom
-// final serverAddress = '188.237.114.90';
-final serverPort = 1323;
-final serverURL = serverProtocol + '://' + serverAddress + ':' + serverPort.toString();
-bool connected = false;
+bool connected = true;
 int orderDelivered;
 int countTitle;
 Set<String> routLists = {};
@@ -68,7 +54,8 @@ Future<Database> _openDB() async {
 }
 
 Future<void> _initDB(Database db) async {
-  await fetchDataToSQL(db, serverURL);
+  dataJson = await rootBundle.loadString(join("assets", "demo_order.json"));
+  await fetchDataToSQL(db, dataJson);
   if (routLists.isEmpty) {
     countAll = 0;
     countInWork = 0;
@@ -81,77 +68,12 @@ Future<void> _initDB(Database db) async {
     countComplete = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 1 AND order_routlist = ?', [routList]));
     countDeffered = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = -1 AND order_routlist = ?', [routList]));
   }
-  await saveGeodata(db, macAddress, serverURL);
-  // Timer.periodic(Duration(minutes: 5), (Timer timer) => saveGeodata(db, macAddress, serverURL));
-  // Geolocator.getCurrentPosition().then((value) => db.insert('geodata', {
-  //       'longitude': value.longitude,
-  //       'latitude': value.latitude,
-  //     }));
-}
-
-Future<String> _fetchJWTToken(String url) async {
-  if (token == 'Notoken' || token == 'Unconnect') {
-    try {
-      var res = await http.post(url + "/login", body: {'macAddress': macAddress});
-      if (res.statusCode != HttpStatus.ok) {
-        connected = false;
-        return "Unauthorized";
-      }
-      Map<String, dynamic> tk = jsonDecode(res.body);
-      connected = true;
-      token = tk['token'];
-      // return token;
-      // return tk['token'];
-      // } on SocketException catch (e) {
-    } catch (_) {
-      connected = false;
-      return "Unconnect";
-    }
-  }
-  return token;
 }
 
 Color connectColor() {
   Color colorBackground;
   colorBackground = connected ? Colors.blueGrey : Colors.red;
   return colorBackground;
-}
-
-class ConnectToServer extends StatefulWidget {
-  @override
-  _ConnectToServerState createState() => _ConnectToServerState();
-}
-
-class _ConnectToServerState extends State<ConnectToServer> {
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<String>(
-      builder: (context, startSnap) {
-        if (startSnap.connectionState == ConnectionState.none || startSnap.connectionState == ConnectionState.waiting) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text("Подключение..."),
-            ),
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        }
-        token = startSnap.data;
-        if (token == 'Unauthorized') {
-          return AlertDialog(
-            title: Text('Unauthorized'),
-            content: Text('ID отсутствует в системе...'),
-            actions: <Widget>[
-              FlatButton(onPressed: () => SystemNavigator.pop(), child: Text('Выйти из программы')),
-            ],
-          );
-        }
-        return InitDB();
-      },
-      future: _fetchJWTToken(serverURL),
-    );
-  }
 }
 
 class InitDB extends StatefulWidget {
@@ -187,43 +109,6 @@ class GelibertApp extends StatefulWidget {
 }
 
 class _GelibertAppState extends State<GelibertApp> {
-  var _listener;
-
-  @override
-  void initState() {
-    super.initState();
-    // Write geodata to SQL every 5 min
-    Timer.periodic(Duration(minutes: 5), (Timer timer) => saveGeodata(db, macAddress, serverURL));
-    // Timer.periodic(Duration(minutes: 5), (Timer timer) {
-    //   Geolocator.getCurrentPosition().then((value) => db.insert('geodata', {
-    //         'longitude': value.longitude,
-    //         'latitude': value.latitude,
-    //       }));
-    // });
-    // Check connection with backend server
-    DataConnectionChecker().addresses = [
-      AddressCheckOptions(
-        InternetAddress(serverAddress),
-        port: serverPort,
-      )
-    ];
-    _listener = DataConnectionChecker().onStatusChange.listen((status) {
-      switch (status) {
-        case DataConnectionStatus.connected:
-          setState(() => connected = true);
-          break;
-        case DataConnectionStatus.disconnected:
-          setState(() => connected = false);
-          break;
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _listener.cancel();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -232,13 +117,10 @@ class _GelibertAppState extends State<GelibertApp> {
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
       ),
-      // initialRoute: '/connectToServer',
-      initialRoute: '/authPage',
+      initialRoute: '/initDB',
       routes: {
-        '/connectToServer': (context) => ConnectToServer(),
         '/initDB': (context) => InitDB(),
         '/ordersPage': (context) => OrdersPage(title: 'Заказы'),
-        '/authPage': (context) => AuthPage(),
       },
       debugShowCheckedModeBanner: false,
     );
@@ -293,13 +175,8 @@ class _OrdersPageState extends State<OrdersPage> {
                 Icons.autorenew,
                 color: Colors.white,
               ),
-              // onPressed: () {
-              //   setState(() => connected = false);
-              //   Timer(const Duration(seconds: 10),
-              //       () => setState(() => connected = true));
-              // },
               onPressed: () async {
-                await fetchDataToSQL(db, serverURL);
+                await fetchDataToSQL(db, dataJson);
                 countAll = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE order_routlist = ?', [_routNum]));
                 countInWork = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 0 AND order_routlist = ?', [_routNum]));
                 countComplete = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 1 AND order_routlist = ?', [_routNum]));
@@ -323,21 +200,6 @@ class _OrdersPageState extends State<OrdersPage> {
               ),
             ),
         ],
-        // bottom: PreferredSize(
-        //   child: Padding(
-        //     padding: const EdgeInsets.all(8.0),
-        //     child: Text(
-        //       'Маршрутный лист № 000080258',
-        //       style: TextStyle(
-        //         fontSize: 14,
-        //         color: Colors.white,
-        //         fontStyle: FontStyle.italic,
-        //         fontWeight: FontWeight.bold,
-        //       ),
-        //     ),
-        //   ),
-        //   preferredSize: Size.fromHeight(10),
-        // ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -375,7 +237,7 @@ class _OrdersPageState extends State<OrdersPage> {
                       );
                     }).toList(),
                     onChanged: (String newValue) async {
-                      await fetchDataToSQL(db, serverURL);
+                      await fetchDataToSQL(db, dataJson);
                       countAll = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE order_routlist = ?', [newValue]));
                       countInWork =
                           Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders WHERE delivered = 0 AND order_routlist = ?', [newValue]));
@@ -417,15 +279,6 @@ class _OrdersPageState extends State<OrdersPage> {
                 ),
               ),
               onTap: () async {
-                // if (!connected) {
-                //   AlertDialog(
-                //     title: Text('Connect'),
-                //     content: Text('Нет соединения с сервером'),
-                //     actions: <Widget>[
-                //       FlatButton(onPressed: () => Navigator.pop(context), child: Text('Ok'),),
-                //     ],
-                //   );
-                // }
                 await db.delete('couriers');
                 Navigator.pushNamed(context, '/authPage');
                 // return AuthPage();

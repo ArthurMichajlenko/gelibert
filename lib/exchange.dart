@@ -1,7 +1,6 @@
 // import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:http/http.dart' as http;
 
@@ -77,27 +76,6 @@ Future<void> fetchDataToSQL(Database db, String url) async {
     (Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders')) == 0) ? isOrdersEmpty = true : isOrdersEmpty = false;
     connected = false;
     return;
-  }
-}
-
-Future<void> sendToServer(Database db, String url, {@required List<String> id}) async {
-  http.Response response;
-  var ordersJson = await getOrdersFromDbToJson(id, db);
-  try {
-    response = await http.post(
-      url + "/data/orders",
-      headers: {
-        HttpHeaders.authorizationHeader: "Bearer " + token,
-        HttpHeaders.contentTypeHeader: "application/json",
-      },
-      body: ordersJson,
-    );
-    if (response.statusCode != HttpStatus.ok) {
-      connected = false;
-      return;
-    }
-  } catch (e) {
-    print(e);
   }
 }
 
