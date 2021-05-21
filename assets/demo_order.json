@@ -16,8 +16,8 @@
                 "order_date": "20210519",
                 "payment_method": "Ведомость",
                 "order_cost": 225,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -32,8 +32,8 @@
                 "order_date": "20210519",
                 "payment_method": "Ведомость",
                 "order_cost": 135,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -48,8 +48,8 @@
                 "order_date": "20210519",
                 "payment_method": "Ведомость",
                 "order_cost": 180,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -64,8 +64,8 @@
                 "order_date": "20210519",
                 "payment_method": "Ведомость",
                 "order_cost": 180,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -80,8 +80,8 @@
                 "order_date": "20210520",
                 "payment_method": "Перечисление",
                 "order_cost": 150,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -96,8 +96,8 @@
                 "order_date": "20210519",
                 "payment_method": "Перечисление",
                 "order_cost": 250,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -112,8 +112,8 @@
                 "order_date": "20210520",
                 "payment_method": "Перечисление",
                 "order_cost": 100,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -128,8 +128,8 @@
                 "order_date": "20210520",
                 "payment_method": "Перечисление",
                 "order_cost": 100,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -144,8 +144,8 @@
                 "order_date": "20210520",
                 "payment_method": "Перечисление",
                 "order_cost": 250,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -160,8 +160,8 @@
                 "order_date": "20210520",
                 "payment_method": "Перечисление",
                 "order_cost": 160,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -176,8 +176,8 @@
                 "order_date": "20210520",
                 "payment_method": "Перечисление",
                 "order_cost": 200,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -192,8 +192,8 @@
                 "order_date": "20210519",
                 "payment_method": "Кеш",
                 "order_cost": 50,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -208,8 +208,8 @@
                 "order_date": "20210519",
                 "payment_method": "Кеш",
                 "order_cost": 50,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -224,8 +224,8 @@
                 "order_date": "20210519",
                 "payment_method": "Кеш",
                 "order_cost": 120,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -240,8 +240,8 @@
                 "order_date": "20210519",
                 "payment_method": "Кеш",
                 "order_cost": 60,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -256,8 +256,8 @@
                 "order_date": "20210519",
                 "payment_method": "Кеш",
                 "order_cost": 50,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -272,8 +272,8 @@
                 "order_date": "20210519",
                 "payment_method": "Кеш",
                 "order_cost": 100,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -288,8 +288,8 @@
                 "order_date": "20210519",
                 "payment_method": "Кеш",
                 "order_cost": 120,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -304,8 +304,8 @@
                 "order_date": "20210519",
                 "payment_method": "Кеш",
                 "order_cost": 60,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -320,8 +320,8 @@
                 "order_date": "20210519",
                 "payment_method": "Кеш",
                 "order_cost": 50,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -336,8 +336,8 @@
                 "order_date": "20210519",
                 "payment_method": "Кеш",
                 "order_cost": 60,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -352,8 +352,8 @@
                 "order_date": "20210519",
                 "payment_method": "Кеш",
                 "order_cost": 120,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -368,8 +368,8 @@
                 "order_date": "20210520",
                 "payment_method": "Ведомость",
                 "order_cost": 90,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -384,8 +384,8 @@
                 "order_date": "20210520",
                 "payment_method": "Ведомость",
                 "order_cost": 45,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -400,8 +400,8 @@
                 "order_date": "20210520",
                 "payment_method": "Перечисление",
                 "order_cost": 150,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -416,8 +416,8 @@
                 "order_date": "20210520",
                 "payment_method": "Перечисление",
                 "order_cost": 150,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -432,8 +432,8 @@
                 "order_date": "20210520",
                 "payment_method": "Перечисление",
                 "order_cost": 50,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -448,8 +448,8 @@
                 "order_date": "20210520",
                 "payment_method": "Перечисление",
                 "order_cost": 100,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -464,8 +464,8 @@
                 "order_date": "20210520",
                 "payment_method": "Кеш",
                 "order_cost": 50,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -480,8 +480,8 @@
                 "order_date": "20210520",
                 "payment_method": "Кеш",
                 "order_cost": 180,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -496,8 +496,8 @@
                 "order_date": "20210520",
                 "payment_method": "Кеш",
                 "order_cost": 50,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -512,8 +512,8 @@
                 "order_date": "20210520",
                 "payment_method": "Кеш",
                 "order_cost": 120,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -528,8 +528,8 @@
                 "order_date": "20210520",
                 "payment_method": "Кеш",
                 "order_cost": 100,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -544,8 +544,8 @@
                 "order_date": "20210520",
                 "payment_method": "Кеш",
                 "order_cost": 50,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -560,8 +560,8 @@
                 "order_date": "20210520",
                 "payment_method": "Недовоз",
                 "order_cost": 240,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -576,8 +576,8 @@
                 "order_date": "20210520",
                 "payment_method": "Перечисление",
                 "order_cost": 100,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -592,8 +592,8 @@
                 "order_date": "20210520",
                 "payment_method": "Кеш",
                 "order_cost": 60,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -608,8 +608,8 @@
                 "order_date": "20210520",
                 "payment_method": "Кеш",
                 "order_cost": 100,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -624,8 +624,8 @@
                 "order_date": "20210520",
                 "payment_method": "Кеш",
                 "order_cost": 60,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -640,8 +640,8 @@
                 "order_date": "20210520",
                 "payment_method": "Кеш",
                 "order_cost": 100,
-                "delivered": "",
-                "delivery_delay": "",
+                "delivered": 0,
+                "delivery_delay": 0,
                 "date_start": "",
                 "date_finish": "",
                 "time_stamp": "",
@@ -655,7 +655,7 @@
                 "quantity": 4,
                 "price": 45,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196587    ",
@@ -663,7 +663,7 @@
                 "quantity": 3,
                 "price": 15,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196730    ",
@@ -671,7 +671,7 @@
                 "quantity": 3,
                 "price": 45,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196579    ",
@@ -679,7 +679,7 @@
                 "quantity": 4,
                 "price": 45,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196586    ",
@@ -687,7 +687,7 @@
                 "quantity": 3,
                 "price": 60,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196728    ",
@@ -695,7 +695,7 @@
                 "quantity": 3,
                 "price": 50,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196584    ",
@@ -703,7 +703,7 @@
                 "quantity": 5,
                 "price": 50,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196610    ",
@@ -711,7 +711,7 @@
                 "quantity": 2,
                 "price": 50,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196585    ",
@@ -719,7 +719,7 @@
                 "quantity": 2,
                 "price": 50,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196727    ",
@@ -727,7 +727,7 @@
                 "quantity": 5,
                 "price": 50,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196607    ",
@@ -735,7 +735,7 @@
                 "quantity": 10,
                 "price": 16,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196588    ",
@@ -743,7 +743,7 @@
                 "quantity": 4,
                 "price": 50,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196731    ",
@@ -751,7 +751,7 @@
                 "quantity": 1,
                 "price": 50,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196732    ",
@@ -759,7 +759,7 @@
                 "quantity": 1,
                 "price": 50,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196729    ",
@@ -767,7 +767,7 @@
                 "quantity": 2,
                 "price": 60,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196583    ",
@@ -775,7 +775,7 @@
                 "quantity": 1,
                 "price": 60,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196577    ",
@@ -783,7 +783,7 @@
                 "quantity": 1,
                 "price": 50,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196427    ",
@@ -791,7 +791,7 @@
                 "quantity": 2,
                 "price": 50,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196580    ",
@@ -799,7 +799,7 @@
                 "quantity": 2,
                 "price": 60,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196578    ",
@@ -807,7 +807,7 @@
                 "quantity": 1,
                 "price": 60,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196582    ",
@@ -815,7 +815,7 @@
                 "quantity": 1,
                 "price": 50,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196581    ",
@@ -823,7 +823,7 @@
                 "quantity": 1,
                 "price": 60,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196261    ",
@@ -831,7 +831,7 @@
                 "quantity": 2,
                 "price": 60,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196839    ",
@@ -839,7 +839,7 @@
                 "quantity": 2,
                 "price": 45,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196903    ",
@@ -847,7 +847,7 @@
                 "quantity": 1,
                 "price": 45,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196840    ",
@@ -855,7 +855,7 @@
                 "quantity": 3,
                 "price": 50,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196841    ",
@@ -863,7 +863,7 @@
                 "quantity": 3,
                 "price": 50,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196842    ",
@@ -871,7 +871,7 @@
                 "quantity": 1,
                 "price": 50,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196818    ",
@@ -879,7 +879,7 @@
                 "quantity": 2,
                 "price": 50,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196843    ",
@@ -887,7 +887,7 @@
                 "quantity": 1,
                 "price": 50,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196821    ",
@@ -895,7 +895,7 @@
                 "quantity": 3,
                 "price": 60,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196844    ",
@@ -903,7 +903,7 @@
                 "quantity": 1,
                 "price": 50,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196810    ",
@@ -911,7 +911,7 @@
                 "quantity": 1,
                 "price": 70,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196810    ",
@@ -919,7 +919,7 @@
                 "quantity": 1,
                 "price": 50,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196838    ",
@@ -927,7 +927,7 @@
                 "quantity": 2,
                 "price": 50,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196905    ",
@@ -935,7 +935,7 @@
                 "quantity": 1,
                 "price": 50,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196804    ",
@@ -943,7 +943,7 @@
                 "quantity": 4,
                 "price": 60,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196917    ",
@@ -951,7 +951,7 @@
                 "quantity": 2,
                 "price": 50,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196802    ",
@@ -959,7 +959,7 @@
                 "quantity": 1,
                 "price": 60,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196820    ",
@@ -967,7 +967,7 @@
                 "quantity": 2,
                 "price": 50,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196899    ",
@@ -975,7 +975,7 @@
                 "quantity": 1,
                 "price": 60,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             },
             {
                 "id": "uAQ01196898    ",
@@ -983,7 +983,7 @@
                 "quantity": 2,
                 "price": 50,
                 "ext_info": "",
-                "direction": ""
+                "direction": 0
             }
         ]
     }

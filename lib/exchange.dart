@@ -1,106 +1,59 @@
-// import 'dart:convert';
-import 'dart:io';
-
-import 'package:gilebert/models/general.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:http/http.dart' as http;
 
-import 'models/orders.dart';
-import 'models/couriers.dart';
-import 'models/clients.dart';
 import 'package:gilebert/main.dart';
+import 'package:gilebert/models/general.dart';
+
+import 'models/clients.dart';
+import 'models/couriers.dart';
+import 'models/orders.dart';
 
 Future<void> fetchDataToSQL(Database db, String json) async {
-  http.Response response;
-  List<Orders> orders;
-  Couriers couriers;
-  List<Clients> clients;
+  List<Orders> orders = [];
+  Couriers couriers = Couriers();
+  List<Clients> clients = [];
   List<GeneralData> data = generalDataFromJson(json);
-  print(data);
-  try {
-    //Fetch couriers
-    response = await http.get(url + "/data/couriers", headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
-    if (response.statusCode != HttpStatus.ok) {
-      connected = false;
-      return;
-    } else {
-      connected = true;
-      couriers = couriersFromJson(response.body);
-      await db.insert('couriers', couriers.toSQL(), conflictAlgorithm: ConflictAlgorithm.replace);
-    }
-    //Fetch clients
-    response = await http.get(url + "/data/clients", headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
-    if (response.statusCode != HttpStatus.ok) {
-      connected = false;
-      return;
-    } else {
-      connected = true;
-      clients = clientsFromJson(response.body);
-      clients.forEach((x) async {
-        await db.insert('clients', x.toSQL(), conflictAlgorithm: ConflictAlgorithm.replace);
-        return;
-      });
-    }
-    // Fetch orders
-    response = await http.get(url + "/data/orders", headers: {HttpHeaders.authorizationHeader: "Bearer " + token});
-    routLists.clear();
-    switch (response.statusCode) {
-      case 200:
-        connected = true;
-        isOrdersEmpty = false;
-        orders = ordersFromJson(response.body);
-        var sqlRes = await db.query('orders');
-        if (sqlRes.isNotEmpty) {
-          await db.delete('orders', where: "date_start <= date('now', '-1 day')");
-        }
-        orders.forEach((x) async {
-          routLists.add(x.orderRoutlist);
-          await db.insert('orders', x.toSQL(), conflictAlgorithm: ConflictAlgorithm.replace);
-          x.consists.forEach((y) async {
-            return await db.insert('consists', y.toSQL(), conflictAlgorithm: ConflictAlgorithm.replace);
-          });
-          return;
-        });
-        break;
-      case 204:
-        isOrdersEmpty = true;
-        var sqlRes = await db.query('orders');
-        if (sqlRes.isNotEmpty) {
-          await db.delete('orders', where: "date_start <= date('now', '-1 day')");
-        }
-        break;
-      default:
-        (Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders')) == 0) ? isOrdersEmpty = true : isOrdersEmpty = false;
-        connected = false;
-        return;
-    }
-  } catch (e) {
-    print(e);
-    (Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM orders')) == 0) ? isOrdersEmpty = true : isOrdersEmpty = false;
-    connected = false;
+  //Fetch couriers
+  couriers.id = data[0].courierId;
+  couriers.macAddress = data[0].courierImei;
+  couriers.name = data[0].courierName;
+  couriers.tel = data[0].courierTel;
+  couriers.carNumber = data[0].courierCarNumber;
+  await db.insert('couriers', couriers.toSQL(), conflictAlgorithm: ConflictAlgorithm.replace);
+  //Fetch clients
+  data[0].clients.forEach((cl) {
+    clients.add(Clients(id: cl.clientId, name: cl.clientName, tel: cl.clientName));
+    orders.add(Orders(
+      id: cl.orderId,
+      courierId: data[0].courierId,
+      clientId: cl.clientId,
+      paymentMethod: cl.paymentMethod,
+      orderCost: cl.orderCost,
+      delivered: cl.delivered,
+      deliveryDelay: cl.deliveryDelay,
+      dateStart: cl.dateStart,
+      dateFinish: cl.dateFinish,
+      address: cl.address,
+      orderRoutlist: cl.orderRoutlist,
+      orderDate: cl.orderDate,
+    ));
+  });
+  clients.forEach((x) async {
+    await db.insert('clients', x.toSQL(), conflictAlgorithm: ConflictAlgorithm.replace);
     return;
-  }
+  });
+  // Fetch orders
+  routLists.clear();
+  connected = true;
+  isOrdersEmpty = false;
+  orders.forEach((x) async {
+    routLists.add(x.orderRoutlist);
+    await db.insert('orders', x.toSQL(), conflictAlgorithm: ConflictAlgorithm.replace);
+    // x.consists.forEach((y) async {
+    //   return await db.insert('consists', y.toSQL(), conflictAlgorithm: ConflictAlgorithm.replace);
+    // });
+    return;
+  });
+  data[0].consists.forEach((consist) async {
+    await db.insert('consists', consist.toSQL(), conflictAlgorithm: ConflictAlgorithm.replace);
+  });
 }
-
-// Future<String> getOrdersFromDbToJson(List<String> id, Database db) async {
-//   String result;
-//   List<Orders> orders = [];
-//   List<Consist> consists = [];
-//   for (var orderId in id) {
-//     var resConsists = await db.query(
-//       'consists',
-//       where: 'orders_id = ?',
-//       whereArgs: [orderId],
-//     );
-//     var resOrders = await db.query(
-//       'orders',
-//       where: 'id = ?',
-//       whereArgs: [orderId],
-//     );
-//     resConsists.forEach((sqlConsists) => consists.add(Consist.fromSQL(sqlConsists)));
-//     resOrders.forEach((sqlOrders) => orders.add(Orders.fromSQL(sqlOrders)));
-//     orders[0].consists = consists;
-//     result = ordersToJson(orders);
-//   }
-//   return result;
-// }

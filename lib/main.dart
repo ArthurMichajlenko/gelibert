@@ -17,7 +17,7 @@ import 'title_orders.dart';
 // void main() => runApp(GelibertApp());
 Database db;
 String dataJson;
-String macAddress;
+String macAddress='100';
 bool connected = true;
 int orderDelivered;
 int countTitle;

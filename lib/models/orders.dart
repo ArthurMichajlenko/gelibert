@@ -21,7 +21,7 @@ int countAll;
 int countInWork;
 int countComplete;
 int countDeffered;
-bool isOrdersEmpty = true;
+bool isOrdersEmpty = false;
 
 class Orders {
   var _client = Clients();

@@ -6,7 +6,7 @@ List<GeneralData> generalDataFromJson(String str) {
 }
 
 String generaldataToJson(List<GeneralData> data) {
-  final dyn = new List<dynamic>.from(data.map((x) => x.toJson()));
+  final dyn = List<dynamic>.from(data.map((x) => x.toJson()));
   return json.encode(dyn);
 }
 
@@ -62,9 +62,9 @@ class Client {
   String orderId;
   String orderDate;
   String paymentMethod;
-  int orderCost;
-  String delivered;
-  String deliveryDelay;
+  double orderCost;
+  int delivered;
+  int deliveryDelay;
   String dateStart;
   String dateFinish;
   String timeStamp;
@@ -95,7 +95,7 @@ class Client {
         orderId: json["order_id"],
         orderDate: json["order_date"],
         paymentMethod: json["payment_method"],
-        orderCost: json["order_cost"],
+        orderCost: json["order_cost"].toDouble(),
         delivered: json["delivered"],
         deliveryDelay: json["delivery_delay"],
         dateStart: json["date_start"],
@@ -123,15 +123,17 @@ class Client {
 }
 
 class GeneralConsist {
-  String id;
+  int id;
+  String ordersID;
   String product;
-  int quantity;
-  int price;
+  double quantity;
+  double price;
   String extInfo;
-  String direction;
+  int direction;
 
   GeneralConsist({
     this.id,
+    this.ordersID,
     this.product,
     this.quantity,
     this.price,
@@ -140,16 +142,40 @@ class GeneralConsist {
   });
 
   factory GeneralConsist.fromJson(Map<String, dynamic> json) => GeneralConsist(
-        id: json["id"],
+        // id: json["id"],
+        ordersID: json["id"],
         product: json["product"],
-        quantity: json["quantity"],
-        price: json["price"],
+        quantity: json["quantity"].toDouble(),
+        price: json["price"].toDouble(),
         extInfo: json["ext_info"],
         direction: json["direction"],
       );
 
+  factory GeneralConsist.fromSQL(Map<String, dynamic> sql) {
+    return new GeneralConsist(
+      id: sql["id"],
+      ordersID: sql["orders_id"],
+      product: sql["product"],
+      quantity: sql["quantity"],
+      price: sql["price"],
+      extInfo: sql["ext_info"],
+      direction: sql["direction"],
+    );
+  }
+
   Map<String, dynamic> toJson() => {
-        "id": id,
+        // "id": id,
+        "id": ordersID,
+        "product": product,
+        "quantity": quantity,
+        "price": price,
+        "ext_info": extInfo,
+        "direction": direction,
+      };
+
+  Map<String, dynamic> toSQL() => {
+        // "id": id,
+        "orders_id": ordersID,
         "product": product,
         "quantity": quantity,
         "price": price,
